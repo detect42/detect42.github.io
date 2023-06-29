@@ -135,6 +135,7 @@
     <title>tips for vim</title>
     <url>/post/54b5cdaf.html</url>
     <content><![CDATA[<h1 id="一些tips">一些tips</h1>
+<p>可以在settings里面自定义vim映射</p>
 
 
 	<div class="row">
@@ -147,10 +148,5 @@
       <tags>
         <tag>vim</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>vim</title>
-    <url>/post/undefined.html</url>
-    <content><![CDATA[]]></content>
   </entry>
 </search>
