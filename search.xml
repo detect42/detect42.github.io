@@ -120,11 +120,13 @@
 <ol>
 <li>\post\pdf母驴下本地加入xxx.pdf</li>
 <li>md文件里加入</li>
+<li>也可以直接插入网址外部访问</li>
 </ol>
-<pre><code> &#123;% pdf pdf/xxx.pdf %&#125;
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">&#123;% pdf pdf/xxx.pdf %&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="插入图片">插入图片</h2>
-<img src="/post/favicon.png" width="50%" height="50%">]]></content>
+<p>将图片保存在\post下，直接调用即可，可以改变图片长宽比例以及大小</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">&lt;img src=<span class="string">&quot;xxx.png&quot;</span> width=<span class="string">&quot;10%&quot;</span> height=<span class="string">&quot;10%&quot;</span>&gt;</span><br></pre></td></tr></table></figure>
+<img src="/post/1.png" width="10%" height="10%">]]></content>
       <tags>
         <tag>hexo</tag>
       </tags>
