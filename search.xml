@@ -124,8 +124,7 @@
 <pre><code> &#123;% pdf pdf/xxx.pdf %&#125;
 </code></pre>
 <h2 id="插入图片">插入图片</h2>
-<p><img src="/post/favicon.png" alt="Alt text"></p>
-]]></content>
+<img src="/post/favicon.png" width="50%" height="50%">]]></content>
       <tags>
         <tag>hexo</tag>
       </tags>
