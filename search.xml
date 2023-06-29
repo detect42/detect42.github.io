@@ -93,4 +93,23 @@
         <tag>随笔</tag>
       </tags>
   </entry>
+  <entry>
+    <title>git初步</title>
+    <url>/post/91c7c6a1.html</url>
+    <content><![CDATA[<h1 id="git基本命令">git基本命令</h1>
+<h2 id="git详细介绍-使用">git详细介绍&amp;使用</h2>
+<p><a href="https://www.liaoxuefeng.com/wiki/896043488029600">史上最浅显易懂的Git教程</a></p>
+<h2 id="git指令简版总结">git指令简版总结</h2>
+
+
+	<div class="row">
+    <embed src="pdf/git-cheat-sheet.pdf" width="100%" height="550" type="application/pdf">
+	</div>
+
+
+]]></content>
+      <tags>
+        <tag>git</tag>
+      </tags>
+  </entry>
 </search>
