@@ -119,18 +119,12 @@
 <h2 id="1-添加pdf">1. 添加pdf</h2>
 <ol>
 <li>\post\pdf母驴下本地加入xxx.pdf</li>
-<li>md文件里加入
-
-	<div class="row">
-    <embed src="pdf/xxx.pdf" width="100%" height="550" type="application/pdf">
-	</div>
-
-
-</li>
+<li>md文件里加入</li>
 </ol>
-<h2 id="3332">3332</h2>
-<p><img src="/post/favicon.png" alt="Alt text"><br>
-<img src="/source/img/favicon.png" alt></p>
+<pre><code> &#123;% pdf pdf/xxx.pdf %&#125;
+</code></pre>
+<h2 id="插入图片">插入图片</h2>
+<p><img src="/post/favicon.png" alt="Alt text"></p>
 ]]></content>
       <tags>
         <tag>hexo</tag>
