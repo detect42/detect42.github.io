@@ -131,4 +131,26 @@
         <tag>hexo</tag>
       </tags>
   </entry>
+  <entry>
+    <title>tips for vim</title>
+    <url>/post/54b5cdaf.html</url>
+    <content><![CDATA[<h1 id="一些tips">一些tips</h1>
+
+
+	<div class="row">
+    <embed src="pdf/vim.pdf" width="100%" height="550" type="application/pdf">
+	</div>
+
+
+
+]]></content>
+      <tags>
+        <tag>vim</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>vim</title>
+    <url>/post/undefined.html</url>
+    <content><![CDATA[]]></content>
+  </entry>
 </search>
