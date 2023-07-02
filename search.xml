@@ -3,8 +3,73 @@
   <entry>
     <title>effctive c++ tips</title>
     <url>/post/a20e8ec8.html</url>
-    <content><![CDATA[<p>chtholly!</p>
+    <content><![CDATA[<h2 id="1-除非有好的理由允许构造函数隐式转换-否则申明构造函数为explicit">1. 除非有好的理由允许构造函数隐式转换，否则申明构造函数为explicit</h2>
+<hr>
+<h2 id="2-default构造函数-copy构造函数-copy-assignment操作符">2. default构造函数，copy构造函数，copy assignment操作符</h2>
+<p>新对象被定义一定有个构造函数被调用</p>
+<h2 id="code-0"><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Class w1;<span class="comment">//default </span></span><br><span class="line"><span class="function">Class <span class="title">w2</span><span class="params">(w1)</span></span>;<span class="comment">//copy构造</span></span><br><span class="line">Class w1=w1;<span class="comment">//copy赋值操作符</span></span><br><span class="line">Class w3=w2;<span class="comment">//copy构造</span></span><br></pre></td></tr></table></figure></h2>
+<h2 id="3-类中声明常量">3. 类中声明常量</h2>
+<p>为确保此常量只有一个实例，用static</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span>&#123;</span><br><span class="line">    <span class="type">static</span> <span class="type">const</span> <span class="type">int</span> Num=<span class="number">5</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同时也可以使用enum</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span>&#123;</span><br><span class="line">    <span class="keyword">enum</span>&#123;Num=<span class="number">5</span>&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>enum特征：</p>
+<ol>
+<li>enum和define一样不允许指针指向自己，绝不会导致不必要的内存分配</li>
+<li>实用主义，很多代码用了它</li>
+</ol>
+<hr>
+<h2 id="4-const食用技巧">4. const食用技巧</h2>
+<ul>
+<li>
+<h3 id="1-const对象只能调用const成员函数-不能调用非const成员函数；非const对象可以调用const成员函数">1. const对象只能调用const成员函数、不能调用非const成员函数；非const对象可以调用const成员函数</h3>
+</li>
+</ul>
+<h3 id="引发原因：-由调用成员函数时隐式传入的当前对象的this指针引起">引发原因： 由调用成员函数时隐式传入的当前对象的this指针引起。</h3>
+<blockquote>
+<p>1、 非<code>const</code>成员函数中的隐式参数：classA* this</p>
+</blockquote>
+<blockquote>
+<p>2、 <code>const</code>成员函数中的隐式参数：<code>const classA* this</code></p>
+</blockquote>
+<h3 id="根本原因：">根本原因：</h3>
+<blockquote>
+<p>1、 <code>const</code>对象的指针为<code>const classA* this</code>，因此传入非const成员函数时编译器报错（类型不匹配，无法从const 指针转换为非const指针）；但传入const成员函数则类型匹配。</p>
+</blockquote>
+<blockquote>
+<p>2、非<code>const</code>对象的指针为<code>classA* this</code>，可以调用const成员函数，因为const修饰符保证了不会修改该对象。</p>
+</blockquote>
+<p>所以对于const对象可能调用的函数，可以直接加个const函数重载，c++支持const函数重载。</p>
+<ul>
+<li>
+<h3 id="2-类中使用mutable定义-这样在const成员函数中可以修改其值">2. 类中使用mutable定义，这样在const成员函数中可以修改其值</h3>
+</li>
+<li>
+<h3 id="3-const类不能作为按地址形式传入non-const函数中">3. const类不能作为按地址形式传入non-const函数中</h3>
+</li>
+</ul>
+<hr>
+<h2 id="5-make-sure-that-objects-are-initialzed-before-they-re-used">5. Make sure that objects are initialzed before they’re used</h2>
+<blockquote>
+<p>建议永远使用<code>member initialization list</code>。（就算没有任何额外赋值，也建议在初始化成员列表里手动调用default或对内置数据类型附初值）</p>
+</blockquote>
+<blockquote>
+<p>实际上，构造函数在运行前会对所有类成员调用default构造一遍，这样花费了不必要的时间开销。况且，如const常量一定需要初始值，而不能被赋值。</p>
+</blockquote>
+<hr>
+<h2 id="6-构造-析构-赋值运算">6. 构造/析构/赋值运算</h2>
+<ul>
+<li>
+<h3 id="1-只要你写了一个构造函数-default版构造函数就不会创建">1. 只要你写了一个构造函数，default版构造函数就不会创建</h3>
+</li>
+<li>
+<h3 id="2-当类中有const成员-引用成员-string-或者base-class的赋值操作符是private-那么编译器拒绝生成默认operator">2. 当类中有const成员，引用成员(string&amp;),或者base class的赋值操作符是private，那么编译器拒绝生成默认operator=。</h3>
+</li>
+</ul>
 ]]></content>
+      <tags>
+        <tag>c++</tag>
+      </tags>
   </entry>
   <entry>
     <title>Hello World</title>
