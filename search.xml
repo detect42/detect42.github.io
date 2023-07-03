@@ -7,7 +7,8 @@
 <hr>
 <h2 id="2-default构造函数-copy构造函数-copy-assignment操作符">2. default构造函数，copy构造函数，copy assignment操作符</h2>
 <p>新对象被定义一定有个构造函数被调用</p>
-<h2 id="code-0"><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Class w1;<span class="comment">//default </span></span><br><span class="line"><span class="function">Class <span class="title">w2</span><span class="params">(w1)</span></span>;<span class="comment">//copy构造</span></span><br><span class="line">Class w1=w1;<span class="comment">//copy赋值操作符</span></span><br><span class="line">Class w3=w2;<span class="comment">//copy构造</span></span><br></pre></td></tr></table></figure></h2>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Class w1;<span class="comment">//default </span></span><br><span class="line"><span class="function">Class <span class="title">w2</span><span class="params">(w1)</span></span>;<span class="comment">//copy构造</span></span><br><span class="line">Class w1=w1;<span class="comment">//copy赋值操作符</span></span><br><span class="line">Class w3=w2;<span class="comment">//copy构造</span></span><br></pre></td></tr></table></figure>
+<hr>
 <h2 id="3-类中声明常量">3. 类中声明常量</h2>
 <p>为确保此常量只有一个实例，用static</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span>&#123;</span><br><span class="line">    <span class="type">static</span> <span class="type">const</span> <span class="type">int</span> Num=<span class="number">5</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -65,7 +66,25 @@
 <li>
 <h3 id="2-当类中有const成员-引用成员-string-或者base-class的赋值操作符是private-那么编译器拒绝生成默认operator">2. 当类中有const成员，引用成员(string&amp;),或者base class的赋值操作符是private，那么编译器拒绝生成默认operator=。</h3>
 </li>
+<li>
+<h3 id="3-不想编译器自动生成函数-可以-delete">3. 不想编译器自动生成函数，可以<code>=delete</code></h3>
+</li>
+<li>
+<h3 id="4-心得：只有当class内至少含有一个virtual函数-才为它声明virtual析构函数-virtual函数会开一个虚函数表占用内存-同时因为stl标准库里全是non-virtual-所以一般不将其作为base-class继承">4. 心得：只有当class内至少含有一个virtual函数，才为它声明virtual析构函数（virtual函数会开一个虚函数表占用内存）,同时因为STL标准库里全是non-virtual，所以一般不将其作为base class继承。</h3>
+</li>
+<li>
+<h3 id="5-在虚析构函数继承时需要对虚析构函数提供实现">5. 在虚析构函数继承时需要对虚析构函数提供实现.</h3>
+</li>
 </ul>
+<blockquote>
+<p>因为当我们不定义虚构函数的时候，编译器会默认生成一个什么都不做的析构函数，但是注意了默认生成的析构函数就是普通函数不是虚函数！！！（因为虚函数会带来额外开销，c++追求的是速度），所以指望不上编译器自动生成虚构函数，而析构时又一定会调用，所以需要我们手动实现虚析构函数的实现。</p>
+</blockquote>
+<hr>
+<h2 id="7-在构造函数和析构函数间不调用virtual函数">7.在构造函数和析构函数间不调用virtual函数。</h2>
+<blockquote>
+<p>因为这类调用从不下降至derived class。（需要的话可以用static函数从derived class传参向base class的构造函数，并在base里用non-virtual函数接收并按照接收参数的不同做出不同response。</p>
+</blockquote>
+<hr>
 ]]></content>
       <tags>
         <tag>c++</tag>
