@@ -85,6 +85,39 @@
 <p>因为这类调用从不下降至derived class。（需要的话可以用static函数从derived class传参向base class的构造函数，并在base里用non-virtual函数接收并按照接收参数的不同做出不同response。</p>
 </blockquote>
 <hr>
+<h2 id="8-让operator-返回一个reference-to-this">8. 让operator=返回一个reference to *this</h2>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">Widget&amp; <span class="keyword">operator</span> =(<span class="type">const</span> Widget&amp; rhs)&#123;</span><br><span class="line">    <span class="comment">//******</span></span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一方面可以实现连等，另一方面这样的协议被STL共同遵守。</p>
+<hr>
+<h2 id="9-以对象为资源管理-rall-resource-acquisition-is-initializaion">9. 以对象为资源管理(RALL(resource acquisition is initializaion))</h2>
+<ul>
+<li>
+<h3 id="1-获得资源后立刻放进管理对象-如使用auto-ptr">1. 获得资源后立刻放进管理对象（如使用auto_ptr）</h3>
+</li>
+<li>
+<h3 id="2-管理对象-managing-object-运用析构函数确保资源被释放">2. 管理对象(managing object)运用析构函数确保资源被释放</h3>
+</li>
+</ul>
+<p>以防止开的空间在delete前因各种原因中端而导致内存泄漏<br>
+auto_ptr一般用在heap_based资源</p>
+<hr>
+<h2 id="10-rall对象的copy行为">10. RALL对象的copy行为</h2>
+<ul>
+<li>
+<h3 id="1-方法1：抑制copying-用private写copy">1. 方法1：抑制copying（用private写copy）</h3>
+</li>
+<li>
+<h3 id="2-方法2：施行引用计数法-tr1-shared-ptr-可以以一个函数对象为第二参数-在计数为0时调用其">2. 方法2：施行引用计数法(tr1::shared_ptr,可以以一个函数对象为第二参数，在计数为0时调用其)</h3>
+</li>
+</ul>
+<h2 id="11-资源管理类中提供对原始资源的访问">11. 资源管理类中提供对原始资源的访问</h2>
+<p>我们用RALL类将对象装在类中防止内存泄漏发生，但是一些api要求原始的数据进行传参，这时就需要提供对原始资源的访问</p>
+<blockquote>
+<p>对于智能指针<code>pINv.get()</code>即可调用其储存的原始资源</p>
+</blockquote>
+<blockquote>
+<p>对于其他某些RALL类要么提供显式转换函数(如上)，要么提供隐式转换函数(<code>operator type()</code>)</p>
+</blockquote>
 ]]></content>
       <tags>
         <tag>c++</tag>
