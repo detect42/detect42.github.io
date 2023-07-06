@@ -302,6 +302,21 @@ auto_ptr一般用在heap_based资源</p>
 <blockquote>
 <p>绝不要返回pointer或reference指向一个local stack对象，或返回reference指向一个local-allocated对象。</p>
 </blockquote>
+<h2 id="18-将成员变量设计为private">18. 将成员变量设计为private</h2>
+<blockquote>
+<p>切记将成员变量设计成private，好处：1. 访问数据的一致性 2. 可以细微划分访问时的控制权限 3. 提供class作者充分的实现弹性。</p>
+</blockquote>
+<blockquote>
+<p>protected 并不比public 更具备封装性</p>
+</blockquote>
+<h2 id="prefer拿non-member-non-friend函数替换member函数">prefer拿non-member non-friend函数替换member函数。</h2>
+<p>可以增加封装性，包裹弹性，和机能拓展性。</p>
+<blockquote>
+<p>越少的函数能直接调用私有数据，封装性越好</p>
+</blockquote>
+<blockquote>
+<p>将多个功能函数（如clear功能、cookie功能）放在多个头文件但隶属于同一个命名空间，可以轻松拓展这些功能函数。（namespace可以跨越多个源码文件）</p>
+</blockquote>
 ]]></content>
       <tags>
         <tag>c++</tag>
