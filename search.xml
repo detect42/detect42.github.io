@@ -302,6 +302,7 @@ auto_ptr一般用在heap_based资源</p>
 <blockquote>
 <p>绝不要返回pointer或reference指向一个local stack对象，或返回reference指向一个local-allocated对象。</p>
 </blockquote>
+<hr>
 <h2 id="18-将成员变量设计为private">18. 将成员变量设计为private</h2>
 <blockquote>
 <p>切记将成员变量设计成private，好处：1. 访问数据的一致性 2. 可以细微划分访问时的控制权限 3. 提供class作者充分的实现弹性。</p>
@@ -309,7 +310,8 @@ auto_ptr一般用在heap_based资源</p>
 <blockquote>
 <p>protected 并不比public 更具备封装性</p>
 </blockquote>
-<h2 id="prefer拿non-member-non-friend函数替换member函数">prefer拿non-member non-friend函数替换member函数。</h2>
+<hr>
+<h2 id="19-prefer拿non-member-non-friend函数替换member函数">19. prefer拿non-member non-friend函数替换member函数。</h2>
 <p>可以增加封装性，包裹弹性，和机能拓展性。</p>
 <blockquote>
 <p>越少的函数能直接调用私有数据，封装性越好</p>
@@ -317,6 +319,58 @@ auto_ptr一般用在heap_based资源</p>
 <blockquote>
 <p>将多个功能函数（如clear功能、cookie功能）放在多个头文件但隶属于同一个命名空间，可以轻松拓展这些功能函数。（namespace可以跨越多个源码文件）</p>
 </blockquote>
+<hr>
+<h2 id="20-non-member函数">20. non-member函数</h2>
+<p>如果你需要为某个函数的所有参数（包括被this指针所指的那个隐喻参数）进行类型转换，那么这个函数必须是non-member。</p>
+<h2 id="最常见的是operator重载运算-因为this指针无法进行隐式类型转换-所以有必要变成non-member函数-但是是不是要friend是不一定的-不能只因函数不该是member-就让它自动成为friend">最常见的是operator重载运算，因为this指针无法进行隐式类型转换，所以有必要变成non-member函数。但是是不是要friend是不一定的。不能只因函数不该是member，就让它自动成为friend。</h2>
+<h2 id="21-swap的实现">21. swap的实现</h2>
+<ul>
+<li>当std::swap对你的类型效率不高时，提供一个swap成员函数，并确定这个函数不抛出异常。</li>
+<li>如果你提供一个member swap，也提供一个non-member swap用来调用前者。对于classes（而非templates），也要特化std::swap&gt;</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span>&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(Widget&amp; other)</span></span>&#123;</span><br><span class="line">        <span class="keyword">using</span> std::swap;</span><br><span class="line">        <span class="built_in">swap</span>(Ptr,other.Ptr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">namespace</span> std&#123;</span><br><span class="line">    <span class="keyword">template</span>&lt;&gt;</span><br><span class="line">    <span class="type">void</span> <span class="built_in">swap</span>&lt;Widget&gt;(Widget&amp; a,Widget&amp; b)&#123;</span><br><span class="line">        a.<span class="built_in">swap</span>(b);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>调用swap时加上using std::swap，然后调用的时候不带任何“命名空间资格修饰”。</p>
+</li>
+<li>
+<p>swap调用顺序： 1：class专属的swap 2：std::swap内的专属特化版 3：默认版std::swap。</p>
+</li>
+</ul>
+<hr>
+<h2 id="22-尽可能延后变量定义式的出现时间">22. 尽可能延后变量定义式的出现时间</h2>
+<p>不只因该延后到非得使用该变量为止，甚至应该尝试延后这份定义知道能够给它初值实参为止。</p>
+<h2 id="不仅可以避免构造非必要对象-还可以避免无意义的default构造行为-更深一层说-以-具有明显意义之初值-将变量初始化还可以附带说明变量的目的">不仅可以避免构造非必要对象，还可以避免无意义的default构造行为，更深一层说，以“具有明显意义之初值”将变量初始化还可以附带说明变量的目的。</h2>
+<h2 id="23-c-转型操作">23. c++转型操作</h2>
+<ul>
+<li>
+<h3 id="宁可用c-style转型-不使用旧式转型-前者很容易被分辨出来-而且作用更加细化">宁可用c++style转型，不使用旧式转型，前者很容易被分辨出来，而且作用更加细化</h3>
+</li>
+</ul>
+<blockquote>
+<p>const_cast 用来将对象的常量性移除</p>
+<p>dynamic_cast 用来“安全向下转型”，也就是用来决定某对象是否归属继承体系中的<br>
+某个类型。</p>
+<p>reinterpret_cast 低级转型，e.g. 将pointer to int转为int</p>
+<p>static_cast 强迫隐式转型</p>
+</blockquote>
+<ul>
+<li>
+<h3 id="使用旧式转型的唯一时机：调用一个explicit构造函数将一个对象传递给一个函数时">使用旧式转型的唯一时机：调用一个explicit构造函数将一个对象传递给一个函数时。</h3>
+</li>
+<li>
+<h3 id="单个对象-如一个derived类-可以拥有一个以上的地址-所以不要以为-转型什么都没做-只是告诉编译器把某种类型视为另一种类型">单个对象（如一个derived类）可以拥有一个以上的地址，所以不要以为“转型什么都没做，只是告诉编译器把某种类型视为另一种类型“）</h3>
+</li>
+<li>
+<h3 id="如果可以-尽量避免转型-如指针动态链接-或virtual函数">如果可以，尽量避免转型。（如指针动态链接，或virtual函数）</h3>
+</li>
+</ul>
+<hr>
+<h2 id="24-避免返回handles-reference-指针-迭代器-指向对象内部成分">24. 避免返回handles(reference,指针，迭代器)指向对象内部成分</h2>
+<ul>
+<li>可增加封装性，帮助const成员函数行为像一个const。</li>
+<li>降低出现“虚吊号牌”(dangling handles)的可能性。（对象先寄了，导致成员赋值的内部指针虚吊。）</li>
+</ul>
 ]]></content>
       <tags>
         <tag>c++</tag>
