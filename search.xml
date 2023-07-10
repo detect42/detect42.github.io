@@ -421,6 +421,59 @@ auto_ptr一般用在heap_based资源</p>
 <li>pure virtual函数也可以被实现，用来当缺省实现。</li>
 <li>non-virtual 函数的目的是为了令derived class继承函数的接口及一份强制性的实现。</li>
 </ul>
+<h2 id="30-考虑用设计模式替换virtual函数">30. 考虑用设计模式替换virtual函数</h2>
+<p>介绍两种设计模式，NVI(non-virtial interface)，主张将所有virtual设计为private。Strategy设计模式，用函数指针或者古典strategy，另外开个类。</p>
+<p>因为是关于设计模式的介绍，详细可以看他人的 <strong><a href="https://blog.csdn.net/CltCj/article/details/128432338">博客分享</a></strong>。</p>
+<hr>
+<h2 id="31-绝不重新定义继承而来的non-virtual函数">31. 绝不重新定义继承而来的non-virtual函数</h2>
+<ul>
+<li>
+<p>non-virtual函数为静态绑定，也就是说pointer-to-base永远调用的是base版本，即使其指向一个derived类。一个简单的例子是为什么多态中析构函数都是virtual：虚析构函数为了避免内存泄露,基类的析构函数一般都是虚函数。 如果基类析构函数不是虚函数:基类指针指向子类对象,delete基类指针,调用基类析构函数,不会调用子类析构函数,造成内存泄露。</p>
+</li>
+<li>
+<p>non-virtual函数的不变性高于其特异性。（public继承下，一切base的non-virtual都适用于所有的derived classes）</p>
+</li>
+</ul>
+<hr>
+<h3 id="32-绝不重新定义继承而来的缺省参数值">32. 绝不重新定义继承而来的缺省参数值</h3>
+<p>理由很简单，virtual函数时动态绑定(dynamically bound)，而缺省参数值却是静态绑定。</p>
+<p>所以如果使用多态时，重新定义了继承而来的缺省参数值，在动态绑定中，其默认参数却永远是base的，导致难以发现的错位。（继承中唯一该覆写的东西是virtual函数）</p>
+<p>（如果想要统一默认参数，可以使用30条中的NVI设计模式。）</p>
+<hr>
+<h3 id="33-复合关系">33. 复合关系</h3>
+<ul>
+<li>在应用域(application domain)，复合意味着has-a。</li>
+<li>在实现域(implementation domain)，复合意味着 is-implemented-in-terms-of（根据某物实现出）。e.g. 用std::list 实现SET。</li>
+</ul>
+<hr>
+<h3 id="34-private继承">34. private继承</h3>
+<p>public继承在必要时可（为了让函数调用成功），可以将derived类转成base，而private继承则不行。</p>
+<p>private base 继承而来的所有东西都会在derived类中变成private属性。</p>
+<ul>
+<li><strong>private继承意味着只有实现部分被继承，接口部分应略去。如果D以private形式继承B，意思是D对象根据B对象实现而得，再没有其他意涵了。</strong></li>
+</ul>
+<p>复合(composition)比private继承 （都是is-implemented-in-terms-of）</p>
+<ul>
+<li>复合优点：阻止derived类重新定义接口、可以解耦</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span>&#123;</span><br><span class="line">    <span class="keyword">private</span>: </span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">WidgetTimer</span>: <span class="keyword">public</span> Timer&#123;</span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">onTick</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;;</span><br><span class="line">    WidgetTimer timer;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>private继承优点：当derived函数需要访问protected based class的成员、或需要重新定义继承而来的virtual函数。</li>
+</ul>
+<hr>
+<h2 id="35-多重继承">35. 多重继承</h2>
+<ul>
+<li>多重继承比单一继承更复杂。它可能导致新的歧义性，以及对virtual继承的需要。</li>
+<li>virtual继承会增加大小，速度，初始化复杂度成本。</li>
+<li>多重继承的确有正当用途。比如：<code>&quot;public继承某个inteface class&quot;,&quot;private继承某个协助实现的class&quot;</code>的两两组合。</li>
+</ul>
+<hr>
+<h2 id="隐式接口和编译器多态">隐式接口和编译器多态</h2>
+<ul>
+<li>class和template都支持接口和多态</li>
+<li>对class而言接口是显示的，以函数签名为中心。多态则是通过virtual函数发生于运行期。</li>
+<li>对template参数而言，接口是隐式的，奠基于有效表达式。多态则是通过template具现化和函数重载解析发生于编译期。</li>
+</ul>
 ]]></content>
       <tags>
         <tag>c++</tag>
