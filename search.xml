@@ -435,18 +435,18 @@ auto_ptr一般用在heap_based资源</p>
 </li>
 </ul>
 <hr>
-<h3 id="32-绝不重新定义继承而来的缺省参数值">32. 绝不重新定义继承而来的缺省参数值</h3>
+<h2 id="32-绝不重新定义继承而来的缺省参数值">32. 绝不重新定义继承而来的缺省参数值</h2>
 <p>理由很简单，virtual函数时动态绑定(dynamically bound)，而缺省参数值却是静态绑定。</p>
 <p>所以如果使用多态时，重新定义了继承而来的缺省参数值，在动态绑定中，其默认参数却永远是base的，导致难以发现的错位。（继承中唯一该覆写的东西是virtual函数）</p>
 <p>（如果想要统一默认参数，可以使用30条中的NVI设计模式。）</p>
 <hr>
-<h3 id="33-复合关系">33. 复合关系</h3>
+<h2 id="33-复合关系">33. 复合关系</h2>
 <ul>
 <li>在应用域(application domain)，复合意味着has-a。</li>
 <li>在实现域(implementation domain)，复合意味着 is-implemented-in-terms-of（根据某物实现出）。e.g. 用std::list 实现SET。</li>
 </ul>
 <hr>
-<h3 id="34-private继承">34. private继承</h3>
+<h2 id="34-private继承">34. private继承</h2>
 <p>public继承在必要时可（为了让函数调用成功），可以将derived类转成base，而private继承则不行。</p>
 <p>private base 继承而来的所有东西都会在derived类中变成private属性。</p>
 <ul>
@@ -468,7 +468,7 @@ auto_ptr一般用在heap_based资源</p>
 <li>多重继承的确有正当用途。比如：<code>&quot;public继承某个inteface class&quot;,&quot;private继承某个协助实现的class&quot;</code>的两两组合。</li>
 </ul>
 <hr>
-<h2 id="隐式接口和编译器多态">隐式接口和编译器多态</h2>
+<h2 id="36-隐式接口和编译器多态">36.隐式接口和编译器多态</h2>
 <ul>
 <li>class和template都支持接口和多态</li>
 <li>对class而言接口是显示的，以函数签名为中心。多态则是通过virtual函数发生于运行期。</li>
