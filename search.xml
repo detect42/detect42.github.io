@@ -546,8 +546,8 @@ auto_ptr一般用在heap_based资源</p>
       </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/post/0.html</url>
+    <title>Python之散装知识</title>
+    <url>/post/d9e0de5e.html</url>
     <content><![CDATA[<h2 id="1-staticmethod-的使用">1. @staticmethod 的使用</h2>
 <p>在Python中，<code>@staticmethod</code>是一个装饰器（decorator），用于定义类中的静态方法（staticmethods）。静态方法是类中的一种方法，它与类的实例无关，因此不需要通过类的实例进行调用，而是直接通过类名调用。</p>
 <p>使用<code>@staticmethod</code>装饰器可以将一个普通的方法转换为静态方法。在定义静态方法时，需要在方法上方加上<code>@staticmethod</code>装饰器。静态方法的定义和使用有以下特点：</p>
@@ -569,5 +569,8 @@ auto_ptr一般用在heap_based资源</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span>:</span><br><span class="line">    class_variable = <span class="number">10</span>  <span class="comment"># 类级别的属性</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, x</span>):</span><br><span class="line">        self.x = x  <span class="comment"># 实例属性</span></span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">static_method</span>():</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;This is a static method.&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用静态方法，不需要实例化类对象</span></span><br><span class="line">MyClass.static_method()  <span class="comment"># Output: This is a static method.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建类的实例</span></span><br><span class="line">obj = MyClass(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 静态方法仍然可以通过类名调用</span></span><br><span class="line">obj.static_method()  <span class="comment"># Output: This is a static method.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 静态方法不能访问实例属性</span></span><br><span class="line"><span class="built_in">print</span>(obj.x)  <span class="comment"># Output: 5</span></span><br></pre></td></tr></table></figure>
 <p>总结：<code>@staticmethod</code>装饰器用于定义静态方法，它可以通过类名直接调用，不需要实例化类对象，且在方法体内不能访问实例属性。静态方法在类的实例无关的情况下使用，常用于实现与类相关的工具函数或辅助函数。</p>
 ]]></content>
+      <tags>
+        <tag>python</tag>
+      </tags>
   </entry>
 </search>
