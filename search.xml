@@ -586,6 +586,20 @@ auto_ptr一般用在heap_based资源</p>
     <content><![CDATA[<h3 id="指定服务器调用显卡">指定服务器调用显卡</h3>
 <p><code>export CUDA_VISIBLE_DEVICES=1,3</code></p>
 <h3 id="export配置环境变量">export配置环境变量</h3>
+<h3 id="pip换源">pip换源</h3>
+<p>python -m pip config set global.index-url <a href="http://mirrors.cloud.tencent.com/pypi/simple">http://mirrors.cloud.tencent.com/pypi/simple</a></p>
+<ol>
+<li>wget <a href="https://repo.anaconda.com/archive/Anaconda3-2023.07-1-Linux-x86_64.sh">https://repo.anaconda.com/archive/Anaconda3-2023.07-1-Linux-x86_64.sh</a> --nocheck-certificate</li>
+<li>bash Anaconda3-2023.07-1-Linux-x86_64.sh</li>
+<li>source ~/.bashrc</li>
+<li>conda update -n base -c defaults conda</li>
+<li>conda create -n sd python=3.10</li>
+<li>source activate sd</li>
+<li>git clone <a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui">https://github.com/AUTOMATIC1111/stable-diffusion-webui</a></li>
+<li>wget <a href="https://civitai.com/api/download/models/90072">https://civitai.com/api/download/models/90072</a> --content-disposition</li>
+<li>nohup ./webui.sh --listen --enable-insecure-extension-access --xformers --no-half-vae &amp;</li>
+</ol>
+<p>git clone <a href="https://ghproxy.com/https://github.com/AUTOMATIC1111/stable-diffusion-webui.git">https://ghproxy.com/https://github.com/AUTOMATIC1111/stable-diffusion-webui.git</a></p>
 ]]></content>
       <tags>
         <tag>sd</tag>
