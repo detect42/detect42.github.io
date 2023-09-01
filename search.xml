@@ -600,6 +600,68 @@ auto_ptr一般用在heap_based资源</p>
 <li>nohup ./webui.sh --listen --enable-insecure-extension-access --xformers --no-half-vae &amp;</li>
 </ol>
 <p>git clone <a href="https://ghproxy.com/https://github.com/AUTOMATIC1111/stable-diffusion-webui.git">https://ghproxy.com/https://github.com/AUTOMATIC1111/stable-diffusion-webui.git</a></p>
+<hr>
+<p><a href="https://185.217.108.158/api/v1/client/subscribe?token=770c8251c71782f76b40abc45efc4860&amp;flag=clash">https://185.217.108.158/api/v1/client/subscribe?token=770c8251c71782f76b40abc45efc4860&amp;flag=clash</a></p>
+<p>curl <a href="https://185.217.108.158/api/v1/client/subscribe?token=770c8251c71782f76b40abc45efc4860&amp;flag=clash">https://185.217.108.158/api/v1/client/subscribe?token=770c8251c71782f76b40abc45efc4860&amp;flag=clash</a> &gt; ~/.config/clash/config.yaml</p>
+<p>export http_proxy=http://127.0.0.1:7890<br>
+export https_proxy=http://127.0.0.1:7890<br>
+export ALL_PROXY=socks5://127.0.0.1:7891</p>
+<p>clash -d ~/.config/clash</p>
+<p>echo $https_proxy</p>
+<hr>
+<p>ImportError: Using SOCKS proxy, but the ‘socksio’ package is not installed. Make sure to install httpx using <code>pip install httpx[socks]</code>.</p>
+<p>因为在命令行设置了“科学上网”，关掉即可</p>
+<p>理解你的情况了。如果你在命令行中使用了科学上网（翻墙）的代理设置，而在某些情况下你不想使用代理，你可以关闭代理来解决这个问题。这样，在不需要代理的情况下，你就可以避免出现 “socksio” 包未安装的 ImportError 错误。</p>
+<p>如果你想要临时关闭终端会话中的代理设置，可以运行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">unset</span> https_proxy http_proxy all_proxy ALL_PROXY</span><br></pre></td></tr></table></figure>
+<p>这将清除当前终端会话中的 HTTP 和 SOCKS 代理设置。</p>
+<p>如果你想要永久性地关闭代理，以后在终端会话中也不再应用代理设置，你可以检查以下地方：</p>
+<ol>
+<li>
+<p>检查你的 Shell 配置文件，例如 <code>~/.bashrc</code> 或 <code>~/.zshrc</code>。</p>
+</li>
+<li>
+<p>在这些文件中查找是否有设置代理的行，类似于：</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> https_proxy=http://127.0.0.1:7890</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>
+<p>删除或注释掉这些行，以禁用代理设置。</p>
+</li>
+<li>
+<p>最后，运行 <code>source</code> 命令使更改生效：</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bashrc  <span class="comment"># 或者 source ~/.zshrc</span></span><br></pre></td></tr></table></figure>
+<p>这样，在以后的终端会话中就不会再应用代理设置了。</p>
+<p>记住，在科学上网的情况下，你可以根据需要启用或禁用代理，以适应不同的使用场景。</p>
+<hr>
+<h3 id="关于科学上网：">关于科学上网：</h3>
+<p>要设置 <code>https_proxy</code> 环境变量为 <code>http://127.0.0.1:7890</code>，你可以使用以下方式：</p>
+<p>临时设置，只在当前终端会话中生效（终端关闭后将失效）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> https_proxy=http://127.0.0.1:7890</span><br></pre></td></tr></table></figure>
+<p>永久设置，对当前用户在所有终端会话中都生效：</p>
+<ol>
+<li>打开终端并运行以下命令编辑用户的 <code>~/.bashrc</code> 文件（如果你使用的是 Bash shell）：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nano ~/.bashrc</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>在文件末尾添加以下行：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> https_proxy=http://127.0.0.1:7890</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>
+<p>按下 <code>Ctrl + O</code> 保存文件，然后按下 <code>Ctrl + X</code> 关闭文本编辑器。</p>
+</li>
+<li>
+<p>使更改生效：</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+<p>这样，在每次打开新终端会话时，<code>https_proxy</code> 环境变量都会被自动设置为 <code>http://127.0.0.1:7890</code>。</p>
+<p>请注意，如果你使用的是其他 shell，例如 Zsh，那么相应的配置文件可能不是 <code>~/.bashrc</code>，而是 <code>~/.zshrc</code>。在这种情况下，请将上述步骤中的文件名替换为正确的配置文件名。</p>
+<hr>
 ]]></content>
       <tags>
         <tag>sd</tag>
