@@ -648,4 +648,104 @@ export ALL_PROXY=socks5://127.0.0.1:7891</p>
         <tag>sd</tag>
       </tags>
   </entry>
+  <entry>
+    <title>linux指令集</title>
+    <url>/post/4de2ff1e.html</url>
+    <content><![CDATA[<p>常见的Linux操作和命令：</p>
+<ol>
+<li>
+<p><strong>文件和目录操作</strong>：</p>
+<ul>
+<li><code>ls</code>：列出当前目录的文件和子目录。</li>
+<li><code>cd</code>：改变当前工作目录。</li>
+<li><code>pwd</code>：显示当前工作目录的完整路径。</li>
+<li><code>mkdir</code>：创建新目录。</li>
+<li><code>touch</code>：创建新文件。</li>
+<li><code>cp</code>：复制文件或目录。</li>
+<li><code>mv</code>：移动或重命名文件或目录。</li>
+<li><code>rm</code>：删除文件或目录。</li>
+</ul>
+</li>
+<li>
+<p><strong>文件查看和编辑</strong>：</p>
+<ul>
+<li><code>cat</code>：查看文件内容。</li>
+<li><code>more</code> 或 <code>less</code>：分页查看文件内容。</li>
+<li><code>nano</code> 或 <code>vim</code>：文本编辑器。</li>
+<li><code>head</code> 和 <code>tail</code>：查看文件的开头和结尾部分。</li>
+</ul>
+</li>
+<li>
+<p><strong>系统信息</strong>：</p>
+<ul>
+<li><code>uname</code>：显示系统信息。</li>
+<li><code>top</code> 或 <code>htop</code>：查看系统资源使用情况。</li>
+<li><code>df</code>：显示磁盘空间使用情况。</li>
+<li><code>free</code>：显示内存使用情况。</li>
+</ul>
+</li>
+<li>
+<p><strong>进程管理</strong>：</p>
+<ul>
+<li><code>ps</code>：列出当前正在运行的进程。</li>
+<li><code>kill</code>：终止进程。</li>
+<li><code>bg</code> 和 <code>fg</code>：在后台和前台运行进程。</li>
+</ul>
+</li>
+<li>
+<p><strong>用户和权限</strong>：</p>
+<ul>
+<li><code>sudo</code>：以超级用户权限运行命令。</li>
+<li><code>useradd</code> 和 <code>userdel</code>：创建和删除用户。</li>
+<li><code>passwd</code>：更改用户密码。</li>
+<li><code>chmod</code>：更改文件和目录权限。</li>
+<li><code>chown</code>：更改文件和目录的所有者。</li>
+</ul>
+</li>
+<li>
+<p><strong>包管理</strong>：</p>
+<ul>
+<li><code>apt</code> 或 <code>apt-get</code>：Debian/Ubuntu系统的包管理工具。</li>
+<li><code>yum</code>：CentOS/RHEL系统的包管理工具。</li>
+<li><code>dnf</code>：Fedora系统的包管理工具。</li>
+</ul>
+</li>
+<li>
+<p><strong>网络操作</strong>：</p>
+<ul>
+<li><code>ping</code>：测试与主机的网络连接。</li>
+<li><code>ifconfig</code> 或 <code>ip</code>：查看和配置网络接口。</li>
+<li><code>ssh</code>：远程登录其他计算机。</li>
+<li><code>wget</code> 或 <code>curl</code>：下载文件或内容。</li>
+</ul>
+</li>
+<li>
+<p><strong>压缩和解压缩</strong>：</p>
+<ul>
+<li><code>tar</code>：打包和解包文件。</li>
+<li><code>gzip</code> 和 <code>gunzip</code>：压缩和解压缩文件。</li>
+<li><code>zip</code> 和 <code>unzip</code>：创建和解压ZIP文件。</li>
+</ul>
+</li>
+<li>
+<p><strong>查找文件</strong>：</p>
+<ul>
+<li><code>find</code>：按名称、类型等条件查找文件。</li>
+<li><code>grep</code>：在文本文件中搜索特定字符串。</li>
+</ul>
+</li>
+<li>
+<p><strong>系统日志</strong>：</p>
+<ul>
+<li><code>dmesg</code>：显示系统消息日志。</li>
+<li><code>journalctl</code>：查看systemd日志。</li>
+</ul>
+</li>
+</ol>
+<p>这只是Linux命令的一小部分，Linux系统非常强大且具有高度可定制性，可以根据需要执行各种任务。要了解有关特定命令的详细信息，你可以在终端中运行<code>man</code>命令，后跟命令名称，以查看其手册页。例如：<code>man ls</code> 或 <code>man mkdir</code>。这将提供有关该命令的详细信息和选项。</p>
+]]></content>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
 </search>
