@@ -931,7 +931,7 @@ export ALL_PROXY=socks5://127.0.0.1:7891</p>
 <li>牛客_04 B</li>
 <li>hdu_09 1002 1008 1011</li>
 </ul>
-<h2 id="科研实践">科研实践</h2>
+<h1 id="center-科研实践"><center> 科研实践</h1>
 <h3 id="英文：">英文：</h3>
 <p>Latent Diffusion论文：<a href="https://arxiv.org/pdf/2112.10752.pdf">https://arxiv.org/pdf/2112.10752.pdf</a></p>
 <p>Diffusion Models详细公式：<a href="https://lilianweng.github.io/posts/2021-07-11-diffusion-models/">https://lilianweng.github.io/posts/2021-07-11-diffusion-models/</a></p>
