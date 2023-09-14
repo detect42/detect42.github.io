@@ -782,7 +782,7 @@ export ALL_PROXY=socks5://127.0.0.1:7891</p>
 <hr>
 <h3 id="最后我们希望sd的所有部分都可以自己实现包括encoder-decoder-latent-voe等">最后我们希望sd的所有部分都可以自己实现包括encoder/decoder/latent/voe等</h3>
 <p>对各位部件以及每行代码的功能的详细解释可见stablediffusion官网。</p>
-<h4 id="较为系统的阐释-click-here"><a href="https://huggingface.co/blog/stable_diffusion#writing-your-own-inference-pipeline">较为系统的阐释-click here</a></h4>
+<h3 id="较为系统的结合源码的阐释-click-here"><a href="https://huggingface.co/blog/stable_diffusion#writing-your-own-inference-pipeline">较为系统的结合源码的阐释-click here</a></h3>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> tqdm.auto <span class="keyword">import</span> tqdm</span><br><span class="line"><span class="keyword">from</span> diffusers <span class="keyword">import</span> UniPCMultistepScheduler</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> CLIPTextModel, CLIPTokenizer</span><br><span class="line"><span class="keyword">from</span> diffusers <span class="keyword">import</span> AutoencoderKL, UNet2DConditionModel, PNDMScheduler</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment">#sd几大模块的设定</span></span><br><span class="line">vae = AutoencoderKL.from_pretrained(<span class="string">&quot;CompVis/stable-diffusion-v1-4&quot;</span>, subfolder=<span class="string">&quot;vae&quot;</span>, use_safetensors=<span class="literal">True</span>)</span><br><span class="line">tokenizer = CLIPTokenizer.from_pretrained(<span class="string">&quot;CompVis/stable-diffusion-v1-4&quot;</span>, subfolder=<span class="string">&quot;tokenizer&quot;</span>)</span><br><span class="line">text_encoder = CLIPTextModel.from_pretrained(<span class="string">&quot;CompVis/stable-diffusion-v1-4&quot;</span>, subfolder=<span class="string">&quot;text_encoder&quot;</span>, use_safetensors=<span class="literal">True</span>)</span><br><span class="line">unet = UNet2DConditionModel.from_pretrained(<span class="string">&quot;CompVis/stable-diffusion-v1-4&quot;</span>, subfolder=<span class="string">&quot;unet&quot;</span>, use_safetensors=<span class="literal">True</span>)</span><br><span class="line">scheduler = UniPCMultistepScheduler.from_pretrained(<span class="string">&quot;CompVis/stable-diffusion-v1-4&quot;</span>, subfolder=<span class="string">&quot;scheduler&quot;</span>)</span><br><span class="line"></span><br><span class="line">torch_device = <span class="string">&quot;cuda&quot;</span></span><br><span class="line">vae.to(torch_device)</span><br><span class="line">text_encoder.to(torch_device)</span><br><span class="line">unet.to(torch_device)</span><br><span class="line"></span><br><span class="line">prompt = [<span class="string">&quot;1girl, aqua eyes, baseball cap, blonde hair, closed mouth, earrings, green background, hat, hoop earrings, jewelry, looking at viewer, shirt, short hair, simple background, solo, upper body, yellow shirt,high quality,masterpiece&quot;</span>]</span><br><span class="line">height = <span class="number">512</span>  <span class="comment"># default height of Stable Diffusion</span></span><br><span class="line">width = <span class="number">512</span>  <span class="comment"># default width of Stable Diffusion</span></span><br><span class="line">num_inference_steps = <span class="number">25</span>  <span class="comment"># Number of denoising steps</span></span><br><span class="line">guidance_scale = <span class="number">7.5</span>  <span class="comment"># Scale for classifier-free guidance</span></span><br><span class="line"><span class="comment"># Seed generator to create the inital latent noise</span></span><br><span class="line">generator = torch.manual_seed(<span class="number">0</span>)</span><br><span class="line">batch_size = <span class="built_in">len</span>(prompt)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">text_input = tokenizer(</span><br><span class="line">    prompt, padding=<span class="string">&quot;max_length&quot;</span>, max_length=tokenizer.model_max_length, truncation=<span class="literal">True</span>, return_tensors=<span class="string">&quot;pt&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    text_embeddings = text_encoder(text_input.input_ids.to(torch_device))[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">max_length = text_input.input_ids.shape[-<span class="number">1</span>]</span><br><span class="line">uncond_input = tokenizer([<span class="string">&quot;&quot;</span>] * batch_size, padding=<span class="string">&quot;max_length&quot;</span>,max_length=max_length, return_tensors=<span class="string">&quot;pt&quot;</span>)</span><br><span class="line">uncond_embeddings = text_encoder(uncond_input.input_ids.to(torch_device))[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">text_embeddings = torch.cat([uncond_embeddings, text_embeddings])</span><br><span class="line"></span><br><span class="line">latents = torch.randn(</span><br><span class="line">    (batch_size, unet.in_channels, height // <span class="number">8</span>, width // <span class="number">8</span>),</span><br><span class="line">    generator=generator,</span><br><span class="line">)</span><br><span class="line">latents = latents.to(torch_device)</span><br><span class="line"></span><br><span class="line">latents = latents * scheduler.init_noise_sigma</span><br><span class="line"></span><br><span class="line">scheduler.set_timesteps(num_inference_steps)</span><br><span class="line"><span class="keyword">for</span> t <span class="keyword">in</span> tqdm(scheduler.timesteps):</span><br><span class="line">    <span class="comment"># expand the latents if we are doing classifier-free guidance to avoid doing two forward passes.</span></span><br><span class="line">    latent_model_input = torch.cat([latents] * <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    latent_model_input = scheduler.scale_model_input(</span><br><span class="line">        latent_model_input, timestep=t)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># predict the noise residual</span></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        noise_pred = unet(latent_model_input, t,</span><br><span class="line">                          encoder_hidden_states=text_embeddings).sample</span><br><span class="line"></span><br><span class="line">    <span class="comment"># perform guidance</span></span><br><span class="line">    noise_pred_uncond, noise_pred_text = noise_pred.chunk(<span class="number">2</span>)</span><br><span class="line">    noise_pred = noise_pred_uncond + guidance_scale * \</span><br><span class="line">        (noise_pred_text - noise_pred_uncond)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute the previous noisy sample x_t -&gt; x_t-1</span></span><br><span class="line">    latents = scheduler.step(noise_pred, t, latents).prev_sample</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># scale and decode the image latents with vae</span></span><br><span class="line">latents = <span class="number">1</span> / <span class="number">0.18215</span> * latents</span><br><span class="line"><span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    image = vae.decode(latents).sample</span><br><span class="line"></span><br><span class="line">image = (image / <span class="number">2</span> + <span class="number">0.5</span>).clamp(<span class="number">0</span>, <span class="number">1</span>).squeeze()</span><br><span class="line">image = (image.permute(<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>) * <span class="number">255</span>).to(torch.uint8).cpu().numpy()</span><br><span class="line">images = (image * <span class="number">255</span>).<span class="built_in">round</span>().astype(<span class="string">&quot;uint8&quot;</span>)</span><br><span class="line">image = Image.fromarray(image)</span><br><span class="line">output_dir = <span class="string">&quot;/data1/sdtest/&quot;</span></span><br><span class="line">output_filename = <span class="string">&quot;2.1.png&quot;</span></span><br><span class="line">output_path = os.path.join(output_dir, output_filename)</span><br><span class="line"><span class="comment"># 将图像数据保存为图像文件</span></span><br><span class="line">image.save(output_path)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;生成的图像已保存到:&quot;</span>, output_path)</span><br></pre></td></tr></table></figure>]]></content>
       <tags>
         <tag>diffusion</tag>
@@ -873,6 +873,7 @@ export ALL_PROXY=socks5://127.0.0.1:7891</p>
 </ul>
 <h2 id="密码学原理">密码学原理</h2>
 <p><img src="./image/002.png" alt=""></p>
+<img src= "002.png" width="60%" length="60%">
 <ul>
 <li>ppt + 教材</li>
 <li>
@@ -955,22 +956,35 @@ export ALL_PROXY=socks5://127.0.0.1:7891</p>
 <ul>
 <li>需要注意的是，在整个 UNET 执行一次的过程中，timestep_embedding 和 content embedding 始终保持不变。而在 UNET 反复执行多次的过程中，timestep_embedding 每次都会发生变化，而 content embedding 始终保持不变。在迭代过程中，每次 UNET 输出的 noise_slice 都原有的 latent 向量相减，作为下次迭代时，UNET 的 Latent 输入。</li>
 </ul>
-<p><img src="unet.png" alt="Alt text"></p>
+<img src="001.png" width="100%" length="100%">
 <h4 id="很棒的stable-diffusion解释：https-blog-csdn-net-yujianmin1990-article-details-129143157">很棒的Stable Diffusion解释：<a href="https://blog.csdn.net/yujianmin1990/article/details/129143157">https://blog.csdn.net/yujianmin1990/article/details/129143157</a></h4>
 <ul>
 <li>采样噪声被预测了出来，所以如果我们从图像中减去它就能得到尽可能接近于模型训练样本的图像（不是精准的图像本身，而是分布，像素分布的世界里呈现起来天空通常是蓝色，人类有两个眼，小猫看向某个方向，耳朵竖起且专注）。</li>
 </ul>
-<p>Stable Diffusion非常详细的介绍：<a href="https://zhuanlan.zhihu.com/p/621493124">https://zhuanlan.zhihu.com/p/621493124</a></p>
-<p>扩散模型相关的解释：<a href="https://www.youtube.com/watch?v=hO57mntSMl0">https://www.youtube.com/watch?v=hO57mntSMl0</a></p>
+<h3 id="stable-diffusion非常详细的介绍：https-zhuanlan-zhihu-com-p-621493124">Stable Diffusion非常详细的介绍：<a href="https://zhuanlan.zhihu.com/p/621493124">https://zhuanlan.zhihu.com/p/621493124</a></h3>
+<img src="6.png" width="60%" height="60%">
+<ul>
+<li>
+<p>第一步，Prompt Encoder过程（Text Encoder）<br>
+模型将潜在空间的随机种子和文本提示词（Prompt）同时作为输入，然后使用潜在空间的种子生成大小为64×64的随机潜在图像表示，通过CLIP的文本编码器将输入的文本提示转换为大小为77×768的文本嵌入。</p>
+</li>
+<li>
+<p>第二步，使用U-Net进行Diffusion过程<br>
+使用经过修改，含注意力机制的U-Net，在接受文本嵌入作为注意力机制计算对象的同时迭代地对随机潜在图像表示进行去噪。 U-Net 的输出是噪声的残差，用于通过scheduler 程序算法计算去噪的潜在图像表示。 scheduler 算法根据先前的噪声表示和预测的噪声残差计算预测的去噪图像表示。去噪过程重复约50-100次，这样可以逐步检索更好的潜在图像表示。许多不同的 scheduler 算法可以用于这个计算，每一个都有它的优点和缺点。对于Stable Diffusion，可以使用包括 PNDM scheduler、DDIM scheduler+PLMS、K-LMS scheduler等。</p>
+</li>
+<li>
+<p>第三步，潜在图片通过VAE进行解码<br>
+一旦上面步骤完成，潜在图像表示就会由变分自编码器的解码器部分进行解码，输出图片，步骤完成。</p>
+</li>
+</ul>
+<p>（上面三个步骤的主要工作流程图）</p>
+<img src="003.png" width="100%" height="100%">
+<h4 id="万字长文讲解stable-diffusion的ai绘画基本技术原理"><a href="https://zhuanlan.zhihu.com/p/621493124">万字长文讲解Stable Diffusion的AI绘画基本技术原理</a></h4>
+<ul>
+<li>关于stablediffusion较底层的原理可以查看上面这篇文章，文末附有各个组件的原始论文+源码。</li>
+</ul>
 <hr>
-<p><a href="https://huggingface.co/docs/diffusers/quicktour">https://huggingface.co/docs/diffusers/quicktour</a></p>
-<p><a href="http://www.studyofnet.com/999996229.html">http://www.studyofnet.com/999996229.html</a></p>
-<p><a href="https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/diffusers_intro.ipynb">https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/diffusers_intro.ipynb</a></p>
-<p>pipline:</p>
-<p><a href="https://huggingface.co/docs/diffusers/v0.20.0/en/api/pipelines/overview#diffusers.DiffusionPipeline">https://huggingface.co/docs/diffusers/v0.20.0/en/api/pipelines/overview#diffusers.DiffusionPipeline</a></p>
-<p>lora: <a href="https://huggingface.co/docs/diffusers/v0.20.0/en/training/lora">https://huggingface.co/docs/diffusers/v0.20.0/en/training/lora</a></p>
-<p>how does sd works? <a href="https://huggingface.co/blog/stable_diffusion#how-does-stable-diffusion-work">https://huggingface.co/blog/stable_diffusion#how-does-stable-diffusion-work</a></p>
-<ol start="2">
+<ol>
 <li>公开课｜吴恩达 CS229</li>
 </ol>
 <p>吴恩达在斯坦福教授的机器学习课程 CS229 与 吴恩达在 Coursera 上的《Machine Learning》相似，但是有更多的数学要求和公式的推导，难度稍难一些。该课程对机器学习和统计模式识别进行了广泛的介绍。</p>
@@ -993,17 +1007,6 @@ BiliBili： <a href="https://www.bilibili.com/video/BV1JE411g7XF?from=search&amp
 <p>读书笔记： <a href="https://www.cnblogs.com/limitlessun/p/8505647.html#_label0">https://www.cnblogs.com/limitlessun/p/8505647.html#_label0</a><br>
 公式推导： <a href="https://datawhalechina.github.io/pumpkin-book/#/">https://datawhalechina.github.io/pumpkin-book/#/</a><br>
 课后习题： <a href="https://zhuanlan.zhihu.com/c_1013850291887845376">https://zhuanlan.zhihu.com/c_1013850291887845376</a></p>
-<ol start="5">
-<li>书籍｜《统计学习方法》</li>
-</ol>
-<p>李航的这本《统计学习方法》堪称经典，包含更加完备和专业的机器学习理论知识，作为夯实理论非常不错，该书已经出第二版了。</p>
-<p>讲课 PPT： <a href="https://github.com/fengdu78/lihang-code/tree/master/ppt">https://github.com/fengdu78/lihang-code/tree/master/ppt</a></p>
-<p>读书笔记： <a href="http://www.cnblogs.com/limitlessun/p/8611103.html">http://www.cnblogs.com/limitlessun/p/8611103.html</a><br>
-<a href="https://github.com/SmirkCao/Lihang">https://github.com/SmirkCao/Lihang</a></p>
-<p>参考笔记： <a href="https://zhuanlan.zhihu.com/p/36378498">https://zhuanlan.zhihu.com/p/36378498</a></p>
-<p>个人部分总结： <a href="https://blog.csdn.net/weixin_41888257/article/details/107701677">https://blog.csdn.net/weixin_41888257/article/details/107701677</a></p>
-<p><a href="https://blog.csdn.net/weixin_41888257/article/details/107701929">https://blog.csdn.net/weixin_41888257/article/details/107701929</a></p>
-<p>代码实现： <a href="https://github.com/fengdu78/lihang-code/tree/master/code">https://github.com/fengdu78/lihang-code/tree/master/code</a></p>
 ]]></content>
       <tags>
         <tag>catalog</tag>
