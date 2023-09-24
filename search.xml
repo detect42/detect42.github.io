@@ -861,11 +861,13 @@ export ALL_PROXY=socks5://127.0.0.1:7891</p>
 <h2 id="最优化方法导论">最优化方法导论</h2>
 <h4 id="课程主页"><a href="https://www.lamda.nju.edu.cn/wuly/optfall2023/index.html">课程主页</a></h4>
 <ul>
+<li>Lecture Notes will be updated after every lesson</li>
+<li>Referrence: Convex Optimization, Stephen Boyd and Lieven Vandenberghe</li>
+</ul>
+<h3 id="课程笔记">课程笔记</h3>
+<ul>
 <li>
-<p>Lecture Notes will be updated after every lesson</p>
-</li>
-<li>
-<p>Referrence: Convex Optimization, Stephen Boyd and Lieven Vandenberghe</p>
+<p><a href="https://zhuanlan.zhihu.com/p/507328276">【矩阵论】范数</a></p>
 </li>
 <li>
 <h3 id="考核-hw-40-final-exam-60">考核: HW:<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>40</mn></mrow><annotation encoding="application/x-tex">40</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mord">0</span></span></span></span> Final Exam:<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>60</mn></mrow><annotation encoding="application/x-tex">60</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">6</span><span class="mord">0</span></span></span></span></h3>
