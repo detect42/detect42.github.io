@@ -1904,9 +1904,51 @@ backUp回溯过程中更新父节点的值</p>
       </tags>
   </entry>
   <entry>
-    <title>linux指令集</title>
+    <title>linux常用指令集</title>
     <url>/post/4de2ff1e.html</url>
-    <content><![CDATA[<p>常见的Linux操作和命令：</p>
+    <content><![CDATA[<h2 id="指定服务器调用显卡">指定服务器调用显卡</h2>
+<p><code>export CUDA_VISIBLE_DEVICES=1,3</code></p>
+<h2 id="pip换源">pip换源</h2>
+<p>python -m pip config set global.index-url <a href="http://mirrors.cloud.tencent.com/pypi/simple">http://mirrors.cloud.tencent.com/pypi/simple</a></p>
+<h2 id="代理">代理</h2>
+<h3 id="一次性打开代理">一次性打开代理</h3>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">export http_proxy=http://127.0.0.1:7890</span><br><span class="line">export https_proxy=http://127.0.0.1:7890</span><br><span class="line">export ALL_PROXY=socks5://127.0.0.1:7891</span><br></pre></td></tr></table></figure>
+<h3 id="打开代理：">打开代理：</h3>
+<p><code>clash -d ~/.config/clash</code></p>
+<hr>
+<p>如果你想要临时关闭终端会话中的代理设置，可以运行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">unset</span> https_proxy http_proxy all_proxy ALL_PROXY</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="关于科学上网：">关于科学上网：</h3>
+<p>要设置 <code>https_proxy</code> 环境变量为 <code>http://127.0.0.1:7890</code>，你可以使用以下方式：</p>
+<p>临时设置，只在当前终端会话中生效（终端关闭后将失效）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> https_proxy=http://127.0.0.1:7890</span><br></pre></td></tr></table></figure>
+<p>永久设置，对当前用户在所有终端会话中都生效：</p>
+<ol>
+<li>打开终端并运行以下命令编辑用户的 <code>~/.bashrc</code> 文件（如果你使用的是 Bash shell）：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nano ~/.bashrc</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>在文件末尾添加以下行：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> https_proxy=http://127.0.0.1:7890</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>
+<p>按下 <code>Ctrl + O</code> 保存文件，然后按下 <code>Ctrl + X</code> 关闭文本编辑器。</p>
+</li>
+<li>
+<p>使更改生效：</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+<p>这样，在每次打开新终端会话时，<code>https_proxy</code> 环境变量都会被自动设置为 <code>http://127.0.0.1:7890</code>。</p>
+<p>请注意，如果你使用的是其他 shell，例如 Zsh，那么相应的配置文件可能不是 <code>~/.bashrc</code>，而是 <code>~/.zshrc</code>。在这种情况下，请将上述步骤中的文件名替换为正确的配置文件名。</p>
+<hr>
+<h2 id="ipynb转md">ipynb转md</h2>
+<p>cd 到存放ipynb文件的文件夹里，输入以下命令：</p>
+<p><code>jupyter nbconvert --to markdown test.ipynb</code></p>
+<hr>
+<h2 id="常见的linux操作和命令：">常见的Linux操作和命令：</h2>
 <ol>
 <li>
 <p><strong>文件和目录操作</strong>：</p>
@@ -2001,56 +2043,6 @@ backUp回溯过程中更新父节点的值</p>
 ]]></content>
       <tags>
         <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Stable-diffusion-command</title>
-    <url>/post/9ba61012.html</url>
-    <content><![CDATA[<h3 id="指定服务器调用显卡">指定服务器调用显卡</h3>
-<p><code>export CUDA_VISIBLE_DEVICES=1,3</code></p>
-<h3 id="export配置环境变量">export配置环境变量</h3>
-<h3 id="pip换源">pip换源</h3>
-<p>python -m pip config set global.index-url <a href="http://mirrors.cloud.tencent.com/pypi/simple">http://mirrors.cloud.tencent.com/pypi/simple</a></p>
-<hr>
-<h2 id="一次性打开代理">一次性打开代理</h2>
-<p>export http_proxy=http://127.0.0.1:7890<br>
-export https_proxy=http://127.0.0.1:7890<br>
-export ALL_PROXY=socks5://127.0.0.1:7891</p>
-<h2 id="打开代理：">打开代理：</h2>
-<p><code>clash -d ~/.config/clash</code></p>
-<p>echo $https_proxy</p>
-<hr>
-<p>如果你想要临时关闭终端会话中的代理设置，可以运行以下命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">unset</span> https_proxy http_proxy all_proxy ALL_PROXY</span><br></pre></td></tr></table></figure>
-<hr>
-<h3 id="关于科学上网：">关于科学上网：</h3>
-<p>要设置 <code>https_proxy</code> 环境变量为 <code>http://127.0.0.1:7890</code>，你可以使用以下方式：</p>
-<p>临时设置，只在当前终端会话中生效（终端关闭后将失效）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> https_proxy=http://127.0.0.1:7890</span><br></pre></td></tr></table></figure>
-<p>永久设置，对当前用户在所有终端会话中都生效：</p>
-<ol>
-<li>打开终端并运行以下命令编辑用户的 <code>~/.bashrc</code> 文件（如果你使用的是 Bash shell）：</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nano ~/.bashrc</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>在文件末尾添加以下行：</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> https_proxy=http://127.0.0.1:7890</span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>
-<p>按下 <code>Ctrl + O</code> 保存文件，然后按下 <code>Ctrl + X</code> 关闭文本编辑器。</p>
-</li>
-<li>
-<p>使更改生效：</p>
-</li>
-</ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
-<p>这样，在每次打开新终端会话时，<code>https_proxy</code> 环境变量都会被自动设置为 <code>http://127.0.0.1:7890</code>。</p>
-<p>请注意，如果你使用的是其他 shell，例如 Zsh，那么相应的配置文件可能不是 <code>~/.bashrc</code>，而是 <code>~/.zshrc</code>。在这种情况下，请将上述步骤中的文件名替换为正确的配置文件名。</p>
-<hr>
-]]></content>
-      <tags>
-        <tag>sd</tag>
       </tags>
   </entry>
   <entry>
