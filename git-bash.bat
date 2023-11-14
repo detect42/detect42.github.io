@@ -1,0 +1,1 @@
+start "" "D:\Program Files (x86)\Git\git-bash.exe" -c "cd C:/Blog/hexo && ls;bash"
