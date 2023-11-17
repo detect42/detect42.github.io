@@ -9,6 +9,10 @@ top: 100
 
 ---
 
+- 如何判断一个问题时np难问题
+- mac item2 各种plugin
+- 命令行里无法使用vpn连接
+
 # <center> NJU课程
 
 ## 概率论与数理统计
