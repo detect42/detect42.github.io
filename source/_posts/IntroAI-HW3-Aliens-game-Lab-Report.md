@@ -197,23 +197,23 @@ AdaBoost可以被看作是一个集体决策的过程，每个“成员”（弱
 
 ## 4.1 Naive Bayes
 
-![Alt text](123/image.png)
+![Alt text](IntroAI-HW3-Aliens-game-Lab-Report/image.png)
 
 运行结果上，avater确实一开始往左走，在敌人数量下降后开始移动射击，但是走位完全是随机的，没法准确命中目标。
 
 ## 4.2 KNN
 
-![Alt text](123/image-1.png)
+![Alt text](IntroAI-HW3-Aliens-game-Lab-Report/image-1.png)
 
  KNN的纸面数据结果比Naive Bayes好一些，正确率与误判率都有提升。
 
- ![Alt text](123/image-2.png)
+ ![Alt text](IntroAI-HW3-Aliens-game-Lab-Report/image-2.png)
 
  如图，仅在445tick内完成游戏，但是在这个过程中，avater却几乎不怎么走位，算法没有调控好定点射击和追击歼灭的平衡。
 
  ## 4.3 Random Forest
 
- ![Alt text](123/image-3.png)
+ ![Alt text](IntroAI-HW3-Aliens-game-Lab-Report/image-3.png)
 
  纸面数据又有提升。
 
@@ -221,7 +221,7 @@ AdaBoost可以被看作是一个集体决策的过程，每个“成员”（弱
 
  ## 4.4 Adaboost
 
- ![Alt text](123/image-4.png)
+ ![Alt text](IntroAI-HW3-Aliens-game-Lab-Report/image-4.png)
 
  结果依然不好，一开始直接左移到头，然后就一直发射弹药不动了。
 
@@ -359,7 +359,7 @@ AdaBoost可以被看作是一个集体决策的过程，每个“成员”（弱
 
 ## 6.1 Naive Bayes
 
-![Alt text](123/image-6.png)
+![Alt text](IntroAI-HW3-Aliens-game-Lab-Report/image-6.png)
 
 结果反而更佳糟糕，这是因为Naive Bayes算法的特征独立性假设且过于简单，导致其无法学习到多个特征之间的关系，所以这种改进对Naive Bayes算法无效。
 
@@ -367,7 +367,7 @@ AdaBoost可以被看作是一个集体决策的过程，每个“成员”（弱
 
 ## 6.2 KNN
 
-![Alt text](123/image-8.png)
+![Alt text](IntroAI-HW3-Aliens-game-Lab-Report/image-8.png)
 
 当设置$Hyperparameter$ $K=1$时，纸面数据与第一次相比提升不大。
 
@@ -381,7 +381,7 @@ AdaBoost可以被看作是一个集体决策的过程，每个“成员”（弱
   
 当$K=5$时：
 
-![Alt text](123/image-9.png)
+![Alt text](IntroAI-HW3-Aliens-game-Lab-Report/image-9.png)
 
 纸面数据有了提升，同时实际表现与K=1时相差不大，但是实际表现更加稳定，所以我选择$K=5$作为最终的$Hyperparameter$。
 
@@ -390,7 +390,7 @@ AdaBoost可以被看作是一个集体决策的过程，每个“成员”（弱
 
 ## 6.3 Random Forest
 
-![Alt text](123/image-10.png)
+![Alt text](IntroAI-HW3-Aliens-game-Lab-Report/image-10.png)
 
 数据表现差异不大，
 
@@ -403,7 +403,7 @@ AdaBoost可以被看作是一个集体决策的过程，每个“成员”（弱
 
 ## 6.4 Adaboost
 
-![Alt text](123/image-11.png)
+![Alt text](IntroAI-HW3-Aliens-game-Lab-Report/image-11.png)
 
 就实验数据反而是负提升，实际结果也不好。
 
