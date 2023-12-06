@@ -7,7 +7,7 @@ date: 2023-12-06 23:35:12
 
 # <center> Homework 3 </center>
 
-### <center> 221502011 王崧睿 detect0530@gmail.com </center>
+### detect0530@gmail.com </center>
 
 # 1. 证明No Free Lunch(NFL)定理
 
