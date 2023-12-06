@@ -1,0 +1,346 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>IntroAI_HW4 Freeway_Game Lab_Report | detect</title><meta name="author" content="Richard,detect0530@gmail.com"><meta name="copyright" content="Richard"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="报告题目：Freeway Game     detect0530@gmail.com     2023年12月   1 引言 强化作为机器学习比较新的一个分支，广泛用于游戏ai中，本次实验，将以Freeway Game作为例子，运用强化学习的方法，训练一个能够自动玩游戏的ai。 2 实验内容 2.1 Task1 2.1.1.0 阐述强化学习的方法与过程 实验Sample code采用的是传统的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IntroAI_HW4 Freeway_Game Lab_Report">
+<meta property="og:url" content="https://detect42.github.io/post/3757a55f.html">
+<meta property="og:site_name" content="detect">
+<meta property="og:description" content="报告题目：Freeway Game     detect0530@gmail.com     2023年12月   1 引言 强化作为机器学习比较新的一个分支，广泛用于游戏ai中，本次实验，将以Freeway Game作为例子，运用强化学习的方法，训练一个能够自动玩游戏的ai。 2 实验内容 2.1 Task1 2.1.1.0 阐述强化学习的方法与过程 实验Sample code采用的是传统的">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://detect42.github.io/img/favicon.png">
+<meta property="article:published_time" content="2023-12-06T15:41:42.000Z">
+<meta property="article:modified_time" content="2023-12-06T15:44:01.267Z">
+<meta property="article:author" content="Richard">
+<meta property="article:tag" content="HW">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://detect42.github.io/img/favicon.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://detect42.github.io/post/3757a55f.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":1000},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'IntroAI_HW4 Freeway_Game Lab_Report',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-12-06 23:44:01'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/1.css"><meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/favicon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">30</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">18</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/topimg.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="detect"><span class="site-name">detect</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">IntroAI_HW4 Freeway_Game Lab_Report</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-12-06T15:41:42.000Z" title="Created 2023-12-06 23:41:42">2023-12-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-12-06T15:44:01.267Z" title="Updated 2023-12-06 23:44:01">2023-12-06</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">3.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>12min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="IntroAI_HW4 Freeway_Game Lab_Report"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><center> <h1> 报告题目：Freeway Game </h1> </center>
+<center> <h3> detect0530@gmail.com </h3> </center>
+<center> <h3> 2023年12月 </h3> </center>
+<h1 id="1-引言">1 引言</h1>
+<p>强化作为机器学习比较新的一个分支，广泛用于游戏ai中，本次实验，将以Freeway Game作为例子，运用强化学习的方法，训练一个能够自动玩游戏的ai。</p>
+<h1 id="2-实验内容">2 实验内容</h1>
+<h2 id="2-1-task1">2.1 Task1</h2>
+<h3 id="2-1-1-0-阐述强化学习的方法与过程">2.1.1.0 阐述强化学习的方法与过程</h3>
+<p>实验Sample code采用的是传统的Q-learning方法，Q-learning是一种基于Q值的强化学习方法，其核心思想是通过不断的迭代，更新Q-table，最终得到一个最优的Q-table，从而得到最优的策略。</p>
+<p>具体来说，需要维护Q-tabke来辅助决策，Q-table记录了每个statement对应每个action的打分。这一步我们引入了三个东西：</p>
+<ol>
+<li>状态 ： 指游戏或模型中不同的状态定位，当然在特征工程的帮助下，也可以看作特征，</li>
+<li>action ： 指游戏/模型规定的运作方式。</li>
+<li>打分 ：又涉及heuristic函数，来对当前状态以及action评分。</li>
+</ol>
+<h4 id="q-learning-强化学习算法流程：">Q-learning 强化学习算法流程：</h4>
+<p>第一步设计对状态的评估函数Q，Q(s,a)表示在s状态下a动作的评分。</p>
+<p>第二步，让游戏/模型自己运行，运行的效果好也罢，不好也罢，不重要，我们唯一要做的事情是在运行时不断对Q(s,a)进行调整，最终希望所有的Q(s,a)收敛，这样我们在之后的游戏里，就可以直接利用收敛的Q-table来确定当前状态下，最优秀的action是哪一步了。</p>
+<p>第三步，调整说来容易，如何才能做到了。贝尔曼将这个故事继续演绎了下去：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi><mo stretchy="false">(</mo><mi>s</mi><mo separator="true">,</mo><mi>a</mi><mo stretchy="false">)</mo><mo>=</mo><mi>Q</mi><mo stretchy="false">(</mo><mi>s</mi><mo separator="true">,</mo><mi>a</mi><mo stretchy="false">)</mo><mo>+</mo><mi>α</mi><mo stretchy="false">(</mo><mi>R</mi><mo>+</mo><mi>γ</mi><mo>∗</mo><mi>m</mi><mi>a</mi><msub><mi>x</mi><msup><mi>a</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup></msub><mi>Q</mi><mo stretchy="false">(</mo><msup><mi>s</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo separator="true">,</mo><msup><mi>a</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo stretchy="false">)</mo><mo>−</mo><mi>Q</mi><mo stretchy="false">(</mo><mi>s</mi><mo separator="true">,</mo><mi>a</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">Q(s,a)=Q(s,a)+\alpha(R+\gamma *max_{a&#x27;}Q(s&#x27;,a&#x27;)-Q(s,a))
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">Q</span><span class="mopen">(</span><span class="mord mathdefault">s</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">a</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">Q</span><span class="mopen">(</span><span class="mord mathdefault">s</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">a</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.6597200000000001em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05556em;">γ</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.051892em;vertical-align:-0.25em;"></span><span class="mord mathdefault">m</span><span class="mord mathdefault">a</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32797999999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight">a</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6828285714285715em;"><span style="top:-2.786em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathdefault">Q</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.801892em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">a</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.801892em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">Q</span><span class="mopen">(</span><span class="mord mathdefault">s</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">a</span><span class="mclose">)</span><span class="mclose">)</span></span></span></span></span></p>
+<p>解释一下：</p>
+<p>R时执行动作a后得到的奖励，当前时s状态，找到动作a后会前往下一个状态s‘，而后在s’状态下找到一个最大化的Q(s’,a’)即可。</p>
+<p>分析一下参数的含义：</p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span></span></span></span>（学习率）代表了新的Q值能从旧的Q值学到多少比重。</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05556em;">γ</span></span></span></span> （折扣因子）代表了未来奖励的折扣因子，如果<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05556em;">γ</span></span></span></span>越大，那么越重视未来奖励，反之，越重视当前奖励。</li>
+</ul>
+<p>故事到这里就结束了，只需要不断的让游戏/模型运行，然后不断的调整Q值，最终Q值收敛，我们就可以直接利用Q值来决策了。</p>
+<h3 id="2-1-1-1-策略模型">2.1.1.1 策略模型</h3>
+<p>sample code中巧妙地使用了epsilon参数来控制随机性，从而避免陷入局部最优解。具体来说，每一次决策，都有<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>ϵ</mi></mrow><annotation encoding="application/x-tex">1-\epsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">ϵ</span></span></span></span>的概率随机选择一个action，而有<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϵ</mi></mrow><annotation encoding="application/x-tex">\epsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">ϵ</span></span></span></span>的概率选择当前状态下，Q值最大的action。</p>
+<p>这样一来，赋予了策略随机性有机会让模型跳出局部最优解.</p>
+<p>同时，我注意到sample code里使用了:</p>
+<p><code>m_c = new weka.classifiers.trees.REPTree();</code></p>
+<p>REPT分类器，这是一种基于决策树的分类器，其核心思想是通过不断的迭代，将数据集分割成多个子集，最终得到一个决策树，从而得到最优的分类器。</p>
+<p>依托于决策树而非传统的Q值表。树与表的结构相比可以自由确定特征选择，从而更好的学习到特征之间的关系。</p>
+<p>最后再从REPTree转换会Q-table进行决策。</p>
+<h3 id="2-1-1-2-模型缺点">2.1.1.2 模型缺点</h3>
+<ol>
+<li>由于Q-learning是一种基于Q值的强化学习方法，其核心思想是通过不断的迭代，更新Q-table，最终得到一个最优的Q-table，从而得到最优的策略。但是这种方法的缺点是，需要维护一个Q-table，这个Q-table的大小是与状态数和动作数成正比的，如果状态数和动作数很大，那么这个Q-table就会很大，这样就会导致内存不够用，或者是计算速度很慢。所以这种方法只适用于状态数和动作数比较小的情况。</li>
+</ol>
+<p>但对于本问题，光是sample code的特征就有八百余个，特征过多带来的问题：</p>
+<ol>
+<li>q-table里状态太多，数据量不够的情况下，很难收敛。</li>
+<li>特征过多，</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (m_dataset.numInstances() &gt; m_maxPoolSize) &#123;</span><br><span class="line">    m_dataset.delete(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，sample code中限制了dataset的数量，这也是特征过多的后果。</p>
+<h3 id="2-1-1-3-改进方法">2.1.1.3 改进方法</h3>
+<p>改进特征的表示方法，将特征进行refine和降维，从而减少特征数量，同时也可以减少状态数量。这一部分会在之后详细介绍到。</p>
+<h3 id="2-1-2-simulation-depth-m-gamma-m-maxpoolsize">2.1.2 SIMULATION_DEPTH, m_gamma, m_maxPoolSize</h3>
+<ol>
+<li>SIMULATION_DEPTH</li>
+</ol>
+<p>代表训练模拟的深度，越深意味着训练集越充沛，但是同时也意味着训练时间越长，所以需要权衡。</p>
+<ol start="2">
+<li>m_gamma</li>
+</ol>
+<p>这是一个衰减指数，代表了未来奖励的折扣因子，如果<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05556em;">γ</span></span></span></span>越大，那么越重视未来奖励，反之，越重视当前奖励。</p>
+<ol start="3">
+<li>m_maxPoolSize</li>
+</ol>
+<p>代表了dataset的最大数量，超出这个数量，会像queue一样把最早记录的data删去。可以控制储存的dataset的大小。</p>
+<h3 id="2-1-3-getaction-和-getactionnoexplore">2.1.3 getAction 和 getActionNoExplore</h3>
+<p>这两个函数都是用来决策的，区别在于getActionNoExplore不会随机选择action，而是直接选择当前状态下，Q值最大的action。</p>
+<ul>
+<li>getaction： 用于训练，会随机选择action，从而避免陷入局部最优解。</li>
+<li>getactionNoExplore： 用于测试，不会随机选择action，而是直接选择当前状态下，Q值最大的action。</li>
+</ul>
+<h2 id="2-2-修改特征提取方法">2.2 修改特征提取方法</h2>
+<p>在讨论特征提取的优化之前，先让我们留意原始sample code相当不合理的几个问题：</p>
+<ol>
+<li>修改1</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getAction</span><span class="params">(<span class="type">double</span>[] feature)</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">       <span class="type">double</span>[] Q = getQArray(feature);</span><br><span class="line">       <span class="type">int</span> <span class="variable">bestaction</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">       <span class="comment">// epsilon greedy</span></span><br><span class="line">       <span class="keyword">if</span>( m_rnd.nextDouble() &lt; m_epsilon )&#123;</span><br><span class="line">           bestaction = m_rnd.nextInt(m_numActions);</span><br><span class="line">           <span class="keyword">return</span> bestaction;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+<p>在这里，我将epsilon greedy choice前置了，因为需要随机选择的我们就不需要计算Q值了，这样可以节省一些计算量。（sample code里将epsilon greedy choice放在了计算Q值之后）</p>
+<ol start="2">
+<li>heuristics函数</li>
+</ol>
+<p>我发现sample code里调用的是<code>winheurstic function</code>,里面只基于游戏输赢判断。 这非常不合理，因为游戏输赢只是一个二元的判断，而我们需要的是一个连续的评分，这样才能更好的反映当前状态的好坏。</p>
+<p>所以我将heuristic函数进行了改进：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">double</span> <span class="title function_">evaluateState</span><span class="params">(StateObservation stateObs)</span> &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">gameOver</span> <span class="operator">=</span> stateObs.isGameOver();</span><br><span class="line">    Types.<span class="type">WINNER</span> <span class="variable">win</span> <span class="operator">=</span> stateObs.getGameWinner();</span><br><span class="line">    <span class="type">double</span> <span class="variable">rawScore</span> <span class="operator">=</span> stateObs.getGameScore();</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="variable">Avatar_x</span> <span class="operator">=</span> (<span class="type">int</span>)(stateObs.getAvatarPosition().x/<span class="number">28</span>);</span><br><span class="line">    <span class="type">int</span> <span class="variable">Avatar_y</span> <span class="operator">=</span> (<span class="type">int</span>)(stateObs.getAvatarPosition().y/<span class="number">28</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="variable">dis</span> <span class="operator">=</span> Math.abs(Avatar_y - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(gameOver &amp;&amp; win == Types.WINNER.PLAYER_LOSES)</span><br><span class="line">        <span class="keyword">return</span> HUGE_NEGATIVE;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(gameOver &amp;&amp; win == Types.WINNER.PLAYER_WINS)</span><br><span class="line">        <span class="keyword">return</span> HUGE_POSITIVE;</span><br><span class="line">    <span class="keyword">if</span>(Avatar_y==<span class="number">1</span>) rawScore+=<span class="number">1000000</span>;</span><br><span class="line">    <span class="keyword">return</span> rawScore + (<span class="number">15</span>-dis) * <span class="number">60</span>  - Math.abs(<span class="number">14</span> - Avatar_x) * <span class="number">20</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>加入深度引导，显然我们希望avatar所在层数越高越好，所以我加入了一个dis变量，表示avatar所在层数，然后将其作为一个惩罚项，这样就可以引导avatar向上移动。</p>
+</li>
+<li>
+<p>同时我们希望avatar所在的x坐标越靠近中间越好（可以左右连续移动更佳灵活），所以我加入了一个惩罚项，这样就可以引导avatar向中间移动。</p>
+</li>
+</ul>
+<p>ok，至此前置工作完成，我们开始考虑重新设计特征提取。</p>
+<p>原来的特征包括所有的地图特征，显然avatar当前的决策不需要考虑地图的所有特征，只需要考虑avatar周围的特征即可，所以我们可以将地图特征进行refine，只保留avatar周围的特征。</p>
+<p><img src="tempFileForShare_20231204-150117.jpg" alt="Alt text"></p>
+<p>经过调整试错，最后决定保留的地图特征。</p>
+<p>这样一来，我们只会关注周围的地图，且后两排的关转范围比后一排大，这样就可以更好的引导avatar向上移动。同时因为有事会被逼退，所以也要考虑之前一行的地图特征。</p>
+<p>同时地图特征必须与avatar自己的坐标交互，于是同样要保存avatar的横纵坐标。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">double</span>[] featureExtract(StateObservation obs)&#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">double</span>[] feature = <span class="keyword">new</span> <span class="title class_">double</span>[<span class="number">44</span>];  <span class="comment">// 36 + 2 + 4 + 1(action) + 1(Q)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">Avatar_x</span> <span class="operator">=</span> (<span class="type">int</span>)(obs.getAvatarPosition().x/<span class="number">28</span>);</span><br><span class="line">        <span class="type">int</span> <span class="variable">Avatar_y</span> <span class="operator">=</span> (<span class="type">int</span>)(obs.getAvatarPosition().y/<span class="number">28</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span>[][] Map = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">28</span>][<span class="number">15</span>];</span><br><span class="line">        <span class="comment">// Extract features</span></span><br><span class="line">        LinkedList&lt;Observation&gt; allobj = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">if</span>( obs.getImmovablePositions()!=<span class="literal">null</span> )</span><br><span class="line">            <span class="keyword">for</span>(ArrayList&lt;Observation&gt; l : obs.getImmovablePositions()) allobj.addAll(l);</span><br><span class="line">        <span class="keyword">if</span>( obs.getMovablePositions()!=<span class="literal">null</span> )</span><br><span class="line">            <span class="keyword">for</span>(ArrayList&lt;Observation&gt; l : obs.getMovablePositions()) allobj.addAll(l);</span><br><span class="line">        <span class="keyword">if</span>( obs.getNPCPositions()!=<span class="literal">null</span> )</span><br><span class="line">            <span class="keyword">for</span>(ArrayList&lt;Observation&gt; l : obs.getNPCPositions()) allobj.addAll(l);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(Observation o : allobj)&#123;</span><br><span class="line">            <span class="type">Vector2d</span> <span class="variable">p</span> <span class="operator">=</span> o.position;</span><br><span class="line">            <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> (<span class="type">int</span>)(p.x/<span class="number">28</span>); <span class="comment">//squre size is 20 for pacman</span></span><br><span class="line">            <span class="type">int</span> y= (<span class="type">int</span>)(p.y/<span class="number">28</span>);  <span class="comment">//size is 28 for FreeWay</span></span><br><span class="line">            Map[x][y] = o.itype;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> cntfeature=-<span class="number">1</span>;</span><br><span class="line">        feature[++cntfeature]=Avatar_x;</span><br><span class="line">        feature[++cntfeature]=Avatar_y;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> Nowrow=Avatar_y-<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=Avatar_x-<span class="number">5</span>;i&lt;=Avatar_x+<span class="number">5</span>;i++)&#123;</span><br><span class="line">            <span class="type">int</span>  xx=i,yy=Nowrow;</span><br><span class="line">            <span class="keyword">if</span>(!VaildPosition(xx,yy))&#123;</span><br><span class="line">                feature[++cntfeature]=<span class="number">0</span>;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(Map[xx][yy]==<span class="number">13</span>) feature[++cntfeature]=<span class="number">100</span>;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span>(Map[xx][yy]==<span class="number">10</span>||Map[xx][yy]==<span class="number">11</span>||Map[xx][yy]==<span class="number">7</span>||Map[xx][yy]==<span class="number">8</span>) feature[++cntfeature]=<span class="number">300</span>;</span><br><span class="line">                <span class="keyword">else</span> feature[++cntfeature]=<span class="number">200</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        Nowrow=Avatar_y-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=Avatar_x-<span class="number">3</span>;i&lt;=Avatar_x+<span class="number">3</span>;i++)&#123;</span><br><span class="line">            <span class="type">int</span> xx=i,yy=Nowrow;</span><br><span class="line">            <span class="keyword">if</span>(!VaildPosition(xx,yy))&#123;</span><br><span class="line">                feature[++cntfeature]=<span class="number">0</span>;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(Map[xx][yy]==<span class="number">13</span>) feature[++cntfeature]=<span class="number">100</span>;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span>(Map[xx][yy]==<span class="number">10</span>||Map[xx][yy]==<span class="number">11</span>||Map[xx][yy]==<span class="number">7</span>||Map[xx][yy]==<span class="number">8</span>) feature[++cntfeature]=<span class="number">300</span>;</span><br><span class="line">                <span class="keyword">else</span> feature[++cntfeature]=<span class="number">200</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        Nowrow=Avatar_y;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=Avatar_x-<span class="number">3</span>;i&lt;=Avatar_x+<span class="number">3</span>;i++)&#123;</span><br><span class="line">            <span class="type">int</span> xx=i,yy=Nowrow;</span><br><span class="line">            <span class="keyword">if</span>(!VaildPosition(xx,yy))&#123;</span><br><span class="line">                feature[++cntfeature]=<span class="number">0</span>;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(Map[xx][yy]==<span class="number">13</span>) feature[++cntfeature]=<span class="number">100</span>;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span>(Map[xx][yy]==<span class="number">10</span>||Map[xx][yy]==<span class="number">11</span>||Map[xx][yy]==<span class="number">7</span>||Map[xx][yy]==<span class="number">8</span>) feature[++cntfeature]=<span class="number">300</span>;</span><br><span class="line">                <span class="keyword">else</span> feature[++cntfeature]=<span class="number">200</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        Nowrow=Avatar_y+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=Avatar_x-<span class="number">5</span>;i&lt;=Avatar_x+<span class="number">5</span>;i++)&#123;</span><br><span class="line">            <span class="type">int</span> xx=i,yy=Nowrow;</span><br><span class="line">            <span class="keyword">if</span>(!VaildPosition(xx,yy))&#123;</span><br><span class="line">                feature[++cntfeature]=<span class="number">0</span>;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(Map[xx][yy]==<span class="number">13</span>) feature[++cntfeature]=<span class="number">100</span>;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span>(Map[xx][yy]==<span class="number">10</span>||Map[xx][yy]==<span class="number">11</span>||Map[xx][yy]==<span class="number">7</span>||Map[xx][yy]==<span class="number">8</span>) feature[++cntfeature]=<span class="number">300</span>;</span><br><span class="line">                <span class="keyword">else</span> feature[++cntfeature]=<span class="number">200</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4 states</span></span><br><span class="line">        feature[++cntfeature] = obs.getGameTick();</span><br><span class="line">        feature[++cntfeature] = obs.getAvatarSpeed();</span><br><span class="line">        feature[++cntfeature] = obs.getAvatarHealthPoints();</span><br><span class="line">        feature[++cntfeature] = obs.getAvatarType();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> feature;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这样一来，我们update了特征选取的方法，同时也减少了特征数量，从而减少了状态数量，这样就可以更好的收敛，储存，计算。</p>
+<p>（在使用默认的参数的情况下）从得到的结果来看，10次有2-3次可以通关游戏，但是不是很稳定，有时还是会在某些位置反复横跳或者跑到角落里去了。</p>
+<p>不过总的来说，进步已经相当明显了。（运行sample code根本没法通关）</p>
+<hr>
+<h2 id="2-3-修改强化学习参数">2.3 修改强化学习参数</h2>
+<ol>
+<li>epsilon： 0.3 --&gt; 0.2</li>
+</ol>
+<p>游戏里只要碰到障碍物就会回到初始层，多掉几次就会寄。在关键时刻的决策又很重要（甚至一步走错了，会导致几步内无解），于是我们尽量减少训练过程中的随机性，从而减少这种情况的发生。</p>
+<ol start="2">
+<li>agent parameter：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Classifier m_model;</span><br><span class="line">    <span class="keyword">protected</span> Random m_rnd;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">SIMULATION_DEPTH</span> <span class="operator">=</span> <span class="number">20</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> HashMap&lt;Integer, Types.ACTIONS&gt; action_mapping;</span><br><span class="line">    <span class="keyword">protected</span> QPolicy m_policy;</span><br><span class="line">    <span class="keyword">protected</span> <span class="type">int</span> N_ACTIONS;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> Instances m_dataset;</span><br><span class="line">    <span class="keyword">protected</span> <span class="type">int</span> <span class="variable">m_maxPoolSize</span> <span class="operator">=</span> <span class="number">8000</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="type">double</span> <span class="variable">m_gamma</span> <span class="operator">=</span> <span class="number">0.9</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="type">int</span> <span class="variable">direction</span> <span class="operator">=</span> <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>因为我们的特征数量减少了，所以我们可以增加SIMULATION_DEPTH和m_maxPoolSize，从而增加训练集的数量，从而更好的收敛。</p>
+<p>同时略微减少m_gamma，从而更加重视当前奖励。</p>
+<h1 id="3-实验-performance">3 实验 performance</h1>
+<p><strong>在经过以上的改进之后，游戏推理期间，前3次可以稳定快速通关，这是我们非常期待的事情的。</strong></p>
+<p>这是较好的一次结果：<br>
+<img src="IntroAI_HW4/image.png" alt="Alt text"></p>
+<p>但是同样也碰到了一些问题。</p>
+<p>因为我的特征提取只提取了avatar周围的地图，又因为每一层障碍物移动是固定方向的，所以avatar会记住障碍物在周围时该如何行动，但是却没有足够多的data告诉它当周围没有障碍物时该怎么走，于是就会出现这种情况：</p>
+<ol>
+<li>第一层障碍物固定从左往右，按照较大的间隔出现并移动。</li>
+<li>avatar在前几次尝试中学会了如何躲过障碍物前进，但是却没有学会如何在障碍物不在周围时前进。</li>
+<li>于是每一个障碍物出现时，avatar的缺会躲开，但是会跟着这个障碍物往右边移动一小段，直到被这个障碍物甩开，但是此时又进入了下一个障碍物的检测范围，又回跟着这个障碍物往右边移动一小段，直到被这个障碍物甩开，如此循环。</li>
+<li>结果就是如果第一层右侧挡板较多难以突破时，就会跟着移动的障碍物大方向往右边走，直到卡在最右段，如果最右段被挡板封死了，就会一直循环躲避障碍-被阻挡-躲避障碍物的循环而耗尽时间输掉游戏。</li>
+</ol>
+<p>这是一个比较糟糕的结果：</p>
+<p><img src="IntroAI_HW4/image-4.png" alt="Alt text"></p>
+<p>就像上述说的一样，被第一层障碍物的出怪频率和方向卡死在最右角。</p>
+<p>但是对于第一层出怪没那么频繁，且第一层阻挡物不是很多（其他层多，但是其他层不会像第一层障碍物那样太少了），就可以稳定通关。</p>
+<p>像这样：</p>
+<p><img src="IntroAI_HW4/image-3.png" alt="Alt text"></p>
+<h1 id="4-总结">4 总结</h1>
+<p>本次实验，我学习了强化学习的相关知识并在freeway游戏里得到了运用，同时也对强化学习的方法进行了改进，使得游戏的通关率/速度大大提高。</p>
+<p>改进涉及：heuristic函数、代码结构、特征提取方法、强化学习参数等。</p>
+<p>很高兴能有这样的机会学习强化学习的相关知识，同时能够在这样的实验中得到运用。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://detect42.github.io">Richard</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://detect42.github.io/post/3757a55f.html">https://detect42.github.io/post/3757a55f.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/HW/">HW</a></div><div class="post_share"><div class="social-share" data-image="/img/favicon.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/post/ebc186c0.html" title="演化算法HW3-复杂度&amp;期望运行时间理论分析"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">演化算法HW3-复杂度&amp;期望运行时间理论分析</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/post/ebc186c0.html" title="演化算法HW3-复杂度&amp;期望运行时间理论分析"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-06</div><div class="title">演化算法HW3-复杂度&amp;期望运行时间理论分析</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text"> 报告题目：Freeway Game </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text"> detect0530@gmail.com </span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text"> 2023年12月 </span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%BC%95%E8%A8%80"><span class="toc-text">1 引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%AE%9E%E9%AA%8C%E5%86%85%E5%AE%B9"><span class="toc-text">2 实验内容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-task1"><span class="toc-text">2.1 Task1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-1-0-%E9%98%90%E8%BF%B0%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%96%B9%E6%B3%95%E4%B8%8E%E8%BF%87%E7%A8%8B"><span class="toc-text">2.1.1.0 阐述强化学习的方法与过程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#q-learning-%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%B5%81%E7%A8%8B%EF%BC%9A"><span class="toc-text">Q-learning 强化学习算法流程：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-1-1-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%9E%8B"><span class="toc-text">2.1.1.1 策略模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-1-2-%E6%A8%A1%E5%9E%8B%E7%BC%BA%E7%82%B9"><span class="toc-text">2.1.1.2 模型缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-1-3-%E6%94%B9%E8%BF%9B%E6%96%B9%E6%B3%95"><span class="toc-text">2.1.1.3 改进方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-2-simulation-depth-m-gamma-m-maxpoolsize"><span class="toc-text">2.1.2 SIMULATION_DEPTH, m_gamma, m_maxPoolSize</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-3-getaction-%E5%92%8C-getactionnoexplore"><span class="toc-text">2.1.3 getAction 和 getActionNoExplore</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E4%BF%AE%E6%94%B9%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96%E6%96%B9%E6%B3%95"><span class="toc-text">2.2 修改特征提取方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%E4%BF%AE%E6%94%B9%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%8F%82%E6%95%B0"><span class="toc-text">2.3 修改强化学习参数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E5%AE%9E%E9%AA%8C-performance"><span class="toc-text">3 实验 performance</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E6%80%BB%E7%BB%93"><span class="toc-text">4 总结</span></a></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/topimg.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Richard</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js"></script><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>
