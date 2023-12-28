@@ -1,3 +1,6 @@
+## <center> Word Embedding </center>
+#### <center> detect0530@gmail.com </center>
+
 #### 对word的编码是困难的，用one-hot维数太高，分类的话类别也太多，一个单词会出现的很多类中，
 
 #### 于是，我们希望把word project到一个空间中，类似语义的词汇在space里是接近的。且每一个特定的维度有一定的意义。
