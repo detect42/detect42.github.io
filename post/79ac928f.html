@@ -1,0 +1,301 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Accelerating Techniques for self-Attention | detect</title><meta name="author" content="Richard,detect0530@gmail.com"><meta name="copyright" content="Richard"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Accelerating Techniques for self-Attention   detect0530@gamil.com  计算量和耗时 当输入序列很长时，在key和query计算dot-product时候计算量非常的大。（瓶颈）  当input的sequence数量很大时，transformer模型中self-attention组件是最耗时的，也就是运算量的瓶颈，那么如果我们加快sel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Accelerating Techniques for self-Attention">
+<meta property="og:url" content="https://detect42.github.io/post/79ac928f.html">
+<meta property="og:site_name" content="detect">
+<meta property="og:description" content="Accelerating Techniques for self-Attention   detect0530@gamil.com  计算量和耗时 当输入序列很长时，在key和query计算dot-product时候计算量非常的大。（瓶颈）  当input的sequence数量很大时，transformer模型中self-attention组件是最耗时的，也就是运算量的瓶颈，那么如果我们加快sel">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://detect42.github.io/img/favicon.png">
+<meta property="article:published_time" content="2023-12-29T15:38:14.000Z">
+<meta property="article:modified_time" content="2024-01-05T09:39:02.476Z">
+<meta property="article:author" content="Richard">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://detect42.github.io/img/favicon.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://detect42.github.io/post/79ac928f.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":1000},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Accelerating Techniques for self-Attention',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-05 17:39:02'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/1.css"><meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/favicon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">36</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/topimg.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="detect"><span class="site-name">detect</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Accelerating Techniques for self-Attention</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-12-29T15:38:14.000Z" title="Created 2023-12-29 23:38:14">2023-12-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-01-05T09:39:02.476Z" title="Updated 2024-01-05 17:39:02">2024-01-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">1.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>3min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Accelerating Techniques for self-Attention"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="center-accelerating-techniques-for-self-attention-center"><center>Accelerating Techniques for self-Attention </center></h1>
+<h3 id="center-detect0530-gamil-com-center"><center> <a href="mailto:detect0530@gamil.com">detect0530@gamil.com</a> </center></h3>
+<h2 id="计算量和耗时">计算量和耗时</h2>
+<p>当输入序列很长时，在key和query计算dot-product时候计算量非常的大。（瓶颈）</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image.png" alt="Alt text"></p>
+<p>当input的sequence数量很大时，transformer模型中self-attention组件是最耗时的，也就是运算量的瓶颈，那么如果我们加快self-attention的运算速度，就可以加快整个模型的训练速度。</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-1.png" alt="Alt text"></p>
+<h1 id="加快-self-attention运算的方法">加快 Self-Attention运算的方法</h1>
+<h2 id="skip-some-calculation-with-human-knowledge">Skip some calculation with human knowledge</h2>
+<p>也许不需要把attention matrix所有值都算出来。</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-2.png" alt="Alt text"></p>
+<h3 id="local-attention">Local Attention</h3>
+<p>举个例子，如果只有sequence相邻的部分才有作用：</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-3.png" alt="Alt text"></p>
+<p>相当于每次做attention只看一个小范围的区域。但是这样做的话，和CNN就没什么区别了，也就是说虽然这样可以提速，但是效果不一定会很出色。</p>
+<h3 id="stride-attention">Stride Attention</h3>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-4.png" alt="Alt text"></p>
+<p>同时也可以隔固定x位置看一下。</p>
+<h3 id="global-attention">Global Attention</h3>
+<p>选取或者新增一些special token，作为中介，所有token与special token互相联系，此时，信息的传递都通过special token实现。</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-5.png" alt="Alt text"></p>
+<hr>
+<p>那么这么多选择，怎么办呢？</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-6.png" alt="Alt text"></p>
+<p>答案时全都要，既然不知道哪一个更好，那么在self-attention的时候使用多头机制全用上就好了。</p>
+<p>一些进阶的例子：</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-7.png" alt="Alt text"></p>
+<hr>
+<h3 id="clustering">Clustering</h3>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-8.png" alt="Alt text"></p>
+<p>如果我们能估计一些占比很小的attention weight，那实际上可以直接set to 0。</p>
+<p>按照相近的query和key的vector属于同一个cluster</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-9.png" alt="Alt text"></p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-10.png" alt="Alt text"></p>
+<p>只有在同一个cluster的token之间才会算attention，其他的attention weight都设为0。</p>
+<hr>
+<p><strong>以上的做法要计算哪些attention位置都是基于人类对问题的理解。</strong></p>
+<h2 id="learnable-patterrns">Learnable Patterrns</h2>
+<p>学习另外一个nn，输入input序列，每一个元素都通过nn输出一个vector，然后这些vector组成一个矩阵，这个矩阵就是选择的attention matrix标准。</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-11.png" alt="Alt text"></p>
+<h2 id="低秩法">低秩法</h2>
+<p>往往attention matrix是低秩的。</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-12.png" alt="Alt text"></p>
+<p>选择最具代表性的K个key（降低秩），只用计算这K个key和query的dot-product。</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-13.png" alt="Alt text"></p>
+<p>我们选择了K个key vector，然后出了n*k的attention矩阵，那么接下来需要用value vector和attention matrix做一个求和，所以还需要对value的向量组做同样的压缩，提取K个最优代表性的value vector。</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-14.png" alt="Alt text"></p>
+<p>看到这里，或许会想，为什么不把query也压缩一下，这样就可以减少计算量了。但是为了保证输出的sequence长度不变，query的个数是不能变的。（当然，输出长度在一些问题如情感二分类问题下是可以变的，需要具体问题具体分析）</p>
+<p>接下来如何选择有代表性的K个key vector呢？</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-15.png" alt="Alt text"></p>
+<ol>
+<li>利用卷积</li>
+<li>乘上一个N*K的举证，相当于对于原向量组做K个线性变换，我们认为这样的线性变化提取的K的向量是有代表性的。</li>
+</ol>
+<hr>
+<h2 id="加速矩阵运算">加速矩阵运算</h2>
+<p>回顾：</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-16.png" alt="Alt text"></p>
+<p>我们希望加速这一块的运算。</p>
+<p>首先假设不看softmax，我们发现：</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-17.png" alt="Alt text"></p>
+<p>其实通过矩阵乘法的结合律，我们可以把这个运算变成：</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-19.png" alt="Alt text"></p>
+<p>现在我们放回softmax部分：</p>
+<p>首先，我们回顾<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">b_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是怎么算的：</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-20.png" alt="Alt text"></p>
+<p>接下来，我们通过构造<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϕ</mi><mtext>函数</mtext></mrow><annotation encoding="application/x-tex">\phi函数</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">ϕ</span><span class="mord cjk_fallback">函</span><span class="mord cjk_fallback">数</span></span></span></span>，并做变换：</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-21.png" alt="Alt text"></p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-22.png" alt="Alt text"></p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-23.png" alt="Alt text"></p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-24.png" alt="Alt text"></p>
+<p>通过预处理算出公共的矩阵，算<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>b</mi><mn>2</mn></msub><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><msub><mi>b</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">b_1,b_2...b_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mord"><span class="mord mathdefault">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>可以很快的计算。每次就只用算红色的M维向量再乘一下算好的矩阵就可以了。</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-25.png" alt="Alt text"></p>
+<p>接下俩关于<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϕ</mi></mrow><annotation encoding="application/x-tex">\phi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">ϕ</span></span></span></span>函数的设计，就是不同论文有不同的方法了。</p>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-26.png" alt="Alt text"></p>
+<hr>
+<h2 id="attention-一定要用key和query做dot-product吗">Attention 一定要用key和query做dot-product吗</h2>
+<p>实际上，Attention matrix可以直接设置为固定的参数，这些参数加入网络里面去学习。</p>
+<p>可能会说，input不同的序列，attention matrix不都一样吗？确实，但是表现不会变差。所以重新让我们思考attention的价值到底是什么。</p>
+<h2 id="summary">Summary</h2>
+<p><img src="self-attention_%E5%8A%A0%E9%80%9Ftips/image-27.png" alt="Alt text"></p>
+<ul>
+<li>Big Bird 人为去设计需要关注哪些位置，Big Bird是组合了很多方法的。</li>
+<li>Reformer用聚类的方法，去确定attention哪些位置（同一个聚类）。</li>
+<li>Synthesizer 完全用Attention Matrix当成network的参数去训练。</li>
+<li>Sinkforn 直接用network来决定哪些位置需要关注。</li>
+<li>Linformer 选择一些代表性的key向量和value向量（直接降低矩阵大小）。</li>
+<li>Linear Transformer 用低秩法，降低attention matrix的秩。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://detect42.github.io">Richard</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://detect42.github.io/post/79ac928f.html">https://detect42.github.io/post/79ac928f.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></div><div class="post_share"><div class="social-share" data-image="/img/favicon.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/5ace3b8b.html" title="Actor-Critic"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Actor-Critic</div></div></a></div><div class="next-post pull-right"><a href="/post/e0d2147a.html" title="Transformer"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Transformer</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/post/e0d2147a.html" title="Transformer"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-29</div><div class="title">Transformer</div></div></a></div><div><a href="/post/b867d47d.html" title="Batch Normalization"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-28</div><div class="title">Batch Normalization</div></div></a></div><div><a href="/post/f63ef346.html" title="Word Embedding"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-28</div><div class="title">Word Embedding</div></div></a></div><div><a href="/post/d145174e.html" title="Recurrent Neural Network(RNN)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-27</div><div class="title">Recurrent Neural Network(RNN)</div></div></a></div><div><a href="/post/e31a8f3c.html" title="NTU_ML_HW1"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-19</div><div class="title">NTU_ML_HW1</div></div></a></div><div><a href="/post/a43615c7.html" title="GPT问答_NN数据拟合源码拆解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-19</div><div class="title">GPT问答_NN数据拟合源码拆解</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#center-accelerating-techniques-for-self-attention-center"><span class="toc-text">Accelerating Techniques for self-Attention </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#center-detect0530-gamil-com-center"><span class="toc-text"> detect0530@gamil.com </span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E9%87%8F%E5%92%8C%E8%80%97%E6%97%B6"><span class="toc-text">计算量和耗时</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A0%E5%BF%AB-self-attention%E8%BF%90%E7%AE%97%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-text">加快 Self-Attention运算的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#skip-some-calculation-with-human-knowledge"><span class="toc-text">Skip some calculation with human knowledge</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#local-attention"><span class="toc-text">Local Attention</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stride-attention"><span class="toc-text">Stride Attention</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#global-attention"><span class="toc-text">Global Attention</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#clustering"><span class="toc-text">Clustering</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#learnable-patterrns"><span class="toc-text">Learnable Patterrns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%8E%E7%A7%A9%E6%B3%95"><span class="toc-text">低秩法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E9%80%9F%E7%9F%A9%E9%98%B5%E8%BF%90%E7%AE%97"><span class="toc-text">加速矩阵运算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#attention-%E4%B8%80%E5%AE%9A%E8%A6%81%E7%94%A8key%E5%92%8Cquery%E5%81%9Adot-product%E5%90%97"><span class="toc-text">Attention 一定要用key和query做dot-product吗</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#summary"><span class="toc-text">Summary</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/topimg.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Richard</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js"></script><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

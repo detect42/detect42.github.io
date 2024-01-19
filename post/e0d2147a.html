@@ -1,0 +1,288 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Transformer | detect</title><meta name="author" content="Richard,detect0530@gmail.com"><meta name="copyright" content="Richard"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Transformer   detect0530@gmail.com  Sequence to Sequence (seq2seq) 输出的长度是可变的，让机器自己判断该输出多少内容。  这种类型的模型能做非常多的事情。能在自然语言、音频、图像等领域广泛的应用。具体的例子暂且不展开。  Transformer也是一种Seq2Seq模型，但是它的结构和传统的RNN模型不同。它是基于Attentio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Transformer">
+<meta property="og:url" content="https://detect42.github.io/post/e0d2147a.html">
+<meta property="og:site_name" content="detect">
+<meta property="og:description" content="Transformer   detect0530@gmail.com  Sequence to Sequence (seq2seq) 输出的长度是可变的，让机器自己判断该输出多少内容。  这种类型的模型能做非常多的事情。能在自然语言、音频、图像等领域广泛的应用。具体的例子暂且不展开。  Transformer也是一种Seq2Seq模型，但是它的结构和传统的RNN模型不同。它是基于Attentio">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://detect42.github.io/img/favicon.png">
+<meta property="article:published_time" content="2023-12-28T16:37:59.000Z">
+<meta property="article:modified_time" content="2024-01-05T09:39:02.476Z">
+<meta property="article:author" content="Richard">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://detect42.github.io/img/favicon.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://detect42.github.io/post/e0d2147a.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":1000},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Transformer',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-05 17:39:02'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/1.css"><meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/favicon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">36</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/topimg.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="detect"><span class="site-name">detect</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Transformer</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-12-28T16:37:59.000Z" title="Created 2023-12-29 00:37:59">2023-12-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-01-05T09:39:02.476Z" title="Updated 2024-01-05 17:39:02">2024-01-05</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">1.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>3min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Transformer"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="center-transformer-center"><center> Transformer </center></h1>
+<h3 id="center-detect0530-gmail-com-center"><center> <a href="mailto:detect0530@gmail.com">detect0530@gmail.com</a> </center></h3>
+<h2 id="sequence-to-sequence-seq2seq">Sequence to Sequence (seq2seq)</h2>
+<p>输出的长度是可变的，让机器自己判断该输出多少内容。</p>
+<p><img src="Transformer/image.png" alt="Alt text"></p>
+<p>这种类型的模型能做非常多的事情。能在自然语言、音频、图像等领域广泛的应用。具体的例子暂且不展开。</p>
+<p><img src="Transformer/image-1.png" alt="Alt text"></p>
+<p>Transformer也是一种Seq2Seq模型，但是它的结构和传统的RNN模型不同。它是基于Attention机制的，而不是RNN。</p>
+<hr>
+<h2 id="网络结构">网络结构</h2>
+<p><img src="Transformer/image-2.png" alt="Alt text"></p>
+<h3 id="encoder">Encoder</h3>
+<p><img src="Transformer/image-3.png" alt="Alt text"></p>
+<h3 id="原始的transformer里面encoder更复杂">原始的transformer里面encoder更复杂</h3>
+<p><img src="Transformer/image-4.png" alt="Alt text"></p>
+<p><img src="Transformer/image-5.png" alt="Alt text"></p>
+<p>右边就是一个block里面的内容，实际上在encoder中种这样的block会做n次。</p>
+<h2 id="decoder">Decoder</h2>
+<p><img src="Transformer/image-6.png" alt="Alt text"></p>
+<p><img src="Transformer/image-7.png" alt="Alt text"></p>
+<p>一开始会用BOS作为输入，然后会产生一个输出，然后把这个输出作为下一次的输入，然后再产生一个输出，然后再把这个输出作为下一次的输入，一直这样做下去，直到产生EOS为止。</p>
+<p><img src="Transformer/image-8.png" alt="Alt text"></p>
+<p><img src="Transformer/image-9.png" alt="Alt text"></p>
+<p>解释一下图中的<strong>Masked</strong>，实际上Masked就是在self-attention的时候，不让它看到后面的内容。因为在预测的时候，decoder产生的东西是一个一个产生的，后面的内容是不知道的，所以在训练的时候也不应该让它看到后面的内容。</p>
+<p>那么什么时候终止呢？</p>
+<p>我们设计一个END token，当产生了END token的时候，decoder就终止了。</p>
+<h3 id="decoder-non-autoregressive-nat">Decoder Non-autoregressive(NAT)</h3>
+<p><img src="Transformer/image-10.png" alt="Alt text"></p>
+<p>NAT的decoder是可以并行的，因为它不需要等待上一次的输出，它可以直接把encoder的输出拿过来，然后直接做self-attention，然后直接产生输出。</p>
+<p>因为NAT不知道要输出多长，于是可以训一个predictor来预测输出长度。或者在第一个END token出现的时候终止。（同时可以利用这一点自由控制输出的长短）</p>
+<p>但是NAT一般来说表现劣于AT decoder。NAT的详细部分可以看助教的讲解。</p>
+<h2 id="encoder-和-decoder-的连接">Encoder 和 Decoder 的连接</h2>
+<h3 id="inference">Inference</h3>
+<p><img src="Transformer/image-11.png" alt="Alt text"></p>
+<p><img src="Transformer/image-12.png" alt="Alt text"></p>
+<h3 id="training">Training</h3>
+<p>每次产生一个中文字就是一个分类的问题。</p>
+<p>尽量使得总的cross entropy最小。</p>
+<p><img src="Transformer/image-13.png" alt="Alt text"></p>
+<p>训练的时候，我们会给decoder看正确的输入答案（输入的时候）（Teacher forcing技术）</p>
+<p>但是有个问题，当它拿去inference的时候，它不知道正确答案，那么decoder的输入该怎么办？</p>
+<p>也就是说测试的时候decoder会看到一些错误的东西。</p>
+<p>这个叫作<strong>exposure bioas</strong>。</p>
+<p>给decoder一些错误的东西，让它自己去学习怎么处理错误的东西。Scheduled Sampling（有可能伤害到Transformer并行的能力）</p>
+<p><img src="Transformer/image-18.png" alt="Alt text"></p>
+<p><img src="Transformer/image-19.png" alt="Alt text"></p>
+<h2 id="training-tips">Training tips</h2>
+<h3 id="copy-mechanism">Copy Mechanism</h3>
+<p>有时会机器需要从使用者的输入copy一些输出。</p>
+<p>需要训练机器copy内容的能力。（因为需要copy复用的内容，机器没见过，或者不需要机器再用seq2seq的方法一个一个生成）</p>
+<p>比如chat-bot，需要复用一些提问的内容。</p>
+<p><img src="Transformer/image-14.png" alt="Alt text"></p>
+<p>又或者提炼文章摘要，需要从文章里直接复制一些资讯出来。</p>
+<p><strong>摘要copy Mechanism这一块有影片资料。</strong></p>
+<h3 id="guided-attention">Guided Attention</h3>
+<p>要求机器在attention的时候，有固定的方式。</p>
+<p><img src="Transformer/image-15.png" alt="Alt text"></p>
+<p>比如语音合成时，我们期望attention是从左到右的，但是实际上attention可能是乱跳的，所以我们可以guide它。（任何有单调性或者方向性的东西我们就可以去guide，依赖domain knowledge）</p>
+<p>怎么做到呢?</p>
+<p>可惜老师上课没讲。</p>
+<p>可以自行了解： Monotonic Attention, Location-aware Attention, etc.</p>
+<h3 id="beam-search">Beam Search</h3>
+<p>如果每次都贪心的选择概率最高的答案，有可能调入贪心的陷阱，但是暴搜所有路径情况太多。</p>
+<p><img src="Transformer/image-16.png" alt="Alt text"></p>
+<p>技术细节自行google。</p>
+<p>但是也有一些批评的声音。</p>
+<p><img src="Transformer/image-17.png" alt="Alt text"></p>
+<p>如果用Beam Search 有可能会不断说同一句话，不如加一点随机性，虽然不是最好的答案，但是至少看起来比较正常。</p>
+<p>这个还是要看任务本身的特性。</p>
+<ol>
+<li>如果任务答案很明确，beam search就很好用。</li>
+<li>需要一些创造力的时候，不只一个答案时，需要一些随机性。（更有甚至，在推理的时候需要加入杂音，效果还会更好，完美的东西不符合人类认知，不完美反而更容易理解？） <strong>Accept that notion is perfect. True bearuty lies in the cracks of imperfection.</strong></li>
+</ol>
+<h3 id="optimizing-evaluation-metric">Optimizing Evaluation Metric</h3>
+<p>训练的时候用cross entropy，但是评估的时候用BLEU。但是最小的cross entropy不一定是最大的BLEU。（BLEU是按照句子和句子比较的score）</p>
+<p>但是BLEU无法微分，一般用RL来优化BLEU。（但是比较麻烦）</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://detect42.github.io">Richard</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://detect42.github.io/post/e0d2147a.html">https://detect42.github.io/post/e0d2147a.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></div><div class="post_share"><div class="social-share" data-image="/img/favicon.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/79ac928f.html" title="Accelerating Techniques for self-Attention"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Accelerating Techniques for self-Attention</div></div></a></div><div class="next-post pull-right"><a href="/post/b867d47d.html" title="Batch Normalization"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Batch Normalization</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/post/79ac928f.html" title="Accelerating Techniques for self-Attention"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-29</div><div class="title">Accelerating Techniques for self-Attention</div></div></a></div><div><a href="/post/b867d47d.html" title="Batch Normalization"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-28</div><div class="title">Batch Normalization</div></div></a></div><div><a href="/post/f63ef346.html" title="Word Embedding"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-28</div><div class="title">Word Embedding</div></div></a></div><div><a href="/post/d145174e.html" title="Recurrent Neural Network(RNN)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-27</div><div class="title">Recurrent Neural Network(RNN)</div></div></a></div><div><a href="/post/e31a8f3c.html" title="NTU_ML_HW1"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-19</div><div class="title">NTU_ML_HW1</div></div></a></div><div><a href="/post/a43615c7.html" title="GPT问答_NN数据拟合源码拆解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-19</div><div class="title">GPT问答_NN数据拟合源码拆解</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#center-transformer-center"><span class="toc-text"> Transformer </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#center-detect0530-gmail-com-center"><span class="toc-text"> detect0530@gmail.com </span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sequence-to-sequence-seq2seq"><span class="toc-text">Sequence to Sequence (seq2seq)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="toc-text">网络结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#encoder"><span class="toc-text">Encoder</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%A7%8B%E7%9A%84transformer%E9%87%8C%E9%9D%A2encoder%E6%9B%B4%E5%A4%8D%E6%9D%82"><span class="toc-text">原始的transformer里面encoder更复杂</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#decoder"><span class="toc-text">Decoder</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#decoder-non-autoregressive-nat"><span class="toc-text">Decoder Non-autoregressive(NAT)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#encoder-%E5%92%8C-decoder-%E7%9A%84%E8%BF%9E%E6%8E%A5"><span class="toc-text">Encoder 和 Decoder 的连接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#inference"><span class="toc-text">Inference</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#training"><span class="toc-text">Training</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#training-tips"><span class="toc-text">Training tips</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#copy-mechanism"><span class="toc-text">Copy Mechanism</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#guided-attention"><span class="toc-text">Guided Attention</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#beam-search"><span class="toc-text">Beam Search</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#optimizing-evaluation-metric"><span class="toc-text">Optimizing Evaluation Metric</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/topimg.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Richard</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js"></script><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>
