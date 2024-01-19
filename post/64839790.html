@@ -1,0 +1,271 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>浅析Alpha-Go | detect</title><meta name="author" content="Richard,detect0530@gmail.com"><meta name="copyright" content="Richard"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="浅析Alpha-Go   detect0530@gmail.com  训练&amp;执行步骤  先找很多对局素材，进行监督学习，然后分别训练policy和value network。 最后再依据policy和value函数进行蒙特卡洛树搜索。 Policy Network  通过191948的tensor表示状态，然后用convolutional layer提取特征，最后用softmax输出每个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅析Alpha-Go">
+<meta property="og:url" content="https://detect42.github.io/post/64839790.html">
+<meta property="og:site_name" content="detect">
+<meta property="og:description" content="浅析Alpha-Go   detect0530@gmail.com  训练&amp;执行步骤  先找很多对局素材，进行监督学习，然后分别训练policy和value network。 最后再依据policy和value函数进行蒙特卡洛树搜索。 Policy Network  通过191948的tensor表示状态，然后用convolutional layer提取特征，最后用softmax输出每个">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://detect42.github.io/img/favicon.png">
+<meta property="article:published_time" content="2024-01-19T16:04:10.000Z">
+<meta property="article:modified_time" content="2024-01-19T16:06:41.118Z">
+<meta property="article:author" content="Richard">
+<meta property="article:tag" content="RL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://detect42.github.io/img/favicon.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://detect42.github.io/post/64839790.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":1000},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '浅析Alpha-Go',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-01-20 00:06:41'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/1.css"><meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/favicon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">37</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/topimg.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="detect"><span class="site-name">detect</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">浅析Alpha-Go</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-01-19T16:04:10.000Z" title="Created 2024-01-20 00:04:10">2024-01-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-01-19T16:06:41.118Z" title="Updated 2024-01-20 00:06:41">2024-01-20</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">684</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>2min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="浅析Alpha-Go"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="center-浅析alpha-go-center"><center> 浅析Alpha-Go </center></h1>
+<h3 id="center-detect0530-gmail-com-center"><center> <a href="mailto:detect0530@gmail.com">detect0530@gmail.com</a> </center></h3>
+<h2 id="训练-执行步骤">训练&amp;执行步骤</h2>
+<p><img src="Alpha-Go/image.png" alt="Alt text"></p>
+<p>先找很多对局素材，进行监督学习，然后分别训练policy和value network。</p>
+<p>最后再依据policy和value函数进行蒙特卡洛树搜索。</p>
+<h2 id="policy-network">Policy Network</h2>
+<p><img src="Alpha-Go/image-1.png" alt="Alt text"></p>
+<p>通过19<em>19</em>48的tensor表示状态，然后用convolutional layer提取特征，最后用softmax输出每个动作的概率。(361个动作)</p>
+<p>一开始先用人的对局用来学习初步的策略网络。</p>
+<p><img src="Alpha-Go/image-2.png" alt="Alt text"></p>
+<p>用behavior cloning的方法（imitation learning 与reinforcement learning区别在于有无reword），让policy network去模仿人的对局。</p>
+<p><img src="Alpha-Go/image-3.png" alt="Alt text"></p>
+<p><img src="Alpha-Go/image-4.png" alt="Alt text"></p>
+<p>其实就是一个交叉熵作为loss function的多分类问题。</p>
+<p>Behavior cloning缺点是效果不好，没见过的话，不知道怎么走。</p>
+<p>所以我们需要用reinforcement learning来改进behavior cloning训练出的policy network。</p>
+<h3 id="train-policy-network-using-policy-gradient">Train Policy network using policy gradient</h3>
+<h4 id="policy-network">Policy network</h4>
+<p><img src="Alpha-Go/image-5.png" alt="Alt text"></p>
+<p>用更早的参数作为opponet(当作环境交互)的policy network参数。</p>
+<p><img src="Alpha-Go/image-6.png" alt="Alt text"></p>
+<p>赢了就每一步都是好棋。</p>
+<p><img src="Alpha-Go/image-7.png" alt="Alt text"></p>
+<p>这里的<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">u_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>要么是1要么是-1。</p>
+<p><img src="Alpha-Go/image-8.png" alt="Alt text"></p>
+<p>反复迭代后，策略网络就训练好了。</p>
+<h4 id="value-network">Value network</h4>
+<p>这时，policy network已经可以和人类高手对战了，很强，但是不够强。</p>
+<p>其表现不太稳定，一个小的错误也许就会输掉比赛。</p>
+<p>由此，我们还需要改进。使用蒙特卡洛树搜索来让结果更稳定。</p>
+<p>而，蒙特卡洛树搜索需要value network来评估局面。</p>
+<p><img src="Alpha-Go/image-9.png" alt="Alt text"></p>
+<p>注意，这里的价值函数近似的是V函数评估状态的好坏，而不是之前的Q函数评估状态和动作的好坏。</p>
+<p><img src="Alpha-Go/image-10.png" alt="Alt text"></p>
+<p>价值网络是由训练好的策略函数辅助训练。</p>
+<p><img src="Alpha-Go/image-11.png" alt="Alt text"></p>
+<p>利用反复自我博弈，依据policy network下棋，然后标记每一个状态的好坏，用去训练value network。</p>
+<h4 id="monte-carlo-tree-search">Monte Carlo Tree Search</h4>
+<p>用策略函数按照概率选择下一步走什么(不好的走法没必要浪费资源去搜索)，然后反复这样自我博弈看谁会赢。最后选择一个最高得分的action。</p>
+<p><img src="Alpha-Go/image-12.png" alt="Alt text"></p>
+<p>分步骤来看：</p>
+<p><img src="Alpha-Go/image-13.png" alt="Alt text"><br>
+<img src="Alpha-Go/image-14.png" alt="Alt text"><br>
+<img src="Alpha-Go/image-15.png" alt="Alt text"><br>
+<img src="Alpha-Go/image-16.png" alt="Alt text"><br>
+<img src="Alpha-Go/image-17.png" alt="Alt text"></p>
+<p>可以发现，如果一个action被探寻足够多，在后期<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mtext>函数</mtext></mrow><annotation encoding="application/x-tex">\pi函数</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">π</span><span class="mord cjk_fallback">函</span><span class="mord cjk_fallback">数</span></span></span></span>的影响会被分母抵消，变相说明action的Q(a)价值很高，值得我们选，在探寻小的时候，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mtext>函数</mtext></mrow><annotation encoding="application/x-tex">\pi函数</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">π</span><span class="mord cjk_fallback">函</span><span class="mord cjk_fallback">数</span></span></span></span>的影响很大，策略函数本就是较优的，也会选出比较好的解。</p>
+<p>每走一步，会按照以上四步进行上万次模拟。</p>
+<p>搜索结束后，我们选择N(action)最大的那个action即可。</p>
+<h3 id="summary">Summary</h3>
+<p><img src="Alpha-Go/image-18.png" alt="Alt text"></p>
+<h2 id="alphago-zero-v-s-alphago">AlphaGo Zero v.s. AlphaGo</h2>
+<ul>
+<li>完胜AlphaGo</li>
+<li>没有使用human experence （也许人类知识是有害的）</li>
+<li>使用MCTS去训练policy network，让策略网络模仿MCTS的结果，而不是人类的对局。</li>
+</ul>
+<p><img src="Alpha-Go/image-19.png" alt="Alt text"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://detect42.github.io">Richard</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://detect42.github.io/post/64839790.html">https://detect42.github.io/post/64839790.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/RL/">RL</a></div><div class="post_share"><div class="social-share" data-image="/img/favicon.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/post/5ace3b8b.html" title="DRL: Actor-Critic Method"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">DRL: Actor-Critic Method</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/post/5ace3b8b.html" title="DRL: Actor-Critic Method"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-19</div><div class="title">DRL: Actor-Critic Method</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#center-%E6%B5%85%E6%9E%90alpha-go-center"><span class="toc-text"> 浅析Alpha-Go </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#center-detect0530-gmail-com-center"><span class="toc-text"> detect0530@gmail.com </span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83-%E6%89%A7%E8%A1%8C%E6%AD%A5%E9%AA%A4"><span class="toc-text">训练&amp;执行步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#policy-network"><span class="toc-text">Policy Network</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#train-policy-network-using-policy-gradient"><span class="toc-text">Train Policy network using policy gradient</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#policy-network"><span class="toc-text">Policy network</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#value-network"><span class="toc-text">Value network</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#monte-carlo-tree-search"><span class="toc-text">Monte Carlo Tree Search</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#summary"><span class="toc-text">Summary</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#alphago-zero-v-s-alphago"><span class="toc-text">AlphaGo Zero v.s. AlphaGo</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/topimg.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Richard</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js"></script><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>

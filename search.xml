@@ -4313,4 +4313,71 @@ backUp回溯过程中更新父节点的值</p>
         <tag>RL</tag>
       </tags>
   </entry>
+  <entry>
+    <title>浅析Alpha-Go</title>
+    <url>/post/64839790.html</url>
+    <content><![CDATA[<h1 id="center-浅析alpha-go-center"><center> 浅析Alpha-Go </center></h1>
+<h3 id="center-detect0530-gmail-com-center"><center> <a href="mailto:detect0530@gmail.com">detect0530@gmail.com</a> </center></h3>
+<h2 id="训练-执行步骤">训练&amp;执行步骤</h2>
+<p><img src="Alpha-Go/image.png" alt="Alt text"></p>
+<p>先找很多对局素材，进行监督学习，然后分别训练policy和value network。</p>
+<p>最后再依据policy和value函数进行蒙特卡洛树搜索。</p>
+<h2 id="policy-network">Policy Network</h2>
+<p><img src="Alpha-Go/image-1.png" alt="Alt text"></p>
+<p>通过19<em>19</em>48的tensor表示状态，然后用convolutional layer提取特征，最后用softmax输出每个动作的概率。(361个动作)</p>
+<p>一开始先用人的对局用来学习初步的策略网络。</p>
+<p><img src="Alpha-Go/image-2.png" alt="Alt text"></p>
+<p>用behavior cloning的方法（imitation learning 与reinforcement learning区别在于有无reword），让policy network去模仿人的对局。</p>
+<p><img src="Alpha-Go/image-3.png" alt="Alt text"></p>
+<p><img src="Alpha-Go/image-4.png" alt="Alt text"></p>
+<p>其实就是一个交叉熵作为loss function的多分类问题。</p>
+<p>Behavior cloning缺点是效果不好，没见过的话，不知道怎么走。</p>
+<p>所以我们需要用reinforcement learning来改进behavior cloning训练出的policy network。</p>
+<h3 id="train-policy-network-using-policy-gradient">Train Policy network using policy gradient</h3>
+<h4 id="policy-network">Policy network</h4>
+<p><img src="Alpha-Go/image-5.png" alt="Alt text"></p>
+<p>用更早的参数作为opponet(当作环境交互)的policy network参数。</p>
+<p><img src="Alpha-Go/image-6.png" alt="Alt text"></p>
+<p>赢了就每一步都是好棋。</p>
+<p><img src="Alpha-Go/image-7.png" alt="Alt text"></p>
+<p>这里的<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">u_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>要么是1要么是-1。</p>
+<p><img src="Alpha-Go/image-8.png" alt="Alt text"></p>
+<p>反复迭代后，策略网络就训练好了。</p>
+<h4 id="value-network">Value network</h4>
+<p>这时，policy network已经可以和人类高手对战了，很强，但是不够强。</p>
+<p>其表现不太稳定，一个小的错误也许就会输掉比赛。</p>
+<p>由此，我们还需要改进。使用蒙特卡洛树搜索来让结果更稳定。</p>
+<p>而，蒙特卡洛树搜索需要value network来评估局面。</p>
+<p><img src="Alpha-Go/image-9.png" alt="Alt text"></p>
+<p>注意，这里的价值函数近似的是V函数评估状态的好坏，而不是之前的Q函数评估状态和动作的好坏。</p>
+<p><img src="Alpha-Go/image-10.png" alt="Alt text"></p>
+<p>价值网络是由训练好的策略函数辅助训练。</p>
+<p><img src="Alpha-Go/image-11.png" alt="Alt text"></p>
+<p>利用反复自我博弈，依据policy network下棋，然后标记每一个状态的好坏，用去训练value network。</p>
+<h4 id="monte-carlo-tree-search">Monte Carlo Tree Search</h4>
+<p>用策略函数按照概率选择下一步走什么(不好的走法没必要浪费资源去搜索)，然后反复这样自我博弈看谁会赢。最后选择一个最高得分的action。</p>
+<p><img src="Alpha-Go/image-12.png" alt="Alt text"></p>
+<p>分步骤来看：</p>
+<p><img src="Alpha-Go/image-13.png" alt="Alt text"><br>
+<img src="Alpha-Go/image-14.png" alt="Alt text"><br>
+<img src="Alpha-Go/image-15.png" alt="Alt text"><br>
+<img src="Alpha-Go/image-16.png" alt="Alt text"><br>
+<img src="Alpha-Go/image-17.png" alt="Alt text"></p>
+<p>可以发现，如果一个action被探寻足够多，在后期<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mtext>函数</mtext></mrow><annotation encoding="application/x-tex">\pi函数</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">π</span><span class="mord cjk_fallback">函</span><span class="mord cjk_fallback">数</span></span></span></span>的影响会被分母抵消，变相说明action的Q(a)价值很高，值得我们选，在探寻小的时候，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mtext>函数</mtext></mrow><annotation encoding="application/x-tex">\pi函数</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">π</span><span class="mord cjk_fallback">函</span><span class="mord cjk_fallback">数</span></span></span></span>的影响很大，策略函数本就是较优的，也会选出比较好的解。</p>
+<p>每走一步，会按照以上四步进行上万次模拟。</p>
+<p>搜索结束后，我们选择N(action)最大的那个action即可。</p>
+<h3 id="summary">Summary</h3>
+<p><img src="Alpha-Go/image-18.png" alt="Alt text"></p>
+<h2 id="alphago-zero-v-s-alphago">AlphaGo Zero v.s. AlphaGo</h2>
+<ul>
+<li>完胜AlphaGo</li>
+<li>没有使用human experence （也许人类知识是有害的）</li>
+<li>使用MCTS去训练policy network，让策略网络模仿MCTS的结果，而不是人类的对局。</li>
+</ul>
+<p><img src="Alpha-Go/image-19.png" alt="Alt text"></p>
+]]></content>
+      <tags>
+        <tag>RL</tag>
+      </tags>
+  </entry>
 </search>
