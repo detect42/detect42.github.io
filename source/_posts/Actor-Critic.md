@@ -1,5 +1,5 @@
 ---
-title: Actor-Critic
+title: "DRL: Actor-Critic Method"
 tags: RL
 abbrlink: 5ace3b8b
 date: 2024-01-19 21:56:13
@@ -7,7 +7,7 @@ date: 2024-01-19 21:56:13
 
 # <center> DRL: Actor-Critic Method </center>
 
- <center> detect0530@gmail.com </center>
+### <center> detect0530@gmail.com </center>
 
 ## 基本概念
 
