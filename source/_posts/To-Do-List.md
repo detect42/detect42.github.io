@@ -5,7 +5,6 @@ abbrlink: 6ab2dd9e
 date: 2023-09-09 22:53:05
 updated: 2023-09-24
 description: To-Do-List
-top: 100
 
 ---
 
@@ -15,72 +14,17 @@ top: 100
 
 # <center> NJU课程
 
-## 概率论与数理统计
-
-- 作业为书上习题 两周一交
-
-- 南大教材
-
-- 作业会比较严格----每个双周的周三~周日交作业
-
-
 ## DS
 
-- oj+qq群布置的手写作业
-
-- 书籍：数据结构与算法分析
-
-## 并发算法与理论
-
-#### [课程主页](https://hongjin-liang.github.io/teaching/concurrency/)
-
-- ppt在课程主页上
-- 教材《多处理器编程的艺术》
-- ### 考核：提交作业 + course report
-
-
-## 最优化方法导论
-
-#### [课程主页](https://www.lamda.nju.edu.cn/wuly/optfall2023/index.html)
-- Lecture Notes will be updated after every lesson
-- Referrence: Convex Optimization, Stephen Boyd and Lieven Vandenberghe
-
-### 课程笔记
-- [【矩阵论】范数](https://zhuanlan.zhihu.com/p/507328276) 
-
-- ### 考核: HW:$40$ Final Exam:$60$
-
-## 密码学原理
-
-![](./image/002.png)
-
-<img src= "002.png" width="60%" length="60%">
-
-- ppt + 教材
-- ### 考核:  6* HW + 2* exam
-
-## 人工智能导论
-
-### [课程主页](https://www.lamda.nju.edu.cn/introai/)
-
-- 教材《人工智能一种现代的方法》-AIMA
-
-- 学习新的游戏框架
-
-- ### 考核：4+1 LAB + 期末论文
-  
+斐波那契堆 + 可视化展示
 
 ## 搜索与演化算法
 
-### [课程主页](https://www.lamda.nju.edu.cn/HSEA23/)
-
-### 考核: HW(60%) + Final Exam(40%)
+HW4 - 芯片放置问题
 
 ## 科研实践
 
-- 微信群通知 + 组会
-
-- 读论文+实践
+- diffusion model 数字水印相关paper
 
 
 ----
@@ -103,15 +47,6 @@ top: 100
 - 异常及其处理 &#x2714;
 - 调试方法 
 - 线程管理
-
-### 科研实践
-- 图像处理与检测
-
-### xcpc-acm
-
-- hdu_03 1002 1004 1008 
-- 牛客_04 B
-- hdu_09 1002 1008 1011
 
 
 # <center> 科研实践 
