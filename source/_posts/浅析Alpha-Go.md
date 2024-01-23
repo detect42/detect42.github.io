@@ -5,6 +5,8 @@ abbrlink: '64839790'
 date: 2024-01-20 00:04:10
 ---
 
+<font size=4>
+
 # <center> 浅析Alpha-Go </center>
 ###  <center> detect0530@gmail.com </center>
 
@@ -96,14 +98,14 @@ Behavior cloning缺点是效果不好，没见过的话，不知道怎么走。
 ![Alt text](Alpha-Go/image-16.png)
 ![Alt text](Alpha-Go/image-17.png)
 
-可以发现，如果一个action被探寻足够多，在后期$\pi函数$的影响会被分母抵消，变相说明action的Q(a)价值很高，值得我们选，在探寻小的时候，$\pi函数$的影响很大，策略函数本就是较优的，也会选出比较好的解。
+可以发现，如果一个action被探寻足够多，在后期$\pi$函数的影响会被分母抵消，变相说明action的Q(a)价值很高，值得我们选，在探寻小的时候，$\pi$函数的影响很大，策略函数本就是较优的，也会选出比较好的解。
 
 每走一步，会按照以上四步进行上万次模拟。
 
-搜索结束后，我们选择N(action)最大的那个action即可。
+搜索结束后，我们选择N(action)最大的那个action即可。    
 
 ### Summary
-
+  
 ![Alt text](Alpha-Go/image-18.png)
 
 
@@ -112,7 +114,8 @@ Behavior cloning缺点是效果不好，没见过的话，不知道怎么走。
 
 - 完胜AlphaGo
 - 没有使用human experence （也许人类知识是有害的）
-- 使用MCTS去训练policy network，让策略网络模仿MCTS的结果，而不是人类的对局。
+- 使用MCTS去训练policy network，让策略网络模仿MCTS的结果，而不是人类的对局。   
 
 ![Alt text](Alpha-Go/image-19.png)
 
+<font size=4>

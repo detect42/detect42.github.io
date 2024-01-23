@@ -4,6 +4,8 @@ tags: RL
 abbrlink: 5ace3b8b
 date: 2024-01-19 21:56:13
 ---
+<font size=4>
+
 
 # <center> DRL: Actor-Critic Method </center>
 
@@ -198,3 +200,4 @@ policy network提高决策你表现。
 
 value network依据reword让评估更准确，用来帮助决策网络的优化。
 
+<font size=4>
