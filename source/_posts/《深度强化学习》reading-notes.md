@@ -5,7 +5,7 @@ date: 2024-01-23 20:46:02
 tags:
 ---
 
-# <center>深度强化学习》reading notes </center> 
+# <center>《深度强化学习》reading notes </center> 
 <center> detect0530@gmail.com </center>
 <font size=4>
 
