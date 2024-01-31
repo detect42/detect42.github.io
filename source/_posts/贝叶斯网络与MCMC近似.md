@@ -1,6 +1,9 @@
 ---
 title: 贝叶斯网络与MCMC近似
 tags: ML
+categories: 
+- Math
+- Bayesian Network and MCMC
 abbrlink: b06e0ea0
 date: 2023-11-27 22:54:10
 ---

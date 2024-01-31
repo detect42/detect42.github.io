@@ -1,6 +1,9 @@
 ---
 title: Deep_Learning 简介
 tags: ML
+categories: 
+- DL
+- Lee's notes
 abbrlink: ebc18e1f
 date: 2023-11-21 14:55:42
 ---

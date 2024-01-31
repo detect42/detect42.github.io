@@ -1,6 +1,9 @@
 ---
 title: Crypto Note
 tags: note
+categories: 
+- NJU course
+- Crypto
 abbrlink: 484e933c
 date: 2023-12-26 17:21:55
 ---

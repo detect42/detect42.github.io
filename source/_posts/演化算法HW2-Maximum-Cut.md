@@ -1,7 +1,9 @@
 ---
 title: 演化算法HW2 Maximum Cut
 tags: 实验报告
-catagories: 实验报告
+categories: 
+- NJU course
+- HSEA
 abbrlink: 'fb92b679'
 date: 2023-11-17 00:47:58
 ---

@@ -2,7 +2,9 @@
 title: 人工智能导论HW1实验报告
 tags: 实验报告
 abbrlink: 776c3856
-categories: 实验报告
+categories: 
+- NJU course
+- IntroAI
 date: 2023-09-22 15:21:46
 #top: 5
 ---

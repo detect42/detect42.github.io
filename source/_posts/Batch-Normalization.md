@@ -1,6 +1,9 @@
 ---
 title: Batch Normalization
 tags: 机器学习
+categories: 
+- DL
+- Lee's notes
 abbrlink: b867d47d
 date: 2023-12-28 17:48:52
 ---

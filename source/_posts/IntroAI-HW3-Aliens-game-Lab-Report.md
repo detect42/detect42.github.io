@@ -1,7 +1,9 @@
 ---
 title: IntroAI_HW3 "Aliens game" Lab Report
 tags: 实验报告
-categories: 实验报告
+categories: 
+- NJU course
+- IntroAI
 abbrlink: f5193185
 date: 2023-11-14 20:32:57
 ---

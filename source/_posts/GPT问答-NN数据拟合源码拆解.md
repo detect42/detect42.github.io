@@ -1,7 +1,9 @@
 ---
 title: GPT问答_NN数据拟合源码拆解
 tags: [GPT,神经网络,机器学习]
-categories: 机器学习
+categories: 
+- DL
+- code
 abbrlink: a43615c7
 date: 2023-10-19 11:26:03
 ---

@@ -1,6 +1,9 @@
 ---
 title: Accelerating Techniques for self-Attention
 tags: 机器学习
+categories: 
+- DL
+- Lee's notes
 abbrlink: 79ac928f
 date: 2023-12-29 23:38:14
 ---

@@ -1,6 +1,9 @@
 ---
 title: Diffusion入门--inference
 tags: diffusion
+categories: 
+- cv
+- diffusion
 abbrlink: 2786a856
 date: 2023-09-07 21:46:52
 ---

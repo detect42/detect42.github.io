@@ -1,6 +1,9 @@
 ---
 title: IntroAI_HW4 Freeway_Game Lab_Report
 tags: HW
+categories: 
+- NJU course
+- IntroAI
 abbrlink: 3757a55f
 date: 2023-12-06 23:41:42
 ---

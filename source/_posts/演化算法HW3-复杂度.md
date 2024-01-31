@@ -1,6 +1,9 @@
 ---
 title: 演化算法HW3-复杂度&期望运行时间理论分析
 tags: HW
+categories: 
+- NJU course
+- HSEA
 abbrlink: ebc186c0
 date: 2023-12-06 23:35:12
 ---

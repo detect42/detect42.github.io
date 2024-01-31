@@ -1,7 +1,9 @@
 ---
 title: 人工智能导论HW2黑白棋实验报告
 tags: 实验报告
-categories: 实验报告
+categories: 
+- NJU course
+- IntroAI
 abbrlink: 97fe6ca1
 date: 2023-10-18 00:26:24
 ---

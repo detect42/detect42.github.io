@@ -1,6 +1,9 @@
 ---
 title: 浅析Alpha-Go
 tags: RL
+categories: 
+- RL
+- book notes
 abbrlink: '64839790'
 date: 2024-01-20 00:04:10
 ---

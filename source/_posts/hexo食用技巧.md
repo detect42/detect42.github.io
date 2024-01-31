@@ -1,6 +1,9 @@
 ---
 title: hexo食用技巧
 tags: hexo
+categories: 
+- tool
+- hexo
 abbrlink: b1320771
 date: 2023-06-29 20:40:20
 ---

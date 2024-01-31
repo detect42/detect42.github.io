@@ -1,7 +1,9 @@
 ---
 title: 搜索和演化算法HW1实验报告
 tags: 实验报告
-categories: 实验报告
+categories: 
+- NJU course
+- HSEA
 abbrlink: c9d5e149
 date: 2023-09-28 19:05:37
 #top: 5

@@ -1,6 +1,9 @@
 ---
 title: linux常用指令集
 tags: linux
+categories: 
+- tool
+- linux
 abbrlink: 4de2ff1e
 date: 2023-09-02 14:58:46
 ---

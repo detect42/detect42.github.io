@@ -3,6 +3,9 @@ title: effctive c++ tips
 abbrlink: a20e8ec8
 date: 2023-03-23 20:08:14
 tags: c++
+categories: 
+- c++
+- tips
 ---
 
 ## 1. 除非有好的理由允许构造函数隐式转换，否则申明构造函数为explicit

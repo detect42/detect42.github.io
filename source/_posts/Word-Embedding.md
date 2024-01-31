@@ -1,6 +1,9 @@
 ---
 title: Word Embedding
 tags: 机器学习
+categories: 
+- DL
+- Lee's notes
 abbrlink: f63ef346
 date: 2023-12-28 16:19:32
 ---

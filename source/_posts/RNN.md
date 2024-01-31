@@ -1,6 +1,9 @@
 ---
 title: Recurrent Neural Network(RNN)
 tags: 机器学习
+categories: 
+- DL
+- Lee's notes
 abbrlink: d145174e
 date: 2023-12-27 23:06:19
 ---

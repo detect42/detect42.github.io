@@ -1,6 +1,9 @@
 ---
 abbrlink: e31a8f3c
 title: NTU_ML_HW1
+categories: 
+- DL
+- Lee's HW
 date: 2023-10-19 23:31:37
 tags: [机器学习]
 --- 

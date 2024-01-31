@@ -2,7 +2,10 @@
 title: 《深度强化学习》reading notes
 abbrlink: 9f0fbe76
 date: 2024-01-23 20:46:02
-tags:
+tags: RL
+categories: 
+- RL
+- book notes
 ---
 
 # <center>《深度强化学习》reading notes </center> 

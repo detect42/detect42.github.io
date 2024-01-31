@@ -1,6 +1,9 @@
 ---
 title: Diffusion入门--training
 tags: diffusion
+categories: 
+- cv
+- diffusion
 abbrlink: e5691
 date: 2023-09-07 23:23:13
 ---

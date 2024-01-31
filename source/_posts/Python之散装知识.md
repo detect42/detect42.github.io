@@ -1,6 +1,9 @@
 ---
 title: Python之散装知识
 tags: python
+categories: 
+- python
+- tips
 abbrlink: d9e0de5e
 date: 2023-07-27 22:52:31
 ---

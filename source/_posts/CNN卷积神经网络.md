@@ -1,6 +1,9 @@
 ---
 title: CNN卷积神经网络-原理
 tags: ML
+categories: 
+- DL
+- Lee's notes
 abbrlink: '8957548'
 date: 2023-11-24 19:36:07
 ---

@@ -3,6 +3,9 @@ title: git初步
 abbrlink: 91c7c6a1
 date: 2023-06-29 18:06:17
 tags: git
+categories: 
+- tool
+- git
 ---
 # git基本命令
 

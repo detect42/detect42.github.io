@@ -1,6 +1,9 @@
 ---
 title: Self-Attention机制
 tags: ML
+categories: 
+- DL
+- Lee's notes
 abbrlink: 5c7a9306
 date: 2023-11-28 22:54:03
 ---

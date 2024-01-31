@@ -1,6 +1,9 @@
 ---
 title: Transformer
 tags: 机器学习
+categories: 
+- DL
+- Lee's notes
 abbrlink: e0d2147a
 date: 2023-12-29 00:37:59
 ---

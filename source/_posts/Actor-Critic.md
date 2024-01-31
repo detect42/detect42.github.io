@@ -1,6 +1,9 @@
 ---
 title: "DRL: Actor-Critic Method"
 tags: RL
+categories: 
+- RL
+- book notes
 abbrlink: 5ace3b8b
 date: 2024-01-19 21:56:13
 ---

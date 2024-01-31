@@ -1,6 +1,9 @@
 ---
 title: HSEA HW4 BBO
 tags: 实验报告
+categories: 
+- NJU course
+- HSEA
 abbrlink: 21249fb3
 date: 2024-01-26 13:38:17
 ---
