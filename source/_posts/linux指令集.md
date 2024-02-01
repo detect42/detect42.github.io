@@ -8,6 +8,13 @@ abbrlink: 4de2ff1e
 date: 2023-09-02 14:58:46
 ---
 
+## 远程连接
+
+### SFTP上传本地文件
+
+[csdn blog](https://blog.csdn.net/qin_liang/article/details/132640272)
+
+
 ## 指定服务器调用显卡
 
 ```export CUDA_VISIBLE_DEVICES=1,3```
