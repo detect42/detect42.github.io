@@ -2046,7 +2046,10 @@ auto_ptr一般用在heap_based资源</p>
   <entry>
     <title>linux常用指令集</title>
     <url>/post/4de2ff1e.html</url>
-    <content><![CDATA[<h2 id="指定服务器调用显卡">指定服务器调用显卡</h2>
+    <content><![CDATA[<h2 id="远程连接">远程连接</h2>
+<h3 id="sftp上传本地文件">SFTP上传本地文件</h3>
+<p><a href="https://blog.csdn.net/qin_liang/article/details/132640272">csdn blog</a></p>
+<h2 id="指定服务器调用显卡">指定服务器调用显卡</h2>
 <p><code>export CUDA_VISIBLE_DEVICES=1,3</code></p>
 <h2 id="pip换源">pip换源</h2>
 <p>python -m pip config set global.index-url <a href="http://mirrors.cloud.tencent.com/pypi/simple">http://mirrors.cloud.tencent.com/pypi/simple</a></p>
