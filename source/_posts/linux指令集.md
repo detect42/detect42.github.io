@@ -14,10 +14,17 @@ date: 2023-09-02 14:58:46
 
 [csdn blog](https://blog.csdn.net/qin_liang/article/details/132640272)
 
+## clash for linux
+
+[clash for linux](https://zhuanlan.zhihu.com/p/656856050)
 
 ## 指定服务器调用显卡
 
 ```export CUDA_VISIBLE_DEVICES=1,3```
+
+## conda & anaconda & pip
+
+[csdn blog](https://blog.csdn.net/taoqick/article/details/56284364?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0-56284364-blog-130680726.235^v43^pc_blog_bottom_relevance_base9&spm=1001.2101.3001.4242.1&utm_relevant_index=3)
 
 ## pip换源
 
