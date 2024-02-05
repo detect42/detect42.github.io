@@ -522,6 +522,9 @@ torchtriton 2.2.0<br>
 torchvision 0.17.0</p>
 <h4 id="game">game</h4>
 <p>PongNoFrameskip-v4</p>
+<h3 id="performance">Performance</h3>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">gamma = <span class="number">0.99</span></span><br><span class="line">epsilon_max = <span class="number">1</span></span><br><span class="line">epsilon_min = <span class="number">0.05</span></span><br><span class="line">eps_decay = <span class="number">30000</span></span><br><span class="line">frames = <span class="number">2000000</span></span><br><span class="line">USE_CUDA = <span class="literal">True</span></span><br><span class="line">learning_rate = <span class="number">2e-4</span></span><br><span class="line">max_buff = <span class="number">100000</span></span><br><span class="line">update_tar_interval = <span class="number">1000</span></span><br><span class="line">batch_size = <span class="number">32</span></span><br><span class="line">print_interval = <span class="number">1000</span></span><br><span class="line">log_interval = <span class="number">1000</span></span><br><span class="line">learning_start = <span class="number">10000</span></span><br><span class="line">win_reward = <span class="number">18</span>    </span><br><span class="line">win_break = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p><img src="f6c52af6-6b22-4759-aedb-95c3e0d91916.png" alt="Alt text"></p>
 ]]></content>
       <tags>
         <tag>RL</tag>
@@ -3850,9 +3853,9 @@ torchvision 0.17.0</p>
         <category>code</category>
       </categories>
       <tags>
+        <tag>机器学习</tag>
         <tag>GPT</tag>
         <tag>神经网络</tag>
-        <tag>机器学习</tag>
       </tags>
   </entry>
   <entry>
