@@ -89,7 +89,7 @@ Since it's off-policy methods, we set policy $\pi$ to be the $\epsilon-greedy$, 
 
 # Experiment
 
-![Alt text](DQN0/image.png)
+![Alt text](DQN0/image0.png)
 
 ### data preprocessing
 
@@ -106,36 +106,36 @@ the function $\phi$ from algorithm 1 applies this preprocessing to the last 4 fr
 When describing a neural network, the hierarchical structure is typically built from the input layer to the output layer. Here is the hierarchical structure of the aforementioned DQN model:
 
 1. Input Layer:
-   - Number of input channels for the input images: `in_channels`, defaulted to 4, representing the stacking of the latest 4 frames of images.
+- Number of input channels for the input images: `in_channels`, defaulted to 4, representing the stacking of the latest 4 frames of images.
 
 2. First Convolutional Layer (`self.conv1`):
-   - Input channels: `in_channels` (same as the input layer)
-   - Output channels: 32
-   - Convolutional kernel size: 8x8
-   - Stride: 4
-   - Output size: Calculated through the convolution operation
+- Input channels: `in_channels` (same as the input layer)
+- Output channels: 32
+- Convolutional kernel size: 8x8
+- Stride: 4
+- Output size: Calculated through the convolution operation
 
 3. Second Convolutional Layer (`self.conv2`):
-   - Input channels: 32 (from the output of the first convolutional layer)
-   - Output channels: 64
-   - Convolutional kernel size: 4x4
-   - Stride: 2
-   - Output size: Calculated through the convolution operation
+- Input channels: 32 (from the output of the first convolutional layer)
+- Output channels: 64
+- Convolutional kernel size: 4x4
+- Stride: 2
+- Output size: Calculated through the convolution operation
 
 4. Third Convolutional Layer (`self.conv3`):
-   - Input channels: 64 (from the output of the second convolutional layer)
-   - Output channels: 64
-   - Convolutional kernel size: 3x3
-   - Stride: 1
-   - Output size: Calculated through the convolution operation
+- Input channels: 64 (from the output of the second convolutional layer)
+- Output channels: 64
+- Convolutional kernel size: 3x3
+- Stride: 1
+- Output size: Calculated through the convolution operation
 
 5. Fully Connected Layer (`self.fc4`):
-   - Input size: Flattening the output of the convolutional layers into a one-dimensional vector (`7 * 7 * 64`)
-   - Output size: 512
+- Input size: Flattening the output of the convolutional layers into a one-dimensional vector (`7 * 7 * 64`)
+- Output size: 512
 
 6. Output Layer (`self.fc5`):
-   - Input size: 512 (from the output of the fully connected layer)
-   - Output size: `num_actions` (representing the values for each possible action)
+- Input size: 512 (from the output of the fully connected layer)
+- Output size: `num_actions` (representing the values for each possible action)
 
 
 
@@ -157,3 +157,67 @@ torchvision 0.17.0
 
 PongNoFrameskip-v4
 
+
+### Performance
+
+```py
+gamma = 0.99
+epsilon_max = 1
+epsilon_min = 0.05
+eps_decay = 30000
+frames = 2000000
+USE_CUDA = True
+learning_rate = 2e-4
+max_buff = 100000
+update_tar_interval = 1000
+batch_size = 32
+print_interval = 1000
+log_interval = 1000
+learning_start = 10000
+win_reward = 18    
+win_break = True
+```
+
+use the hyperparameter above to train the agent, and the result is as follows:
+
+![Alt text](DQN0/image.png)
+
+it only gains 16.7 out of 20, seeming that the agent is not good enough.
+
+So I tried to change the hyperparameter, and added some techniques.
+
+- $\epsilon$-greedy, $\epsilon$ descending so quickly, which means the agent can't explore the environment enough. So I made descending more slowly, while making the terminal $\epsilon$ smaller.
+
+```py
+epsilon_max = 1
+epsilon_min = 0.02
+eps_decay = 200000 # 增加了随机性
+```
+
+- larger replay buffer
+
+```py
+batch_size = 64 # 增加了经验回收容量
+```
+
+- adjust the optimizer and add warm-up scheduler
+```py
+self.optimizer = optim.AdamW(self.DQN.parameters(), lr=lr, weight_decay=0.01)
+self.scheduler = get_cosine_schedule_with_warmup(self.optimizer, num_warmup_steps=num_warmup_steps, num_training_steps=num_train_total)
+```
+
+
+- cancel the gradient clip
+```py
+#for param in self.DQN.parameters():
+#   param.grad.data.clamp_(-1, 1)
+```
+
+Ultimately, the agent can gain 19.8 out of 20, which is a good result.
+
+
+![Alt text](DQN0/image-1.png)
+
+![alt text](DQN0/image-2.png)
+
+![alt text](DQN0/image-3.png)
