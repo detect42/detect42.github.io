@@ -552,10 +552,10 @@ torchvision 0.17.0</p>
       </tags>
   </entry>
   <entry>
-    <title>HSEA HW4 BBO</title>
+    <title>演化算法HW4 BBO黑箱芯片放置问题</title>
     <url>/post/21249fb3.html</url>
     <content><![CDATA[<h1 id="center-macro-placement-by-black-box-optimization-center"><center> Macro placement by black-box optimization </center></h1>
-<h3 id="center-王崧睿-221502011-detect0530-gmail-com-center"><center> 王崧睿 221502011 <a href="mailto:detect0530@gmail.com">detect0530@gmail.com</a> </center></h3>
+<h3 id="center-detect0530-gmail-com-center"><center> <a href="mailto:detect0530@gmail.com">detect0530@gmail.com</a> </center></h3>
 <font size=4>
 <h2 id="1-问题分析">1 问题分析</h2>
 <p>通过阅读发下来的code，发现需要我调整的黑箱问题是，给定一组长度为dim，有上下界的整数序列。</p>
