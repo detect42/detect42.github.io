@@ -1,5 +1,5 @@
 ---
-title: HSEA HW4 BBO
+title: 演化算法HW4 BBO黑箱芯片放置问题
 tags: 实验报告
 categories: 
 - NJU course
@@ -8,7 +8,7 @@ abbrlink: 21249fb3
 date: 2024-01-26 13:38:17
 ---
 # <center> Macro placement by black-box optimization </center>
-### <center> 王崧睿 221502011 detect0530@gmail.com </center>
+### <center> detect0530@gmail.com </center>
 <font size=4>
 
 ## 1 问题分析

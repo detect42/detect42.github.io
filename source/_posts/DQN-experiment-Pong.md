@@ -21,7 +21,7 @@ This is a simple experiment to train a DQN agent to play atari game Pong. This p
 
 Since traditional reinforcement learning algorithms are not suitable for high-dimensional state space, the DQN algorithm is proposed to solve this problem. The DQN algorithm uses a deep neural network to approximate the Q function, and uses experience replay and target network to stabilize the training process. The DQN algorithm has achieved good results in many atari games, and has become a milestone in the field of reinforcement learning.
 
-Our goal is to train a DQN agent who can play atari game Pong. The agent will receive a reward of +1 if it wins the game, and a reward of -1 if it loses the game. The whole game lasts for 20 turns. The higher the score, the better the agent's performance.(in fact, if we finally win the contest, we will get a reward of +1, otherwise, we will get a reward of -1. And we won't gain anythin unless the contest is done. In this way, our agent can play different games better with the same algorithm framework.)
+Our goal is to train a DQN agent who can play atari game Pong. The agent will receive a reward of +1 if it wins the game, and a reward of -1 if it loses the game. The whole game lasts for at most 21*2-1 =41 turns. The higher the score, the better the agent's performance.(in fact, if we finally win the contest, we will get a reward of +1, otherwise, we will get a reward of -1. And we won't gain anything unless the contest is done. In this way, our agent can play different games better with the same algorithm framework.)
 
 In this article, I'll reproduce the DQN algorithm and analyze why it works compared to traditional reinforcement learning algorithms.
 
@@ -182,7 +182,7 @@ use the hyperparameter above to train the agent, and the result is as follows:
 
 ![Alt text](DQN0/image.png)
 
-it only gains 16.7 out of 20, seeming that the agent is not good enough.
+it only gains 16.7 out of 21, seeming that the agent is not good enough.
 
 So I tried to change the hyperparameter, and added some techniques.
 
@@ -213,7 +213,7 @@ self.scheduler = get_cosine_schedule_with_warmup(self.optimizer, num_warmup_step
 #   param.grad.data.clamp_(-1, 1)
 ```
 
-Ultimately, the agent can gain 19.8 out of 20, which is a good result.
+Ultimately, the agent can gain 20.1 out of 21, which is a good result.
 
 
 ![Alt text](DQN0/image-1.png)
