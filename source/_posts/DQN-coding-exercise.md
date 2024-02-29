@@ -426,8 +426,8 @@ tensor([[1, 6],
 
 平滑 L1 损失的数学定义如下：
 $$
-\text{smooth\_l1\_loss}(x, y) = 
-\begin{cases} 
+\text{smooth\_l1\_loss}(x, y) =
+\begin{cases}
 0.5 \cdot (x - y)^2 & \text{if } |x - y| < 1 \\
 |x - y| - 0.5 & \text{otherwise}
 \end{cases}
