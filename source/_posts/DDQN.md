@@ -45,6 +45,8 @@ errors and noises无处不在，包括environment,function approximation,non-sta
 
 ![alt text](DDQN/image-3.png)
 
+![alt text](DDQN/image-6.png)
+
 两个方面，其一，用原始nn选择max动作，然后用target network计算Q值。其二，虽然前面用target nn的操作还是会有overestimation，但是这样做是易拓展性和接口不变，也是一种trade-off。
 
 ### 实验表现
