@@ -90,6 +90,7 @@ Proportional prioritization
 
 $$W_i = (\frac{1}{N}\cdot\frac{1}{P(i)}^{\beta})$$
 
+（来自晨神summary）
 ![alt text](Priority_ER/image-9.png)
 
 当$\beta$是1时，就是一个完全概率补偿，为了更稳定，所有$W$都要乘以$max(w_i)$，确保$W_i$小于1.

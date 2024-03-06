@@ -1,11 +1,11 @@
 - class_name: 友链
-  class_desc: 
+  class_desc:
   link_list:
     - name: Rijuyuezhu
       link: https://blog.rijuyuezhu.top/
       avatar: https://blog.rijuyuezhu.top/images/avatar.jpg
-      descr: Rijuyuezhu 
-    - name: ericli 
-      link: https://garden.ericli.vip/
+      descr: Rijuyuezhu
+    - name: ericli
+      link: https://www.ericli.vip/
       avatar: https://www.ericli.vip/img/saber.jpg
       descr: ericli
