@@ -12,7 +12,7 @@ description: To-Do-List
 - mac item2 各种plugin
 - 命令行里无法使用vpn连接
 
-# <center> NJU课程
+# <center> NJU课程 </center>
 
 ## DS
 
@@ -34,9 +34,9 @@ HW4 - 芯片放置问题
 ### 机器学习
 - 吴恩达课程  &#x2714;
 - 书籍
-- CS229 
+- CS229
 
-  
+
 ### python学习
 - NunPy
 - Pytorch
@@ -45,45 +45,45 @@ HW4 - 芯片放置问题
 ### c++学习
 
 - 异常及其处理 &#x2714;
-- 调试方法 
+- 调试方法
 - 线程管理
 
 
-# <center> 科研实践 
+# <center> 科研实践
 
-### 英文： 
+### 英文：
 
-Latent Diffusion论文：https://arxiv.org/pdf/2112.10752.pdf 
+Latent Diffusion论文：https://arxiv.org/pdf/2112.10752.pdf
 
-Diffusion Models详细公式：https://lilianweng.github.io/posts/2021-07-11-diffusion-models/ 
+Diffusion Models详细公式：https://lilianweng.github.io/posts/2021-07-11-diffusion-models/
 
-各种微调模型方法对比：https://www.youtube.com/watch?v=dVjMiJsuR5o 
+各种微调模型方法对比：https://www.youtube.com/watch?v=dVjMiJsuR5o
 
-Scheduler对比图来自论文: https://arxiv.org/pdf/2102.09672.pdf 
+Scheduler对比图来自论文: https://arxiv.org/pdf/2102.09672.pdf
 
-VAE结构图出处：https://towardsdatascience.com/vae-variational-autoencoders-how-to-employ-neural-networks-to-generate-new-images-bdeb216ed2c0 
+VAE结构图出处：https://towardsdatascience.com/vae-variational-autoencoders-how-to-employ-neural-networks-to-generate-new-images-bdeb216ed2c0
 
-柯基图来自DALLE2论文：https://cdn.openai.com/papers/dall-e-2.pdf 
+柯基图来自DALLE2论文：https://cdn.openai.com/papers/dall-e-2.pdf
 
-CLIP模型的介绍：https://github.com/openai/CLIP 
+CLIP模型的介绍：https://github.com/openai/CLIP
 
-OpenCLIP：https://github.com/mlfoundations/open_clip 
+OpenCLIP：https://github.com/mlfoundations/open_clip
 
-Textual Inversion: https://textual-inversion.github.io/ 
+Textual Inversion: https://textual-inversion.github.io/
 
-LoRA论文：https://arxiv.org/pdf/2106.09685.pdf 
+LoRA论文：https://arxiv.org/pdf/2106.09685.pdf
 
-Dreambooth 论文：https://arxiv.org/pdf/2208.12242.pdf 
+Dreambooth 论文：https://arxiv.org/pdf/2208.12242.pdf
 
-ControlNet 论文：https://arxiv.org/pdf/2302.05543.pdf 
+ControlNet 论文：https://arxiv.org/pdf/2302.05543.pdf
 
-简单易懂的 Diffusion Model 解释：https://www.youtube.com/watch?v=1CIpzeNxIhU 
+简单易懂的 Diffusion Model 解释：https://www.youtube.com/watch?v=1CIpzeNxIhU
 
-很棒的Stable Diffusion解释：https://jalammar.github.io/illustrated-stable-diffusion/ 
+很棒的Stable Diffusion解释：https://jalammar.github.io/illustrated-stable-diffusion/
 
-同样很棒的SD解释：https://medium.com/@steinsfu/stable-diffusion-clearly-explained-ed008044e07e 
+同样很棒的SD解释：https://medium.com/@steinsfu/stable-diffusion-clearly-explained-ed008044e07e
 
-### 中文： 
+### 中文：
 
 #### Stable Diffusion UNET 结构：https://zhuanlan.zhihu.com/p/582266032
 
@@ -96,7 +96,7 @@ ControlNet 论文：https://arxiv.org/pdf/2302.05543.pdf
 
 - 采样噪声被预测了出来，所以如果我们从图像中减去它就能得到尽可能接近于模型训练样本的图像（不是精准的图像本身，而是分布，像素分布的世界里呈现起来天空通常是蓝色，人类有两个眼，小猫看向某个方向，耳朵竖起且专注）。
 
-### Stable Diffusion非常详细的介绍：https://zhuanlan.zhihu.com/p/621493124 
+### Stable Diffusion非常详细的介绍：https://zhuanlan.zhihu.com/p/621493124
 
 <img src="6.png" width="60%" height="60%">
 
