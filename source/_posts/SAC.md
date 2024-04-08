@@ -61,7 +61,7 @@ PPO同样是AC框架，不过比起DPG更接近传统的PG算法，智能体agen
 - PPO具体的流程可以参考我的另一篇[PPO_blog](https://detect.wiki/post/61815765.html)。
 
 - 也可以参考这个截图：
-![alt text](SAC/image.png)
+<img src="SAC/image.png" alt="" width="70%" height="70%">
 
 - PPO杂谈：
     - PPO与原始PG算法不同在于，每次策略参数迭代都朝着优化的方向改进，同时将策略变化限定在一定范围以内。（反之更新后策略崩溃，提高稳定性）
@@ -116,7 +116,7 @@ $$V_{soft}^\pi(s) = \mathbb{E}_{a\sim \pi}[Q_{soft}^\pi(s,a)]+\alpha H(\pi(\cdot
 
 #### Energy Based Policy(EBP)
 
-![alt text](SAC/image-1.png)
+<img src="SAC/image-1.png" alt="" width="70%" height="70%">
 
 #### SAC的前身Soft Q-Learning
 
@@ -169,13 +169,12 @@ $$\pi_{new} = argmin_{\pi \in \Pi}D_{KL}(\pi(\cdot|s_t)||\frac{\exp(\frac{1}{\al
   \end{aligned}
   $$
 
-  训练Q时，数据是从agent过往与环境交互产生的数据（replay buffer）中取出，但是$a_{t+1}$是从临时策略$\pi_{\phi}中采集出来的$，这样才是合乎我们定义（Q是策略期望汇报），无偏的估计。
+  训练Q时，数据是从agent过往与环境交互产生的数据（replay buffer）中取出，但是$a_{t+1}$是从临时策略$\pi_{\phi}$中采集出来的，这样才是合乎我们定义（Q是策略期望汇报），无偏的估计。
 
 
 - 策略$\pi_\phi$的损失函数：
     $$
-    J_{\pi}(\phi)=D_{KL} \left( \pi_{\phi}(\cdot|s_t)||\exp(\frac{1}{\alpha}Q_\theta(s_t,\cdot)-\log Z(s_t))\right) \\
-    = \mathbb{E}_{s_t \sim D, a_t \sim \pi_\phi}[\log \pi_\phi(a_t,s_t)-\frac{1}{\alpha}Q_\theta(s_t,a_t)+\log Z(s_t)]
+    J_{\pi}(\phi)=D_{KL} \left( \pi_{\phi}(\cdot|s_t)||\exp(\frac{1}{\alpha}Q_\theta(s_t,\cdot)-\log Z(s_t))\right) \\ = \mathbb{E}_{s_t \sim D, a_t \sim \pi_\phi}[\log \pi_\phi(a_t,s_t)-\frac{1}{\alpha}Q_\theta(s_t,a_t)+\log Z(s_t)]
     $$
 
     - Z此时由上一个版本的$\pi$值确定的，是确定的，只有a是由我们要argmin的$\pi_\phi$决定的，所以我们需要从$\pi_\phi$采样a，同时Z的值相当于变成常数，我们可以忽略。#QQQQQQQQQQQQQQQQ
@@ -183,8 +182,7 @@ $$\pi_{new} = argmin_{\pi \in \Pi}D_{KL}(\pi(\cdot|s_t)||\frac{\exp(\frac{1}{\al
     $$a_t = f_\phi(\epsilon_t;s_t) = f_\phi^\mu(s_t) + \epsilon_t \cdot f_\phi^\alpha()$$
     其实就是有固定的mean和std，让后再随便抽一个随机数$\epsilon$从而“确定性”的构造一个随机抽样结果，这样反向传播时的路是通畅的。
 
-    ![alt text](SAC/image-2.png)
-
+    <img src="SAC/image-2.png" alt="" width="70%" height="70%">
     于是最后：
     $$J_{\pi}(\phi)=\mathbb{E}_{s_t \sim D, \epsilon \sim N}[\log \pi_\phi(f_\phi(\epsilon_t;s_t),s_t)-\frac{1}{\alpha}Q_\theta(s_t,f_\phi(\epsilon_t;s_t))]$$
 
@@ -192,11 +190,11 @@ $$\pi_{new} = argmin_{\pi \in \Pi}D_{KL}(\pi(\cdot|s_t)||\frac{\exp(\frac{1}{\al
 
 这里再提一下梯度的事：
 
-![alt text](SAC/image-4.png)
+<img src="SAC/image-4.png" alt="" width="70%" height="70%">
 
 我没有理解梯度加法那个地方。#QQQQQQQQQQQQQQQ
 
-![alt text](SAC/image-5.png)
+<img src="SAC/image-5.png" alt="" width="70%" height="70%">
 
 
 
@@ -218,7 +216,7 @@ $$\max_{\pi} \mathbb{E}_{s_t,a_t \sim \rho_\pi}[\sum_{t=0}^\infin\gamma^tr(s_t,a
 
 现在变成：
 
-![alt text](SAC/image-6.png)
+<img src="SAC/image-6.png" alt="" width="70%" height="70%">
 
 这里做一些解释：
 
@@ -226,7 +224,7 @@ $$\max_{\pi} \mathbb{E}_{s_t,a_t \sim \rho_\pi}[\sum_{t=0}^\infin\gamma^tr(s_t,a
 
 接下来从那一推max的式子由里往外推，并使用对偶性加入拉格朗日项从而把熵限制条件去除。这里作者称满足convex所以是强对偶，所以min，max可以互换，于是最优的$\alpha$可以通过最小化一个函数得到，这个函数里的策略函数也是当前最优的。这个公式里最优的$\pi^*$是怎么来的呢？是我们确定了$\alpha$后，网络迭代出的$\pi^*$（与$\alpha$的值绑定）,所以最后直接优化最后一行的式子就可以了。
 
-![alt text](SAC/image-7.png)
+<img src="SAC/image-7.png" alt="" width="70%" height="70%">
 
 更进一步的，不只是最内层的max满足上式，对于所有时刻的$\alpha_t$和与之绑定的$\pi_t$最后优化的式子都是同构的，所以在程序里每执行一次step，然后更新策略，最后更新$\alpha$，这样就可以自动调节了。（实际实现中，$\alpha$对应的$policy$来自上一轮更新的$\pi$，为了节省再抽样的时间，因为整个过程是迭代的，所以这样做也是可以的）
 
@@ -265,7 +263,7 @@ $$\max_{\pi} \mathbb{E}_{s_t,a_t \sim \rho_\pi}[\sum_{t=0}^\infin\gamma^tr(s_t,a
   $$\pi^*_{MaxEnt} = \argmax_x \mathbb{E}_{s_t,a_t\sim \rho_\pi}[\sum_{l=t}^\infin\gamma^{l-t}\cdot (r(s_l,a_l)+\alpha H(\cdot|s_l))|(s_t,a_t)]$$
   实际上这个最优解就是上面那个Energy-based Policy。
   但是我们直接利用Energy-based函数方便是方便，但是之后需要从这个分布中抽样时就g了。所以我们曲线救国，还是用高斯参数的分布作为数簇，用神经网络调整高斯参数去逼近这个Energy-based Policy。虽然自然想到就用KL散度去衡量，但是有趣的是从KL散度的数学公式可以推出，只要KL散度梯度下降成功，那么新策略一定更优。
-![alt text](SAC/image-3.png)
+<img src="SAC/image-3.png" alt="" width="70%" height="70%">
 
 ##### 8. 策略迭代
   - 现在我们有了策略评估和策略更新，即是广义策略迭代了，那么不断迭代下去理论上就可以收敛。

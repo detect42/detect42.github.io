@@ -352,3 +352,91 @@ for p in self.optimizer_actor.param_groups:
 
 这种做法通常用在需要根据训练进度动态调整学习率的场景中，例如实现学习率衰减（learning rate decay）、预热学习率（learning rate warmup）或其他复杂的学习率调度策略时。动态调整学习率可以帮助模型更好地收敛，避免在训练早期的大幅度参数更新或在训练后期的过度拟合。
 
+
+### 直接在GPU上创建新张量
+
+```py
+import torch
+# 假设我们的系统有至少一个GPU
+device = torch.device('cuda:0')  # 这里的'cuda:0'指的是第一个GPU
+# 直接在GPU上创建一个大小为3x3的空浮点张量
+empty_tensor = torch.empty(3, 3, device=device)
+# 直接在GPU上创建一个大小为4x4的随机浮点张量
+random_tensor = torch.rand(4, 4, device=device)
+# 直接在GPU上创建一个大小为2x2的张量，所有元素初始化为0
+zeros_tensor = torch.zeros(2, 2, device=device)
+# 直接在GPU上创建一个大小为2x2的张量，所有元素初始化为1
+ones_tensor = torch.ones(2, 2, device=device)
+```
+
+
+### .detach()方法的作用与特性
+
+在PyTorch中，`.detach()`方法是一个非常重要的功能，尤其是在处理计算图和梯度计算时。了解`.detach()`的作用和特性对于有效地控制梯度流和优化内存使用非常关键。
+
+#### 作用
+
+1. **分离梯度**: `.detach()`方法创建一个新的张量，该张量与原始张量共享数据但不共享历史。换句话说，使用`.detach()`方法返回的张量不会在其操作上记录梯度，不参与梯度传播，因此对其的任何操作都不会影响到原始张量的梯度。
+
+2. **避免梯度计算**: 它常用于防止PyTorch自动计算梯度或保存计算历史，这在某些情况下非常有用，比如在评估模型时不想影响到模型参数的梯度，或者当你只需要张量的数据而不需要其梯度时。
+
+#### 特性
+
+- **共享数据**: `.detach()`返回的新张量与原始张量共享内存（即数据），这意味着如果更改了其中一个张量的数据，另一个张量的数据也会相应改变。这有助于减少内存使用，因为不需要复制数据。
+
+- **不参与自动梯度计算**: 对`.detach()`返回的张量进行的操作不会被纳入到计算图中，因此这些操作不会影响梯度。这使得`.detach()`非常适合用于停止某些变量的梯度跟踪。
+
+- **用途广泛**: `.detach()`方法在模型训练、评估、特定操作的梯度屏蔽等多种场合中都非常有用。例如，它可以用于冻结部分模型参数的梯度，或者在计算某些指标时暂时停止跟踪梯度。
+
+#### 使用场景示例
+
+假设你在训练一个模型，并希望使用模型的一部分输出作为后续计算的输入，但你不希望这些后续计算影响到模型参数的梯度。这时，就可以使用`.detach()`方法：
+
+```python
+import torch
+
+# 假设x是模型的输入，model是你的模型
+x = torch.randn(1, 3, requires_grad=True)
+output = model(x)
+
+# 假设我们只需要output的数据，而不希望其参与接下来的梯度计算
+output_detached = output.detach()
+
+# 现在，你可以对output_detached进行操作，而这些操作不会影响到原始output变量的梯度
+```
+
+在上述代码中，`output_detached`和`output`共享数据，但对`output_detached`的任何操作都不会影响到`output`的梯度，因为`output_detached`已经从计算图中分离出来了。
+
+总之，`.detach()`是处理PyTorch张量时控制梯度流动的一个强大工具，可以帮助开发者更精确地管理内存使用和梯度计算。
+
+实际上，虽然`.detach()`创建的张量`output_detached`与原始张量`output`共享数据，但对`output_detached`进行的操作不会直接影响`output`的值。这是因为直接修改`output_detached`的值（例如，通过索引赋值）通常是不允许的，因为它们是从计算图中分离出来的，旨在用于读取或作为不需要梯度计算的操作的输入。
+
+共享数据的意思是，如果原始张量`output`的值因为某些操作而改变，那么`output_detached`的值也会随之改变，因为它们底层指向的是同一块内存区域。但是，通常我们不直接修改这些张量的值，而是通过进行计算或应用函数来生成新的张量。对`output_detached`进行的任何计算都不会影响到`output`，因为`output_detached`已经从计算图中被分离出来了，它的操作不会回溯到原始张量。
+
+这里有一个简单的例子来说明这个概念：
+
+```python
+import torch
+
+# 创建一个需要梯度的张量
+x = torch.randn(3, requires_grad=True)
+
+# 通过一些操作得到新的张量
+y = x * 2
+
+# 分离y得到y_detached，它与y共享数据，但不会影响到y的梯度计算
+y_detached = y.detach()
+
+# 尝试修改y_detached的值
+# 这样的操作是不被允许的，因为直接修改张量的值通常会被PyTorch阻止
+# y_detached[0] = 1000  # 这会抛出错误
+
+# 对y_detached进行操作，生成新的张量z
+z = y_detached + 1
+
+# 打印y和z，你会发现y的值没有因为对y_detached的操作而改变
+print("y:", y)
+print("z:", z)
+```
+
+在这个例子中，`y_detached`被用来生成了一个新的张量`z`，但这对`y`本身没有任何影响。这就是`.detach()`方法的一个关键特性：它允许我们在保持数据共享的同时，避免对原始张量的梯度计算产生影响。
