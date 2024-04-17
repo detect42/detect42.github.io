@@ -110,6 +110,6 @@ $\eta(\pi') = \eta(\pi) + \sum_{t=0}^\infin \sum_s P_{\pi'}(s_t=s)\sum_{a_t}\pi'
 
 最基本的结论是：对于两个概率分布，KL-散度衡量了两个概率分布之间的差异，Fisher信息矩阵（FIM）是KL-散度的二阶近似，实际定义了概率分布空间上局部曲率。
 
-[费舍尔信息矩阵](https://blog.csdn.net/wxc971231/article/details/135591016)
+[费舍尔信息矩阵](https://blog.csdn.net/wxc971231/article/details/135591016):黎曼空间与黎曼流形,海森矩阵、费舍尔信息矩阵和 KL 散度。以及其中的数学关系。
 
 [信息论概念详细梳理](https://blog.csdn.net/wxc971231/article/details/122370306)
