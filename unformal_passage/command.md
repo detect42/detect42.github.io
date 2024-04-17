@@ -43,6 +43,10 @@ Cmd + U 撤销光标饿移动和选择
 
 替换自动黏贴图片并设定size大小：
 
+```
+!\[\w*\s*\w*\]\((GAN/image-?\d*\.png)\)
+<img src="$1" alt="" width="50%" height="50%">
+```
 
 
 
