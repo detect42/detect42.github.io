@@ -21,7 +21,7 @@ $$\theta'=\argmin_{\theta'}\nabla_\theta J(\theta)^T(\theta'-\theta)$$
 于是我们放弃使用参数空间$\theta$作为优化的“步长”，转而到$\pi_\theta$中。我们用KL散度来衡量两个分布之间的差异，我们把策略空间用KL散度衡量的距离作为邻域。
 
 
-![alt text](image.png)
+![alt text](TRPO/image.png)
 
 ## TRPO - 策略优化
 
@@ -39,13 +39,13 @@ $\eta(\pi') = \eta(\pi) + \sum_{t=0}^\infin \sum_s P_{\pi'}(s_t=s)\sum_{a_t}\pi'
 
 其中$D_{\pi'}$是新策略大量采样后得到的数据集。我们的目的是找一个更好的新策略，显然对每一个可能得新策略有要做采样是不现实的。于是希望能用$D_{\pi}$替代$D_{\pi'}$，即求解一个proxy代理$L_{\pi}(\pi')$:
 
-![alt text](image-2.png)
+![alt text](TRPO/image-2.png)
 
 我们通过先近似，再用importance sampling技术，现在只用在dataset抽样的数据上进行优化。
 
 下面先引入下界代理法(minorization-maximization (MM) algorithm)。
 
-![alt text](image-3.png)
+![alt text](TRPO/image-3.png)
 
 如果函数f很难优化，构造新函数g，满足：
 
@@ -57,45 +57,45 @@ $\eta(\pi') = \eta(\pi) + \sum_{t=0}^\infin \sum_s P_{\pi'}(s_t=s)\sum_{a_t}\pi'
 于是我们现在希望可以说明当$\pi'$在$\pi$附近一个足够小的信赖邻域(即KL散度小于一个接近0的数)，此时$L_{\pi}(\pi')$能视作$\eta(\pi')$的一个下界近似。
 
 这里具体的bound是什么呢，数学内容暂时略过：
-![alt text](image-4.png)
+![alt text](TRPO/image-4.png)
 
 
 ## TRPO - practical algorithm
 
 
-![alt text](image-5.png)
+![alt text](TRPO/image-5.png)
 
 但到这一步，$D_{KL}^{MAX}$还是没法算（因为状态无限），所以我们用均值去近似最大值（$\pi$和$\pi'$足够接近时，mean和max也接近）。
 
-![alt text](image-6.png)
+![alt text](TRPO/image-6.png)
 
 最后对$L_\pi(\pi')$进行变换：
 
-![alt text](image-7.png)
+![alt text](TRPO/image-7.png)
 
 二到三行去掉$\gamma^t$的原因，是我们不需要得到一个真正的discounted-MDP，而是只用一个"局部视角的discount-MDP"，相当于把一个轨迹看成若干个后缀轨迹，全部都是从当前状态开始的。我们认为这样近似是target-based的。
 
 最后一行使用了Importance Sampling，从而把抽样问题转成了在旧数据库里大量抽样（$D_\pi$中的样本，可以更新多次$\pi'$，实际一般设置为2次）。**TRPO其实不单单是提升了样本效率，根据前面的分析，其还提升了训练的稳定性(和单增性)。**
 
-![alt text](image-10.png)
+![alt text](TRPO/image-10.png)
 
-![alt text](image-8.png)
+![alt text](TRPO/image-8.png)
 
 这里带约数求解过程使用了KKT条件和Hession free的共轭梯度法，具体可以参考下图：
 
-![alt text](image-11.png)
+![alt text](TRPO/image-11.png)
 
 补充：
 
-![alt text](image-12.png)
+![alt text](TRPO/image-12.png)
 
-![alt text](image-13.png)
-![alt text](image-14.png)
+![alt text](TRPO/image-13.png)
+![alt text](TRPO/image-14.png)
 
 
 关于TRPO的介绍到此终于结束了。总结一下，TRPO算法首先从Policy Improvement的角度找到了一个方便求解的Proxy，然后证明了该Proxy在满足信赖邻域条件时能够近似$\eta(\pi')$的下界，最后采用多步启发式近似获得了一个实际可以求解的优化目标，该优化目标使用二阶梯度方法进行求解。
 
-![alt text](image-9.png)
+![alt text](TRPO/image-9.png)
 
 
 ## 后记
