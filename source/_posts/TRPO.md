@@ -98,18 +98,49 @@ $\eta(\pi') = \eta(\pi) + \sum_{t=0}^\infin \sum_s P_{\pi'}(s_t=s)\sum_{a_t}\pi'
 ![alt text](TRPO/image-9.png)
 
 
+-----
+
+最后总结一下思路因果链：
+
+1. 我们希望对策略梯度下降优化，但是$\theta$空间与策略的黎曼空间不一致，导致对$\theta$的欧式空间的梯度优化在策略表现上会很怪。
+2. TRPO分别在目标函数和梯度更新两方面做了改进：
+
+      **梯度更新方面的改进**
+
+      TRPO基于Natural Policy Gradient (即用KL divergence约束policy，避免policy剧烈迭代)，做了以下两点改进：
+
+      第一点，为避免求解复杂的Fisher/Hessian逆运算，使用了conjugate gradient
+      第二点，将学习率换成 α^j * NPG原始的学习率，α∈(0,1)，由大至小线性搜索使目标函数大于0 (即本次迭代比上次好)，且符合KL divergence 的最小整数j值 (防止泰勒展开带来的误差)
+
+      **目标函数方面的改进**
+      在目标函数中引入Importance Sampling，提升了sample efficiency (原来每次采样完后只能更i性能一次梯度就把样本扔掉。引入IS后，可以多次使用θ'采样得的数据更新θ，即使用一批数据进行多次gradient ascent)。
+
+      还有一点有意思的是，作者将新的expeted disconted reward拆成了两部分，即旧的reward+某一部分。思想是，如果，理想情况下，"某一部分"恒为正，则reward是单调不减的，即每次策略都比之前的好。
+
+      这之外还有一点特殊的，在推导surrogate function的过程中，作者使用了MM算法，即找了目标函数的下界作为surrogate function。
+3. 剩下的点是对2的补充说明。
+4. 为了充分利用数据（避免新的策略需要采样才能知道其好坏），我们先后使用MM（minorization-maximization）算法和IS（importance sampling）技术，将优化目标转化为在旧数据集上的优化。经过一些列的近似和推导，我们得到了一个可以在旧数据集上优化的目标函数。（就是之前讲过关于Advantage Function的那个目标函数）
+5. 优化梯度方面，同样可以算出4提出来的优化目标，和KL散度的限制条件，尝试用fisher信息矩阵近似KL散度，从而利用KTT等条件，得到了自然梯度下降的优化目标。
+6. 但是计算FIM的逆是困难的（参数太大，矩阵太大），我们利用Hessian-free的共轭梯度方法，解决$HV$的矩阵product向量的问题。
+7. 这样就把TRPO所有的思路串起来了！
+
+
 ## 后记
 
-[TRPO&&PPO梳理](https://blog.csdn.net/qq_45832958/article/details/123357739)
+[TRPO&&PPO梳理](https://blog.csdn.net/qq_45832958/article/details/123357739) 这个补充了各种各样的小知识点，很赞。
 
-[Gradient Descent&&Newton's Method&&Conjugate Gradient&&Hessian-Free Optimization](https://andrew.gibiansky.com/blog/machine-learning/hessian-free-optimization/)
+[Gradient Descent&&Newton's Method&&Conjugate Gradient&&Hessian-Free Optimization](https://andrew.gibiansky.com/blog/machine-learning/hessian-free-optimization/)：从梯度下降讲到Hessian-free优化，补充数学知识。
 
-[从梯度下降到Hessian-Free优化](https://zhuanlan.zhihu.com/p/23866364?utm_source=qq&utm_medium=social&utm_oi=1193914178270945280)
+[从梯度下降到Hessian-Free优化](https://zhuanlan.zhihu.com/p/23866364?utm_source=qq&utm_medium=social&utm_oi=1193914178270945280)：上一篇的中文译本。
 
-[rollout算法](https://zhuanlan.zhihu.com/p/61062275?utm_source=qq&utm_medium=social&utm_oi=1193914178270945280)
+[rollout算法](https://zhuanlan.zhihu.com/p/61062275?utm_source=qq&utm_medium=social&utm_oi=1193914178270945280)：sampling策略的不同。
+
+-----
 
 最基本的结论是：对于两个概率分布，KL-散度衡量了两个概率分布之间的差异，Fisher信息矩阵（FIM）是KL-散度的二阶近似，实际定义了概率分布空间上局部曲率。
 
-[费舍尔信息矩阵](https://blog.csdn.net/wxc971231/article/details/135591016):黎曼空间与黎曼流形,海森矩阵、费舍尔信息矩阵和 KL 散度。以及其中的数学关系。
+[费舍尔信息矩阵](https://blog.csdn.net/wxc971231/article/details/135591016):黎曼空间与黎曼流形,海森矩阵、费舍尔信息矩阵和 KL 散度。非常数学理性地探讨了这些复杂概率中的数学关系。
 
-[信息论概念详细梳理](https://blog.csdn.net/wxc971231/article/details/122370306)
+![alt text](TRPO/image11.png)
+
+[信息论概念详细梳理](https://blog.csdn.net/wxc971231/article/details/122370306)：数学知识储备。
