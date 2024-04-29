@@ -1,8 +1,14 @@
+---
+title: OS_lab
+tags: OS
+abbrlink: 3d86db23
+date: 2024-04-29 17:31:28
+---
 # <center> OS lab </center>
 
 ## [M1: 打印进程树 (pstree)](https://jyywiki.cn/OS/2024/labs/M1.md)
 
-![alt text](image.png)
+![alt text](OS_lab/image.png)
 
 总体思路按照实验指南：
 
@@ -280,8 +286,8 @@ int main() {
 
 ## L0: 为计算机硬件编程
 
-![alt text](image-2.png)
-![alt text](image-1.png)
+![alt text](OS_lab/image-2.png)
+![alt text](OS_lab/image-1.png)
 
 本次作业的任务是在Abstract Machine上打印图片。
 
@@ -292,7 +298,7 @@ void putch(char ch); //putch 会在调试终端上输出一个字符；
 
 事实上，裸机编程过程中，我们缺少了打量库函数：
 
-![alt text](image-3.png)
+![alt text](OS_lab/image-3.png)
 
 1. 通过:
 ```c
@@ -308,11 +314,11 @@ void ioe_write(int reg, void *buf);
     h = info.height;
 ```
 
-2. 把图片转化为数组形式，直接include<image.h>暴力把图片数据导进来。
+2. 把图片转化为数组形式，直接include<OS_lab/image.h>暴力把图片数据导进来。
 
 ```c
-//image.h
-uint32_t image[] = {
+//OS_lab/image.h
+uint32_t OS_lab/image[] = {
     0x906B5C,
     0x906B5C,
     0x926D5D,
@@ -331,7 +337,7 @@ uint32_t image[] = {
 
 ```c
 //kernel.c
-#include "image.h"
+#include "OS_lab/image.h"
 ```
 
 至于如何把图片变成数组，请右转python万能脚本。
@@ -398,7 +404,7 @@ void print_image()
    */
     for (int y = 0; y < h; y++)
         for (int x = 0; x < w; x++)
-            draw_tile(x, y, 1, 1, image[Getid(477,337,x,y)]);
+            draw_tile(x, y, 1, 1, OS_lab/image[Getid(477,337,x,y)]);
 }
 ```
 
@@ -456,7 +462,7 @@ int main(const char *args)
 ---
 ## [M2: 协程库 (libco)](https://jyywiki.cn/OS/2024/labs/M2.md)
 
-![alt text](image-4.png)
+![alt text](OS_lab/image-4.png)
 
 我们需要实现协程库 co.h 中定义的 API：
 
@@ -697,7 +703,7 @@ makecontext(&context, function, args_count, ...);
 
 ## [L1: 物理内存管理 (pmm)](https://jyywiki.cn/OS/2024/labs/L1.md)
 
-![alt text](image-5.png)
+![alt text](OS_lab/image-5.png)
 
 题目给定了一段堆空间，要求我们在多处理器下实现内存的malloc和free。
 
