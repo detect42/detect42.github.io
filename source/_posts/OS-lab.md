@@ -728,9 +728,9 @@ makecontext(&context, function, args_count, ...);
 
 需要大内存分配时，再对线段树上全局锁，并查询可用内存。并标记被占用的cpu专属内存。
 
-### 2.对2^i小内存和4k单独开链表
+### 2.对$2^i$小内存和4k单独开链表
 
-对于2^i小内存和4k内存，我们提前把堆区内存分配到2^i和4k为单位的若干个链表中，每个链表对应一个cpu。
+对于$2^i$小内存和4k内存，我们提前把堆区内存分配到$2^i$和4k为单位的若干个链表中，每个链表对应一个cpu。
 
 这样我们可以用一个类似生产者消费者模型，每个cpu要取内存，从特定size的list中拿锁。
 
@@ -749,7 +749,7 @@ free时，直接把内存放回对应的list中。
 
 ---
 
-我选择了方法4，因为这个方法容易实现，而且在当前workload下，效率也是可以接受的。
+**我选择了方法4**，因为这个方法容易实现，而且在当前workload下，效率也是可以接受的。
 
 接下来继续解决list内存分配的问题。
 
@@ -759,159 +759,119 @@ free时，直接把内存放回对应的list中。
 
 于是我们这样定义：
 
-- 每个free block的由**24个byte的header组成**，包括next指针，size，以及list编号（用于获得对应的锁）。这之后有连续的size大小的内存。
+- 每个free block的由**40个byte的header组成**，包括next指针，size，以及list编号（用于获得对应的锁），以及这个区间的开头和结尾的位置。这之后有连续的size大小的内存。
 - next指针指向下一段free block（注意next指针指向下一个header和内存之间的位置。）
+- **总的来说，就是在list的node前面空出40byte来存放这个node有关的信息。**
 
-### 方案4实现
+### <center> 方案4实现
+
+#### 思路及优化
+
+为了避免一把大锁在多线程情况下的争用，我们可以将内存分成多个list，每个list对应一把锁。
+
+list的总数是一个hyperparameter：NUM_LISTS，我们可以根据实际情况调整。（最后设置为32，这个参数的原因后面讲）
+
+这样对于每个cpu只要不刚好抽到了NUM_LISTS中的同一个list，**那么就不存在锁的争用。**
+
 
 #### 准备工作
 
 首先移植xv6的spinlock。（略）
 
-```c
-#define PAGE_SIZE 4096
-#define SMALL_BLOCK_SIZE 128
-#define MAX_ALLOC_SIZE (16 * 1024 * 1024) // 16 MiB
-
-#define NUM_LISTS 128 // 定义链表的数量
-
-//24byte链表结构
-typedef struct node_t {
-    int size;
-    struct node_t *next;
-    int lockid;
-} node_t;
-
-//这里并没有给heads分配空间，在需要用时直接在给定的堆区内存上用地址分配空间
-node_t *heads[NUM_LISTS];
-
-spinlock_t mem_lock[NUM_LISTS];
-
-// 获取对齐所需的最小2的幂，对齐大小为2^align
-size_t min_alignment(size_t size)
-{
-    size_t align = 1;
-    while (align < size)
-        align <<= 1;
-    return align;
-}
-```
 
 #### INIT
 
-```c
-static void pmm_init()
-{
-    for (int i = 0;i<NUM_LISTS;i++){
-        char lock_name[50];                              // 创建一个足够大的字符数组来存储锁的名称
-        sprintf(lock_name, "Memory Manager Lock %d", i); // 将整数转换为字符串，并组合成锁的名称
-        mem_lock[i] = spin_init(lock_name);
-    }
+我们有一个超参数NUM_LISTS，我们需要在给定的堆区内存上分配NUM_LISTS个node_t的空间。
 
-    uintptr_t pmsize = (uintptr_t)heap.end - (uintptr_t)heap.start;
-    printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, heap.start, heap.end);
 
-    uintptr_t total_size = pmsize;
-    uintptr_t segment_size = total_size / NUM_LISTS; // 每个链表管理一段内存大小
+注意在初始化时，我先剥离了$\frac{1}{16}$的总内存，当NUM——LISTS设置的足够高时，确保大内存有地方分配。
 
-    //根据NUM_LIST均分内存
-    for (int i = 0; i < NUM_LISTS; i++) {
-        uintptr_t segment_start = (uintptr_t)heap.start + i * segment_size;
-        uintptr_t segment_end = segment_start + segment_size;
-        if (i == NUM_LISTS - 1) {
-            segment_end = (uintptr_t)heap.end; // 确保最后一个段包括所有剩余的内存
-        }
-        //heads指向的是24byte信息前的位置
-        heads[i] = (node_t *)segment_start;
-        heads[i]->size = segment_end - segment_start - sizeof(node_t);
-        heads[i]->next = NULL;
-        heads[i]->lockid = -1;
-      //  printf("List %d: starts at %p with size %d\n", i, (void *)segment_start, heads[i]->size);
-    }
-
-}
-
-```
+由此，我们有了NUM_LISTS个链表，初始为空，表示所有内存都是free的。
 
 #### Malloc
 
-```c
-//找到对齐的位置
-inline uintptr_t Getbegin(uintptr_t pos, size_t align){
-    return (pos + align - 1) & ~(align - 1);
-}
+流程如下：
 
+1. 找到哪一个链表剩余容量最大，假定为i号链表
+2. 拿到i号锁
+3. 遍历i号链表，找到第一个满足条件的内存块，分配内存
+4. 将剩余内存块放回链表
+5. 释放锁
+
+```c
+int Sum[NUM_LISTS];
 void *kalloc(size_t size)
 {
-
     if (size > MAX_ALLOC_SIZE)
         return NULL; // 超过最大限制
 
     size_t align = min_alignment(size);
 
     void *block = NULL;
+    for (int ii = 0; ii <= NUM_LISTS/3 ; ii++) {
+        int i=0;
 
-    // 找NUM_LIST//2次，如果还找不到大小合适的块，则放弃
-    for (int ii = 0; ii <= NUM_LISTS / 2; ii++) {
-        int i = rand() % NUM_LISTS;//每次随机找一个list
+        if (size > 2*1024 * 1024) {
+            if (ii == 1)
+                return NULL;
+            i = NUM_LISTS - 1;
+        }
+        else
+        {
+            for (int j = 0; j < NUM_LISTS -1; j++){
+                if(Sum[j] > Sum[i])
+                    i = j;
+            }
+        }
         bool ok = false;
-       // int ansid = 0;
-        ATOMIC(&mem_lock[i]){ //拿到对应list标号的锁
-            node_t* las = NULL;
+        ATOMIC(&mem_lock[i])
+        {
+            node_t *las = NULL;
             for (node_t *current = heads[i]; current; current = current->next) {
-
                 uintptr_t beginpos = (uintptr_t)current + sizeof(node_t);
                 uintptr_t aligned_addr = Getbegin(beginpos, align);
-                //require表示把当前需要的size和下一个header放下的最少空间
                 uintptr_t require = aligned_addr + size + sizeof(node_t) - beginpos;
-                uintptr_t remain = current->size;//当前free块的空挡
-
-
-
-                if (require<=remain) {
+                uintptr_t remain = current->size;
+                if (require <= remain) {
 
                     ok = true;
-                    //ansid = i;
 
-                    //分裂，把剩下的空间重新表示
                     uintptr_t nextpos = aligned_addr + size;
-                    node_t* nextnode = (node_t*)nextpos;
+                    node_t *nextnode = (node_t *)nextpos;
                     nextnode->size = remain - require;
-                    //printf("nextnode size = %d\n", nextnode->size);
                     nextnode->lockid = -1;
                     nextnode->next = current->next;
+                    nextnode->head = nextpos;
+                    nextnode->tail = current->tail;
 
-                    //重新链表，相当于删除用掉的块
-                    if(las!=NULL){
+                    if (las != NULL) {
                         las->next = nextnode;
                     }
                     else{
                         heads[i] = nextnode;
                     }
 
-                    //更新用掉的块信息，方便free时找回
-                    current = (node_t*)(aligned_addr-sizeof(node_t));
+                    current = (node_t *)(aligned_addr - sizeof(node_t));
                     current->size = size;
                     current->next = NULL;
                     current->lockid = i;
-
-                    //传回的是可以直接放值的指针，所以需要再current上平移24byte
-                    block =(void*)((uintptr_t)current + sizeof(node_t));
-
+                    current->head = beginpos - sizeof(node_t);
+                    current->tail = aligned_addr + size - 1;
+                    Sum[i]=heads[i]->size;
+                    block = (void *)((uintptr_t)current + sizeof(node_t));
                     break;
+                }
+                else{
+                    ;
                 }
                 las = current;
             }
-
         }
 
-        if(ok){
+        if (ok) {
             break;
         }
-
-        printf("Another try:\n");
     }
-
     return (void *)block;
 }
 
@@ -919,21 +879,229 @@ void *kalloc(size_t size)
 
 #### Free
 
-```c
-static void kfree(void *ptr) {
-    //直接移动指针，取回块的信息
-    node_t *current = (node_t *)((uintptr_t)ptr - sizeof(node_t));
-    int ii = current->lockid;
+Free流程如下：
 
-    //上锁，并暴力地丢到队头
+1. 通过heap上移动指针，读取到对应的锁id
+2. 拿到对应的锁
+3. 遍历一遍链表，看放回该内存后可不可以合并，这是很重要的操作，可以减少内存碎片
+4. 动态合并可以保证把可以合并的内存都合并了
+5. 最后细节，我们会把最大的内存块放在开头，方便malloc时快速确定丢哪个list内。
+
+```c
+static void kfree(void *ptr)
+{
+    if (ptr == NULL)
+        return;
+    node_t *current = (node_t *)((uintptr_t)ptr -  sizeof(node_t));
+    int ii = current->lockid;
     ATOMIC(&mem_lock[ii])
     {
-        current->next = heads[ii];
-        heads[ii] = current;
-    }
+        node_t tmp;
+        tmp.head = current->head;
+        tmp.tail = current->tail;
+        tmp.size = current->size;
+        tmp.lockid = current->lockid;
+        tmp.next = NULL;
+        current = (node_t *)(current->head);
+        current->head = tmp.head;
+        current->tail = tmp.tail;
+        current->size = tmp.tail - tmp.head - sizeof(node_t);
+        current->lockid = -1;
+        current->next = NULL;
+        uintptr_t Begin = current->head;
+        uintptr_t End = current->tail;
+        current->lockid = -1;
+        while (1){
+            bool ok = false;
+            node_t *las = NULL,*NEXT;
+            for (node_t *p = heads[ii]; p != NULL; p = NEXT) {
+                NEXT = p->next;
+                uintptr_t beginpos = p->head;
+                uintptr_t endpos = p->tail;
+                if (End + 1 == beginpos) {
+                    current->size += (endpos-beginpos+1);
+                    current->tail = endpos;
+                    if (las != NULL) {
+                        las->next = p->next;
+                    } else {
+                        heads[ii] = p->next;
+                    }
+                    ok = true;
+                    break;
+                }
+                else if (endpos + 1 == Begin) {
+                    if (las != NULL) {
+                        las->next = p->next;
+                    } else {
+                        heads[ii] = p->next;
+                    }
+                    p->tail = current->tail;
+                    p->size = current->size;
+                    current = (node_t*)(p->head);
+                    current->size += (endpos - beginpos + 1);
+                    current->head = beginpos;
+                    current->next = NULL;
+                    current->lockid = -1;
+                    ok = true;
+                }
+                else
+                    las = p;
+            }
+            if (!ok) {
+                break;
+            }
+        }
 
+
+//---------------------------
+        if (!heads[ii]) {
+            heads[ii] = current;
+        }
+        else{
+            if(heads[ii]->size < current->size){
+                current->next = heads[ii];
+                heads[ii] = current;
+            }
+            else
+            {
+                if (heads[ii]->next == NULL) {
+                    heads[ii]->next = current;
+                } else {
+                    current->next = heads[ii]->next;
+                    heads[ii]->next = current;
+                }
+            }
+        }
+
+        Sum[ii] = heads[ii]->size;
+    }
 }
 ```
 
+#### coding中遇到的难题
 
+由于要求内存对齐，而我的实现是在对齐的地址前存放40byte的node信息，所以在malloc和free过程中处理好node信息的位置相当折磨，尤其是引入并发后，很多细节问题要么不会被暴漏，要么混在并发报错里不易察觉。所以调试花费了很久的时间。（可以在我的malloc和free函数中看到，有关node信息的处理和对齐非常繁琐复杂。）
+
+#### NUM_LISTS的选择
+
+- 不能太小，因为太小会导致锁的争用，效率低下。且一个list管辖的内存大，free时连环合并内存块会比较耗时。
+- 不能太大，因为太大会导致单个list容纳的内存过小，压力测试中容易出现遍历完这个list也找不到合适的内存，不得不换一个list去找的情况。同时会让我们维护最大空闲list的操作变得复杂。
+
+综上，经过人工超参数梯度下降，我选择了32，这个参数在我的测试中表现良好。
+
+----
+
+## [M3: GPT-2 并行推理 (gpt.c)](https://jyywiki.cn/OS/2024/labs/M3.md)
+
+llm复杂度瓶颈在于矩阵乘法matmul_forward。
+
+让gpt翻译一下：
+
+### matmul_forward
+
+解释 `matmul_forward` 函数中矩阵乘法的运作原理和细节。
+
+#### 矩阵乘法的上下文
+
+在你的 `matmul_forward` 函数中，处理的是批量矩阵乘法，涉及到三个主要的矩阵：
+1. **输入矩阵 `inp`（相当于矩阵 \( A \)）**:
+   - 这里，`inp` 的尺寸为 `[B, T, C]`。`B` 是批次大小，表示有多少独立的样本或数据点；每个样本有 `T` 个时间步；每个时间步有 `C` 个特征或元素。
+   - 因此，对于每个 `(b, t)` 对，`inp[b, t, :]` 是一个长度为 `C` 的向量。
+
+2. **权重矩阵 `weight`（相当于矩阵 \( B \)）**:
+   - `weight` 的尺寸为 `[OC, C]`。这表示每一列都是一个与输入矩阵的一行进行点乘的权重向量，共有 `OC` 个这样的权重向量。
+   - 每个输出通道 \( o \)（从 0 到 `OC-1`）都有一个与之对应的权重向量 `weight[o, :]`，这是一个长度为 `C` 的向量。
+
+3. **输出矩阵 `out`（相当于矩阵 \( C \)）**:
+   - 输出矩阵 `out` 的尺寸为 `[B, T, OC]`。这意味着对于每个 `(b, t)` 对，我们都要计算一个长度为 `OC` 的向量，这个向量是 `inp[b, t, :]` 和所有 `weight[o, :]` 的点乘结果的集合。
+
+#### 矩阵乘法的计算
+
+对于每个输出 \( out[b, t, o] \)：
+- 我们取 `inp[b, t, :]`（长度为 `C` 的向量）。
+- 然后用 `weight[o, :]`（也是长度为 `C` 的向量）。
+- 计算这两个向量的点积（scalar product），结果就是 `out[b, t, o]`。
+
+公式表达为：
+\[
+out[b, t, o] = \sum_{i=0}^{C-1} inp[b, t, i] \times weight[o, i]
+\]
+这里的求和是在 \( i \) 上进行，其中 \( i \) 遍历整个特征或元素的长度。
+
+#### 并行化的可行性
+
+这个计算过程中，每个 \( out[b, t, o] \) 的计算都是独立的。这意味着对于不同的输出通道 \( o \)（或者说对于不同的 \( o \) 的集合），我们可以在不同的线程上并行执行这些计算，因为：
+- 每个 \( out[b, t, o] \) 只依赖于 `inp[b, t, :]` 和 `weight[o, :]`，而这些输入和权重之间没有跨 \( o \) 的依赖。
+- 因此，分割输出通道 \( OC \) 并分配给多个线程可以让每个线程独立计算一部分输出矩阵 \( C \) 的列（即 \( out \) 的第三维），没有需要同步的数据依赖。
+
+希望这样详细的解释能帮助你更好地理解 `matmul_forward` 函数的工作原理和并行化的合理性。
+
+### 并行优化
+
+显然，最后一维OC不同的pos相互独立互相不干扰，所以我们可以并行化这个过程。
+
+```c
+// 设定一个结构体参数，方便传递给线程函数
+typedef struct {
+    float *out;
+    float *inp;
+    float *weight;
+    float *bias;
+    int start;
+    int end;
+    int B;
+    int T;
+    int C;
+    int OC;
+} MatMulArgs;
+
+void *matmul_worker(void *arg)
+{
+    MatMulArgs *args = (MatMulArgs *)arg;
+    for (int b = 0; b < args->B; b++) {
+        for (int t = 0; t < args->T; t++) {
+            float *out_bt = args->out + b * args->T * args->OC + t * args->OC;
+            float *inp_bt = args->inp + b * args->T * args->C + t * args->C;
+            for (int o = args->start; o < args->end; o++) { //这个线程负责的oc区间
+                float val = args->bias ? args->bias[o] : 0.0f;
+                float *wrow = args->weight + o * args->C;
+                for (int i = 0; i < args->C; i++) {
+                    val += inp_bt[i] * wrow[i]; //真正单个oc的计算
+                }
+                out_bt[o] = val;
+            }
+        }
+    }
+    return NULL;
+}
+
+void matmul_forward(float *out, float *inp, float *weight, float *bias,
+                    int B, int T, int C, int OC)
+{
+    int num_threads = 4;
+    pthread_t threads[num_threads];
+    MatMulArgs args[num_threads];
+    int chunk_size = OC / num_threads;
+    int remaining_channels = OC % num_threads;
+
+    for (int i = 0; i < num_threads; i++) { //对每个线程把oc区间分配均匀
+        args[i].out = out;
+        args[i].inp = inp;
+        args[i].weight = weight;
+        args[i].bias = bias;
+        args[i].start = i * chunk_size;
+        args[i].end = (i == num_threads - 1) ? (i + 1) * chunk_size + remaining_channels : (i + 1) * chunk_size;
+        args[i].B = B;
+        args[i].T = T;
+        args[i].C = C;
+        args[i].OC = OC;
+        pthread_create(&threads[i], NULL, matmul_worker, (void *)&args[i]);
+    }
+
+    for (int i = 0; i < num_threads; i++) {
+        pthread_join(threads[i], NULL);
+    }
+}
+
+```
 

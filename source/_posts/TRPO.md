@@ -124,6 +124,9 @@ $\eta(\pi') = \eta(\pi) + \sum_{t=0}^\infin \sum_s P_{\pi'}(s_t=s)\sum_{a_t}\pi'
 6. 但是计算FIM的逆是困难的（参数太大，矩阵太大），我们利用Hessian-free的共轭梯度方法，解决$HV$的矩阵product向量的问题。
 7. 这样就把TRPO所有的思路串起来了！
 
+## 实验结果
+
+![alt text](TRPO/image111.png)
 
 ## 后记
 

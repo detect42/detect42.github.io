@@ -70,6 +70,8 @@ $$\nabla R = E_{\gamma \sim p_{\theta'(\gamma)}}[\frac{p_{\theta}}{p_\theta'}A\n
 
 $$A^{\theta}(s_t,a_t) = \sum_{t'>t}\gamma^{t'-t}r^{t'} - V_{\phi}(s_t)$$
 
+注意我们这一步只推导了梯度，我们要求的是目标函数，然后梯度下降，不过容易从这个梯度式子反推出目标函数。（把后面的$\nabla \log p_{\theta}(a_t|s_t)$删去就刚好是积分函数了。（详细推导可以看博客末尾的参考资料链接）
+
 同时，依据重要性采样原则，$p_{\theta}$和$p_{\theta'}$不能差别太远了。(因为这个原因，用旧数据也不宜update太多次)
 
 一般对此有两种方法：
@@ -90,6 +92,11 @@ Well,现在我们只需要找到方法更新critic函数就可以了，$V_{\phi}
 ![alt text](PPO/image-12.png)
 
 
+----
+
+一些好的参考资料：
+
+- [公式推导](https://blog.csdn.net/niulinbiao/article/details/134081800)
 
 
 

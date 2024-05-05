@@ -440,3 +440,125 @@ print("z:", z)
 ```
 
 在这个例子中，`y_detached`被用来生成了一个新的张量`z`，但这对`y`本身没有任何影响。这就是`.detach()`方法的一个关键特性：它允许我们在保持数据共享的同时，避免对原始张量的梯度计算产生影响。
+
+----
+
+### torch 根据概率抽样
+
+```python
+probs = self.actor(state)
+action_dist = torch.distributions.Categorical(probs)
+action = action_dist.sample()
+```
+
+
+---
+
+
+### 获得网络全部参数self.actor.parameters()
+
+注意这里坑点，假设你有一个简单的神经网络，其中包括两个全连接层，每层的权重和偏置都需要计算梯度。例如：
+
+第一层权重形状为 [100, 50]，偏置形状为 [50]。
+第二层权重形状为 [50, 10]，偏置形状为 [10]。
+计算这些参数的梯度后，你将得到四个梯度张量，它们的形状分别是 [100, 50]、[50]、[50, 10]、[10]。如果你想将这些梯度合并为一个向量进行进一步处理（比如更新参数），你需要先将每个张量展平。grad.view(-1) 正是用于这个目的：将任意形状的张量重塑为一维向量。
+
+---
+
+### 张量中提取指定索引元素
+
+```py
+log_probs = torch.log(actor(states).gather(1, actions))
+```
+
+.gather(dim, index) 是一个PyTorch操作，用于根据index指定的索引在指定的维度dim上选取元素。
+在这个上下文中，actions 应该是一个形状为 [batch_size, 1] 的张量，包含每个状态对应的选择动作的索引。
+gather(1, actions) 从 actor(states) 的输出中沿着第二维（dim=1，动作维度）收集动作概率。这意味着从每行（每个状态的动作概率分布）中提取由 actions 指定的动作的概率。
+
+---
+
+### 显式向量化处理参数
+
+在 PyTorch 中，`torch.nn.utils.convert_parameters.vector_to_parameters` 函数用于将一个一维向量转换成一个与网络参数形状相匹配的参数集。这通常用在优化算法中，尤其是在那些需要显式地处理参数作为向量的场景，如某些高级优化技术或者参数更新策略中。
+
+- 详细语法解析
+
+函数 `torch.nn.utils.convert_parameters.vector_to_parameters(vector, parameters)` 接受两个参数：
+
+1. **vector**: 这是一个一维向量，其中包含了应该被加载到模型中的所有参数值。这个向量通常是通过展平模型的所有参数获得的（例如使用 `torch.nn.utils.parameters_to_vector` 函数）。
+
+2. **parameters**: 这是一个参数迭代器，通常可以通过模型的 `.parameters()` 方法获得。它应该包括所有将要被更新的参数。
+
+- 函数作用
+
+这个函数的作用是将一维向量中的参数值赋值回具有特定形状的模型参数中。这通常在以下情况中非常有用：
+
+- **参数恢复**：在进行一些操作（如优化步骤）后，可能需要将一维向量形式的参数恢复到模型的参数形状中。
+- **优化算法**：在某些优化算法中，尤其是那些需要计算参数的Hessian向量积的算法中，参数可能会被临时转换成向量形式进行计算，之后需要转换回原始形状以进行模型更新。
+
+
+示例代码：
+
+假设你有一个简单的神经网络模型，你需要将其参数展平后的向量恢复到模型的参数中：
+
+```python
+import torch
+import torch.nn as nn
+from torch.nn.utils import parameters_to_vector, convert_parameters
+
+# 定义一个简单的网络
+class SimpleNet(nn.Module):
+    def __init__(self):
+        super(SimpleNet, self).__init__()
+        self.fc1 = nn.Linear(10, 5)
+        self.fc2 = nn.Linear(5, 2)
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = self.fc2(x)
+        return x
+
+# 实例化网络
+model = SimpleNet()
+
+# 获取模型的所有参数
+original_parameters = list(model.parameters())
+
+# 将参数转换为一个向量
+params_vector = parameters_to_vector(original_parameters)
+
+# 模拟一些变化到这个向量
+new_params_vector = params_vector + 0.5
+
+# 将更新后的向量参数恢复到模型的参数中
+convert_parameters.vector_to_parameters(new_params_vector, model.parameters())
+
+# 检查模型参数是否更新
+for param in model.parameters():
+    print(param)
+```
+
+在这个例子中，`vector_to_parameters` 函数用于将修改后的参数向量`new_params_vector`重新赋值给模型的参数。这是在复杂的自定义优化流程中常见的一个步骤。
+
+---
+
+### 一个元素的张量到标准 Python 类型的转换
+
+在你的 take_action 函数中，使用 [action.item()] 来返回动作是为了处理几个实际的问题，并且确保代码的通用性和效率。这里是具体原因的详细解释：
+
+张量到标准 Python 类型的转换：
+action.item(): 这个方法是用来从一个只有一个元素的张量中提取其值并转换成一个标准的Python数值（如float或int）。action_dist.sample() 会返回一个张量，哪怕这个张量只包含一个数值（这在大多数单一动作决策场景中都是这样）。使用 .item() 可以有效地从张量中提取出那个单一的动作值。
+
+---
+
+### 在分部下计算log_prob概率
+
+```py
+action_dists = torch.distributions.Normal(mu, std)
+log_probs = action_dists.log_prob(actions)
+# 这里的actions是一个轨迹中的动作序列
+```
+
+功能说明:
+- action_dists: 这是一个概率分布对象，通常是由策略网络（例如前面讨论的 PolicyNetContinuous）生成的。在连续动作空间中，这个分布通常是正态（高斯）分布，由动作的均值（mu）和标准差（std）参数化。
+- log_prob(actions): 这是一个方法，用于计算给定动作 actions 在 action_dists 定义的概率分布下的对数概率。对数概率是很多强化学习算法中的关键组成部分，尤其是那些基于概率的策略梯度方法。
