@@ -4,7 +4,7 @@ tags: python
 abbrlink: 22c2c40d
 date: 2024-03-18 16:45:07
 ---
-## Python
+# <center> Python
 
 ```python
 D = collections.defaultdict(list)
@@ -67,7 +67,57 @@ fav[ord(c)-ord('A')] = True
 
 利用ord转成ascii码,然后减去'A'的ascii码,得到了一个0-25的数字,可以用来索引数组.
 
-## Numpy
+---
+
+## python函数传参规则
+在 Python 中，调用函数时参数的传递有特定的规则。特别是关于位置参数和关键字参数的顺序，Python 对此有严格的要求。错误信息 `SyntaxError: positional argument follows keyword argument` 表示在函数调用时，位置参数出现在了关键字参数之后，这是不允许的。
+
+### 位置参数和关键字参数
+
+1. **位置参数**：
+   - 位置参数是在函数调用时按照函数定义中参数的顺序传递的值。它们不需要使用参数名，因为它们的位置决定了哪个是哪个。
+
+2. **关键字参数**：
+   - 关键字参数通过“关键字=值”的形式在函数调用中指定。使用关键字参数时，参数的顺序可以与函数定义中的顺序不同，因为参数值是通过关键字（即参数名）映射的。
+
+### 规则
+
+在 Python 的函数调用中，关键字参数必须位于所有位置参数之后。这样做的目的是为了避免歧义和提高代码的可读性。如果位置参数出现在关键字参数之后，解释器将无法正确理解每个参数的值应该赋予哪个形式参数。
+
+### 示例
+
+假设有一个函数定义如下：
+
+```python
+def my_function(a, b, c):
+    print("a:", a)
+    print("b:", b)
+    print("c:", c)
+```
+
+正确的调用方法可以是：
+
+```python
+my_function(1, 2, c=3)  # 所有位置参数出现在关键字参数之前
+```
+
+错误的调用会导致 `SyntaxError`：
+
+```python
+my_function(1, b=2, 3)  # SyntaxError: positional argument follows keyword argument
+```
+
+在上述错误的例子中，位置参数 `3` 被放在了关键字参数 `b=2` 之后，这违反了参数传递的规则。
+
+### 解决方案
+
+要避免这类错误，确保在任何关键字参数之后不再出现位置参数。如有必要，可以将所有参数都转换为关键字参数，这样顺序就不会影响函数调用了。
+
+### 总结
+
+当你在编写和调用函数时，应始终保持参数的顺序，使所有位置参数都位于关键字参数之前。这样做不仅符合 Python 的语法规则，还可以使你的代码更加清晰和易于理解。如果遇到 `SyntaxError: positional argument follows keyword argument`，检查并调整参数的顺序即可解决问题。
+
+# <center>Numpy
 
 ```py
 array = np.zeros((args.batch_size, args.state_dim))
@@ -122,9 +172,295 @@ print(result)  # 如果数组中所有元素都大于2，将打印 True，否则
 
 ---
 
+### np.nonzero（包含indices使用技巧）
+
+`np.nonzero()` 是一个非常有用的 NumPy 函数，它返回所有非零元素的索引。在多维数组的情况下，`np.nonzero()` 会返回一个元组，元组中的每个数组代表了对应维度的索引。
+
+### 示例：使用多维数组
+
+假设我们有一个 2x3 的二维数组，我们可以使用 `np.nonzero()` 来找到所有非零元素的位置。下面是具体的代码示例和解释：
+
+```python
+import numpy as np
+
+# 创建一个 2x3 的二维数组
+arr = np.array([[0, 3, 0],
+                [4, 0, 5]])
+
+# 使用 np.nonzero() 获取非零元素的索引
+indices = np.nonzero(arr)
+
+# 打印非零元素的索引
+print(indices)
+```
+
+### 输出和解释
+
+对于上述代码，输出将是：
+
+```
+(array([0, 1, 1]), array([1, 0, 2]))
+```
+
+这里的输出解释如下：
+
+- 第一个数组 `array([0, 1, 1])` 表示非零元素在行上的索引。
+- 第二个数组 `array([1, 0, 2])` 表示非零元素在列上的索引。
+
+这意味着：
+
+- 数组中位置 `(0, 1)` 的元素是非零的，对应元素 `3`。
+- 数组中位置 `(1, 0)` 的元素是非零的，对应元素 `4`。
+- 数组中位置 `(1, 2)` 的元素是非零的，对应元素 `5`。
+
+### 访问非零元素
+
+如果你想直接访问这些非零元素，可以使用这些索引：
+
+```python
+# 使用索引访问非零元素
+nonzero_elements = arr[indices]
+print(nonzero_elements)
+```
+
+输出将是包含所有非零元素的一维数组：
+
+```
+[3 4 5]
+```
+
+### 小结
+
+通过这个例子，你可以看到 `np.nonzero()` 如何有效地提供多维数组中所有非零元素的位置。这在处理科学数据或进行特征提取时特别有用，特别是在稀疏数据环境中。
+
+---
+## np.random 拓展
+
+NumPy 的 `np.random` 模块提供了多种生成随机数的功能，能够覆盖从简单的均匀分布到复杂的正态（高斯）分布等。下面我将介绍几种常用的随机数生成函数及其用途：
+
+### 1. 0 到 1 之间的均匀分布随机数
+
+**函数：`numpy.random.rand()`**
+
+此函数生成在[0, 1)区间内的均匀分布的浮点数。这意味着生成的数值大于等于0且小于1。
+
+```python
+import numpy as np
+
+# 生成一个0到1之间的随机数
+random_number = np.random.rand()
+print(random_number)
+
+# 生成一个5x5的0到1之间的随机数矩阵
+random_matrix = np.random.rand(5, 5)
+print(random_matrix)
+```
+
+### 2. 0 到 n 之间的整数随机数
+
+**函数：`numpy.random.randint()`**
+
+此函数用于生成一个指定范围内的随机整数。参数包括低（inclusive）和高（exclusive）边界，还可以指定输出数组的形状。
+
+```python
+# 生成一个0到10之间的随机整数
+random_int = np.random.randint(0, 10)
+print(random_int)
+
+# 生成一个形状为(2, 3)的随机整数数组，范围从0到10
+random_int_array = np.random.randint(0, 10, size=(2, 3))
+print(random_int_array)
+```
+
+##  3. 高斯（正态）分布随机数
+
+**函数：`numpy.random.randn()` 和 `numpy.random.normal()`**
+
+- `numpy.random.randn()` 生成标准正态分布的随机数（均值为0，标准差为1）。
+- `numpy.random.normal()` 可以生成具有指定均值和标准差的正态分布的随机数。
+
+```python
+# 生成一个标准正态分布的随机数
+standard_normal = np.random.randn()
+print(standard_normal)
+
+# 生成一个均值为0，标准差为0.5的正态分布随机数
+normal = np.random.normal(loc=0, scale=0.5)
+print(normal)
+
+# 生成一个形状为(3, 4)的，均值为0，标准差为0.5的正态分布随机数矩阵
+normal_array = np.random.normal(0, 0.5, (3, 4))
+print(normal_array)
+```
+
+### 4. numpy.random.uniform()
+np.random.uniform() 函数用于生成指定区间内的均匀分布的随机数。你可以指定区间的最小值和最大值。
+```py
+# 生成一个在10到20之间的随机浮点数
+random_uniform = np.random.uniform(10, 20)
+print(random_uniform)
+
+# 生成一个形状为(2, 3)的，范围在-1到0之间的均匀分布随机数数组
+random_uniform_array = np.random.uniform(-1, 0, (2, 3))
+print(random_uniform_array)
+
+```
+
+### 总结
+
+这些是 NumPy 中常用的几种随机数生成方法，通过它们可以满足绝大多数对随机数的需求，无论是简单的均匀分布、整数随机选择还是复杂的正态分布模拟。每种方法都具有高度的灵活性，可以通过调整参数来满足不同的统计需求和数组形状要求。
+
+---
+## nan, inf, 浮点数比较
+
+在NumPy中，`np.nan`和`np.inf`是用来表示特殊的浮点数值的。`np.nan`表示"非数"（Not a Number），而`np.inf`表示正无穷大。此外，`-np.inf`表示负无穷大。这些特殊值在处理涉及未定义或超出数值范围的运算时非常有用。
+
+### np.nan (Not a Number)
+
+`np.nan`用于表示未定义或不可表示的值，如`0/0`的结果。它是IEEE浮点数规范的一部分，并在NumPy中广泛用于表示缺失数据或异常值。在NumPy中，任何涉及`np.nan`的运算通常都会返回`np.nan`，除了一些特定的函数，比如`np.nanmean`，这些函数可以忽略`nan`值进行计算。
+
+### np.inf 和 -np.inf
+
+`np.inf`表示正无穷大，通常用于表示超出浮点数最大范围的值，比如`1/0`的结果。`-np.inf`表示负无穷大，用于表示超出浮点数最小范围的值，如`-1/0`的结果。在NumPy中，无穷大的值可以参与计算，其行为符合数学上的预期（例如任何正数乘以`np.inf`等于`np.inf`）。
+
+### 比较涉及浮点数的值
+
+浮点数因为其表示方式，常常无法精确表示某些值，例如常见的`0.1 * 3`不会精确等于`0.3`，尽管数学上它们是相等的。这是由于浮点数的精度问题导致的。
+
+#### 如何判断两个浮点数是否相等？
+
+使用NumPy时，可以使用`np.isclose()`或`np.allclose()`函数来比较两个浮点数或浮点数组是否近似相等，考虑到计算中的精度误差。
+
+```python
+import numpy as np
+
+a = 0.1 * 3
+b = 0.3
+
+# 使用 np.isclose 来判断两个数是否足够接近
+print(np.isclose(a, b))  # 输出 True 如果 a 和 b 足够接近
+
+# 您也可以指定相对和绝对容差参数
+print(np.isclose(a, b, rtol=1e-05, atol=1e-08))  # 默认参数
+```
+
+这个方法提供了一个实用的方式来处理浮点数的比较，通过设定容忍的误差范围，使得在实际应用中可以判断两个数在数值上是否"相等"。
+
+### 总结
+
+在使用NumPy处理数据时，了解`np.nan`和`np.inf`的行为非常重要，特别是在数据清洗和预处理阶段。此外，了解如何正确比较浮点数也是科学计算中一个关键的问题。这些工具和函数可以帮助你更有效地进行数据分析和数值计算。
+
+---
+
+## 矩阵乘法
+
+- 使用 `*` 或 `np.multiply` 来进行元素对元素的乘法。
+- 使用 `dot` 或 `@` 来执行矩阵乘法，适用于一维数组时，计算内积。
+- 使用 `np.matmul` 或 `@` 来执行矩阵乘法，不支持一维数组的标量乘积，对高维数组有特定的广播规则。
+
+选择哪种运算取决于您的具体需求，尤其是在处理矩阵运算和更高维度数据时。
 
 
-## Torch
+---
+
+## np.random.choice
+
+`np.random.choice()` 是 NumPy 库中一个非常有用的函数，它允许从给定的一维数组或者范围内随机抽取元素，同时也可以指定抽取元素的概率分布和输出样本的数量。这个函数在模拟、抽样调查、随机实验等多种场景中非常实用。
+
+### 函数基本用法
+
+基本语法：
+```python
+numpy.random.choice(a, size=None, replace=True, p=None)
+```
+
+- **a**：如果是一个一维数组或者列表，随机数将从这些元素中抽取。如果是一个整数，抽取的元素将是从 `np.arange(a)` 生成的。
+- **size**：输出样本的数量。默认为 `None`，这意味着输出一个值。可以是一个整数或元组（用于生成多维数组）。
+- **replace**：布尔值，表示是否可以重复选择同一元素。默认为 `True`，即允许重复抽取。如果为 `False`，则抽取的样本中不会有重复元素，此时 `size` 不能超过 `a` 的长度。
+- **p**：一维数组或列表，指定 `a` 中每个元素对应的抽取概率。数组的长度必须与 `a` 相匹配，并且概率之和应为1。
+
+### 示例
+
+#### 从给定数组中随机选择
+
+```python
+import numpy as np
+
+# 定义一个数组
+data = np.array([10, 20, 30, 40, 50])
+
+# 随机选择一个元素
+sample = np.random.choice(data)
+print("Randomly selected item:", sample)
+
+# 不放回地抽取3个不同的元素
+sample_no_replace = np.random.choice(data, size=3, replace=False)
+print("Sample without replacement:", sample_no_replace)
+
+# 使用自定义概率分布抽取
+sample_probs = np.random.choice(data, size=3, p=[0.1, 0.1, 0.1, 0.3, 0.4])
+print("Sample with custom probabilities:", sample_probs)
+```
+
+#### 从数字范围内随机选择
+
+```python
+# 从0到9中随机选择5个数字，允许重复
+sample_from_range = np.random.choice(10, size=5)
+print("Random sample from range 0-9:", sample_from_range)
+```
+
+### 使用场景
+
+1. **模拟实验**：在进行科学实验和模拟研究时，`np.random.choice()` 可以用来随机选择试验条件或样本。
+2. **数据采样**：在机器学习和统计分析中，从大数据集中随机抽取样本进行训练和测试。
+3. **概率研究**：通过指定不同的概率分布，研究和模拟概率事件的结果。
+
+`np.random.choice()` 提供了一种灵活的方式来实现和模拟从给定数据集或数值范围内的随机抽样过程，其多功能性使它成为数据科学和统计学中一个不可或缺的工具。
+
+---
+
+## in place operation
+
+在 NumPy 中使用 `np.add(A, B, out=B)` 和直接使用 `B = A + B` 来计算两个数组的和虽然都能得到相同的数学结果，但这两种方法在内存使用和计算效率方面存在差异。下面是这两种方法的主要区别：
+
+### 1. `np.add(A, B, out=B)`
+使用 `np.add()` 函数并指定 `out` 参数可以在现有数组上就地进行操作，这意味着结果直接存储在 `out` 指定的数组中。在这种情况下，`out=B` 表示结果将被存储在数组 `B` 中，覆盖原有数据。这种方法的主要优点是减少内存分配，因为不需要创建新的数组来存储结果：
+
+```python
+import numpy as np
+
+A = np.array([1, 2, 3])
+B = np.array([4, 5, 6])
+
+np.add(A, B, out=B)
+print(B)  # 输出将显示更新后的 B，即 [5, 7, 9]
+```
+
+这里 `B` 被更新为 `A` 和 `B` 的和。这种方式特别适合处理大数组，因为它可以减少内存消耗和可能的内存分配延迟。
+
+### 2. `B = A + B`
+这种方式比较直观，是将 `A` 和 `B` 相加的结果赋值给 `B`。这实际上涉及到先计算 `A + B` 的和，然后创建一个新的数组存储这个结果，最后将这个新数组的引用赋值给变量 `B`。这意味着原始的 `B` 数组被新的数组引用替代了，原来的数组如果没有其他引用将被垃圾回收：
+
+```python
+A = np.array([1, 2, 3])
+B = np.array([4, 5, 6])
+
+B = A + B
+print(B)  # 输出同样是 [5, 7, 9]
+```
+
+尽管结果相同，但这种方法会使用更多的内存（至少在计算过程中），因为需要临时存储 `A + B` 的结果，然后再复制给 `B`。对于小数组，这种差异可能不明显，但对于处理非常大的数组时，额外的内存分配和释放可能会导致性能下降。
+
+### 总结
+- **`np.add(A, B, out=B)`** 是一种就地操作，可以帮助节省内存，特别适用于数据量大的数组计算。
+- **`B = A + B`** 更直观，适用于快速编程和小规模数据处理，但可能涉及更多的内存分配。
+
+选择哪种方法取决于特定应用的需求，包括对性能的关注、对内存使用的优化，以及代码的可读性。
+
+---
+
+# <center> Torch
 
 一个典型的神经网络forward过程:
 

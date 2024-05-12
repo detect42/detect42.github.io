@@ -1023,9 +1023,9 @@ llm复杂度瓶颈在于矩阵乘法matmul_forward。
 - 计算这两个向量的点积（scalar product），结果就是 `out[b, t, o]`。
 
 公式表达为：
-\[
+$$
 out[b, t, o] = \sum_{i=0}^{C-1} inp[b, t, i] \times weight[o, i]
-\]
+$$
 这里的求和是在 \( i \) 上进行，其中 \( i \) 遍历整个特征或元素的长度。
 
 #### 并行化的可行性
