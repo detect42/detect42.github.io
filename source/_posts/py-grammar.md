@@ -898,3 +898,5 @@ log_probs = action_dists.log_prob(actions)
 功能说明:
 - action_dists: 这是一个概率分布对象，通常是由策略网络（例如前面讨论的 PolicyNetContinuous）生成的。在连续动作空间中，这个分布通常是正态（高斯）分布，由动作的均值（mu）和标准差（std）参数化。
 - log_prob(actions): 这是一个方法，用于计算给定动作 actions 在 action_dists 定义的概率分布下的对数概率。对数概率是很多强化学习算法中的关键组成部分，尤其是那些基于概率的策略梯度方法。
+
+now-pc-updata
