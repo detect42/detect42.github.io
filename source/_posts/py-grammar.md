@@ -554,6 +554,388 @@ for index in np.ndindex(shape):
 
 总之，`np.ndindex` 是一个强大的工具，可以简化多维数组操作的编程，提高代码的清晰度和效率。
 
+---
+
+## np.unique
+
+1. **没有 `axis` 参数的情况**：
+
+```python
+colors = np.unique(Image.reshape(-1, 3))
+```
+
+这种情况下，`np.unique` 会将数组展平成一维数组，然后找到其中所有唯一的元素。因此，这会返回数组中每个颜色通道的所有唯一值，而不是整个颜色（即RGB三元组）。
+
+假设 `Image` 是一个形状为 `(height, width, 3)` 的彩色图像。将 `Image` 重新调整为 `(-1, 3)` 的形状会得到一个形状为 `(height * width, 3)` 的二维数组，但在没有 `axis` 参数的情况下，`np.unique` 会将这个数组视为一维数组，然后返回所有唯一的颜色通道值。
+
+例如：
+
+```python
+import numpy as np
+
+Image = np.array([[[255, 0, 0], [0, 255, 0]],
+                  [[0, 0, 255], [255, 255, 0]]])
+
+colors = np.unique(Image.reshape(-1, 3))
+print(colors)
+```
+
+输出：
+
+```
+[  0   255]
+```
+
+这表示每个颜色通道中唯一的值是0和255。
+
+2. **有 `axis` 参数的情况**：
+
+```python
+colors = np.unique(Image.reshape(-1, 3), axis=0)
+```
+
+这种情况下，`np.unique` 会沿着指定的轴（这里是 `axis=0`）查找唯一的行。因此，这会返回图像中所有唯一的颜色（即唯一的RGB三元组）。
+
+例如：
+
+```python
+import numpy as np
+
+Image = np.array([[[255, 0, 0], [0, 255, 0]],
+                  [[0, 0, 255], [255, 255, 0]]])
+
+colors = np.unique(Image.reshape(-1, 3), axis=0)
+print(colors)
+```
+
+输出：
+
+```
+[[  0   0  255]
+ [  0  255  0]
+ [ 255   0  0]
+ [ 255  255  0]]
+```
+
+这表示图像中所有唯一的颜色值，即RGB三元组。
+
+### 总结
+
+- **没有 `axis` 参数**：`np.unique` 会将输入数组展平成一维数组，返回所有唯一的元素值。对于一个形状为 `(height, width, 3)` 的彩色图像，这将返回所有颜色通道中的唯一值，而不是整个颜色。
+- **有 `axis` 参数**：`np.unique` 会沿着指定的轴查找唯一的行。对于一个形状为 `(height, width, 3)` 的彩色图像，这将返回图像中所有唯一的颜色（即唯一的RGB三元组）。
+
+根据你的具体需求选择相应的用法，以获取所需的唯一元素或唯一颜色。
+
+---
+
+## np.bincount
+
+在 `np.bincount` 函数中，`bin` 指的是"箱"或"桶"（bin），这是一个统计学术语，表示将数据按类别或范围进行分组。`bincount` 是 "bin count" 的缩写，表示对这些分组后的数据进行计数。
+
+### `np.bincount` 的功能
+
+`np.bincount` 函数用于对非负整数数组中的元素进行计数，并返回每个整数值出现次数的数组。可以通过添加权重来计算加权和。具体用法如下：
+
+```python
+np.bincount(x, weights=None, minlength=0)
+```
+
+- `x`：非负整数数组。
+- `weights`：可选参数。如果提供，则返回的数组是加权和，而不是简单的计数。
+- `minlength`：可选参数。指定返回数组的最小长度。
+
+### 示例解释
+
+以下是两个使用 `np.bincount` 的示例，分别展示了不带权重和带权重的情况。
+
+#### 示例1：简单计数
+
+```python
+import numpy as np
+
+x = np.array([0, 1, 1, 2, 2, 2, 3])
+count = np.bincount(x)
+
+print(count)  # 输出：[1 2 3 1]
+```
+
+在这个例子中：
+- 数组 `x` 中包含的元素为 0, 1, 1, 2, 2, 2, 3。
+- `np.bincount(x)` 返回一个数组，表示每个非负整数值出现的次数：
+  - `0` 出现 `1` 次
+  - `1` 出现 `2` 次
+  - `2` 出现 `3` 次
+  - `3` 出现 `1` 次
+- 结果是 `[1, 2, 3, 1]`。
+
+#### 示例2：加权计数
+
+```python
+import numpy as np
+
+x = np.array([0, 1, 1, 2, 2, 2, 3])
+weights = np.array([0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1])
+weighted_count = np.bincount(x, weights=weights)
+
+print(weighted_count)  # 输出：[0.5 1.3 2.7 1.1]
+```
+
+在这个例子中：
+- 数组 `x` 中包含的元素为 0, 1, 1, 2, 2, 2, 3。
+- 对应的权重数组 `weights` 为 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1。
+- `np.bincount(x, weights=weights)` 返回一个数组，表示每个非负整数值的加权和：
+  - `0` 的权重和为 `0.5`
+  - `1` 的权重和为 `0.6 + 0.7 = 1.3`
+  - `2` 的权重和为 `0.8 + 0.9 + 1.0 = 2.7`
+  - `3` 的权重和为 `1.1`
+- 结果是 `[0.5, 1.3, 2.7, 1.1]`。
+
+### 结合你的例子
+
+在你的代码中：
+
+```python
+import numpy as np
+
+D = np.random.uniform(0, 1, 100)
+S = np.random.randint(0, 10, 100)
+D_sums = np.bincount(S, weights=D)
+D_counts = np.bincount(S)
+D_means = D_sums / D_counts
+print(D_means)
+```
+
+1. `D` 是一个包含 100 个随机浮点数的数组。
+2. `S` 是一个包含 100 个随机整数（范围是 0 到 9）的数组，表示每个 `D` 值所属的类别。
+3. `D_sums = np.bincount(S, weights=D)`：
+   - 对于每个类别，计算 `D` 中对应值的加权和。
+4. `D_counts = np.bincount(S)`：
+   - 对于每个类别，计算出现的次数。
+5. `D_means = D_sums / D_counts`：
+   - 对于每个类别，计算加权和除以计数，即每个类别的平均值。
+
+### 总结
+
+`np.bincount` 函数中的 `bin` 表示将数据按类别进行分组统计，这在统计分析和数据处理中非常有用。它允许我们对数据进行分类计数或加权和计算，从而简化了很多统计操作。
+
+---
+
+## 多维numpy数组的遍历
+
+在 Python 中，遍历数组（NumPy 数组或其他可迭代对象）时，可以使用 `enumerate` 方法来获取元素的索引和值。`enumerate` 是一个内置函数，它为可迭代对象生成一个（索引，元素值）对的迭代器。
+
+### 使用 `enumerate` 遍历 NumPy 数组
+
+虽然 `enumerate` 通常用于一维数组，但它也可以与多维数组一起使用。对于多维数组，可以结合 `nditer` 和 `enumerate` 使用，以便在遍历时获得元素的索引和值。
+
+#### 示例 1：遍历一维 NumPy 数组
+
+```python
+import numpy as np
+
+# 创建一个一维 NumPy 数组
+array_1d = np.array([10, 20, 30, 40, 50])
+
+# 使用 enumerate 遍历一维数组
+for index, value in enumerate(array_1d):
+    print(f"Index: {index}, Value: {value}")
+```
+
+输出：
+
+```
+Index: 0, Value: 10
+Index: 1, Value: 20
+Index: 2, Value: 30
+Index: 3, Value: 40
+Index: 4, Value: 50
+```
+
+#### 示例 2：遍历多维 NumPy 数组
+
+对于多维数组，可以使用 `np.ndenumerate` 直接获取多维数组的索引和值：
+
+```python
+import numpy as np
+
+# 创建一个二维 NumPy 数组
+array_2d = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+
+# 使用 np.ndenumerate 遍历二维数组
+for index, value in np.ndenumerate(array_2d):
+    print(f"Index: {index}, Value: {value}")
+```
+
+输出：
+
+```
+Index: (0, 0), Value: 1
+Index: (0, 1), Value: 2
+Index: (0, 2), Value: 3
+Index: (1, 0), Value: 4
+Index: (1, 1), Value: 5
+Index: (1, 2), Value: 6
+Index: (2, 0), Value: 7
+Index: (2, 1), Value: 8
+Index: (2, 2), Value: 9
+```
+
+### 使用 `ndindex` 遍历多维数组
+
+`np.ndindex` 是另一种在多维数组中获取索引的方法：
+
+```python
+import numpy as np
+
+# 创建一个二维 NumPy 数组
+array_2d = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+
+# 使用 np.ndindex 遍历二维数组
+for index in np.ndindex(array_2d.shape):
+    print(f"Index: {index}, Value: {array_2d[index]}")
+```
+
+输出：
+
+```
+Index: (0, 0), Value: 1
+Index: (0, 1), Value: 2
+Index: (0, 2), Value: 3
+Index: (1, 0), Value: 4
+Index: (1, 1), Value: 5
+Index: (1, 2), Value: 6
+Index: (2, 0), Value: 7
+Index: (2, 1), Value: 8
+Index: (2, 2), Value: 9
+```
+
+### 总结
+
+- **一维数组**：使用内置的 `enumerate` 函数来遍历数组，并获取每个元素的索引和值。
+- **多维数组**：
+  - 使用 `np.ndenumerate` 来遍历，并获取每个元素的多维索引和值。
+  - 使用 `np.ndindex` 来遍历数组的索引，然后通过索引访问元素。
+
+这些方法提供了灵活的方式来遍历和处理不同维度的 NumPy 数组，帮助你更有效地操作数组数据。
+
+
+---
+## slice
+
+`slice`在Python中既不是一个`list`函数，也不是一个`tuple`函数，而是一个独立的内置类型，用于创建切片对象，这些对象可以描述序列的一部分。
+
+### 关于 `slice` 类型：
+
+- **作用**：`slice` 对象通常用来代表序列中的一段，包括列表（`list`）、元组（`tuple`）、字符串（`str`）等。它通过指定开始索引、结束索引和步长来定义这一段。
+- **构造函数**：`slice` 通过 `slice(start, stop[, step])` 来创建。
+- **用途**：创建的 `slice` 对象可以用作任何序列类型的索引。
+
+### 示例说明：
+
+```python
+# 创建一个 slice 对象
+my_slice = slice(1, 5, 2)  # 从索引1开始到索引5结束，步长为2
+
+# 使用 slice 对象
+my_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+print(my_list[my_slice])  # 输出将会是 [1, 3]
+
+my_tuple = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+print(my_tuple[my_slice])  # 输出将会是 (1, 3)
+
+my_str = "0123456789"
+print(my_str[my_slice])  # 输出将会是 '13'
+
+# 创建一个示例数组
+array = np.array([[1, 2, 3, 4, 5],
+                  [6, 7, 8, 9, 10],
+                  [11, 12, 13, 14, 15],
+                  [16, 17, 18, 19, 20]])
+
+# 使用切片提取子数组
+sub_array = array[slice(1, 4), slice(0, 5)]
+
+```
+
+在这些示例中，`slice` 对象 `my_slice` 被用来从列表、元组和字符串中提取特定的元素。通过使用切片对象，你可以非常灵活地从各种序列中提取所需部分，而不必每次都硬编码起止索引和步长。
+
+### 关于使用场景：
+
+- **数组和矩阵操作**：在使用像 NumPy 这样的库进行数组操作时，`slice` 对象非常有用，尤其是在处理多维数组时。
+- **数据处理**：在进行数据处理和数据清洗时，可以通过 `slice` 对象来选择或排除数据集中的特定部分。
+
+总结来说，`slice` 是一种非常灵活的工具，可以帮助你在处理Python中的各种序列数据时，以编程方式选择序列的一部分。
+
+## sliding_window_view
+
+`sliding_window_view` 是 NumPy 库中的一个函数，用于创建滑动窗口视图。这允许您以滑动窗口的方式查看数组中的子数组。
+
+要使用 `sliding_window_view`，您需要安装 NumPy 库并导入相应的函数。确保您使用的是 NumPy 1.20.0 或更高版本，因为 `sliding_window_view` 是在这个版本中引入的。
+
+### 安装 NumPy
+
+如果还没有安装 NumPy，可以使用以下命令安装：
+
+```sh
+pip install numpy
+```
+
+### 使用 `sliding_window_view`
+
+在 Python 脚本中导入 `sliding_window_view` 并使用它：
+
+```python
+import numpy as np
+from numpy.lib.stride_tricks import sliding_window_view
+
+# 示例数组
+Z = np.random.randint(0, 10, (10, 10))
+
+# 使用滑动窗口视图
+windows = sliding_window_view(Z, window_shape=(4, 4))
+
+print(windows)
+```
+
+### 示例解释
+
+1. **导入 NumPy 和 `sliding_window_view`**:
+   ```python
+   import numpy as np
+   from numpy.lib.stride_tricks import sliding_window_view
+   ```
+
+2. **创建示例数组**:
+   ```python
+   Z = np.random.randint(0, 10, (10, 10))
+   ```
+
+3. **创建滑动窗口视图**:
+   ```python
+   windows = sliding_window_view(Z, window_shape=(4, 4))
+   ```
+
+4. **打印结果**:
+   ```python
+   print(windows)
+   ```
+
+`sliding_window_view` 函数创建了一个新的视图，其中包含了原始数组 `Z` 的所有可能的 4x4 子数组。这对于图像处理、信号处理和各种数据分析任务非常有用。
+
+确保您使用的是 NumPy 1.20.0 或更高版本，以便使用 `sliding_window_view` 函数。如果您遇到任何问题，请确认您的 NumPy 版本：
+
+```python
+import numpy as np
+print(np.__version__)
+```
+
+如果版本低于 1.20.0，可以通过以下命令升级：
+
+```sh
+pip install --upgrade numpy
+```
+
+这应该可以帮助您顺利使用 `sliding_window_view` 函数。
 
 ---
 # <center> Torch
