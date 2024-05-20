@@ -938,6 +938,143 @@ pip install --upgrade numpy
 这应该可以帮助您顺利使用 `sliding_window_view` 函数。
 
 ---
+
+
+## np.where
+
+`np.where` 是一个非常强大的函数，它可以返回满足特定条件的数组元素的索引。具体来说，`np.where(Z1 == max_value)` 返回的是一个元组，其中包含满足条件的元素的索引。
+
+让我们详细解释一下 `np.where` 的返回值。
+
+### 示例
+
+假设我们有一个一维数组 `Z1`，并且我们想找到其中所有等于最大值的元素的索引：
+
+```python
+import numpy as np
+
+# 创建一个示例数组
+Z1 = np.array([1, 3, 7, 9, 7, 5, 9, 9])
+
+# 找到数组中的最大值
+max_value = Z1.max()
+
+# 使用 np.where 找到所有等于最大值的索引
+max_indices = np.where(Z1 == max_value)
+
+print("Array:", Z1)
+print("Max value:", max_value)
+print("Indices of max value:", max_indices)
+```
+
+### 输出解释
+
+输出结果将是：
+
+```
+Array: [1 3 7 9 7 5 9 9]
+Max value: 9
+Indices of max value: (array([3, 6, 7]),)
+```
+
+### 详细解释
+
+- `max_value = Z1.max()` 这行代码计算数组 `Z1` 中的最大值，结果是 `9`。
+- `np.where(Z1 == max_value)` 这行代码查找数组 `Z1` 中所有等于 `9` 的元素的索引。
+
+`np.where(Z1 == max_value)` 返回一个元组 `(array([3, 6, 7]),)`：
+
+- 这个元组包含一个数组，数组中的每个元素是满足条件 `Z1 == max_value` 的索引。
+- 在这个例子中，最大值 `9` 出现在索引 `3`、`6` 和 `7` 处，所以返回的数组是 `array([3, 6, 7])`。
+
+如果 `Z1` 是一个多维数组，那么 `np.where` 返回的将是多个数组，分别对应不同维度上的索引。
+
+### 多维数组的示例
+
+让我们看一下多维数组的情况：
+
+```python
+import numpy as np
+
+# 创建一个示例二维数组
+Z2 = np.array([[1, 3, 7],
+               [9, 7, 5],
+               [9, 9, 2]])
+
+# 找到数组中的最大值
+max_value = Z2.max()
+
+# 使用 np.where 找到所有等于最大值的索引
+max_indices = np.where(Z2 == max_value)
+
+print("Array:\n", Z2)
+print("Max value:", max_value)
+print("Indices of max value:", max_indices)
+```
+
+### 输出解释
+
+输出结果将是：
+
+```
+Array:
+ [[1 3 7]
+  [9 7 5]
+  [9 9 2]]
+Max value: 9
+Indices of max value: (array([1, 2, 2]), array([0, 0, 1]))
+```
+
+在这个例子中，最大值 `9` 出现在 `(1, 0)`、`(2, 0)` 和 `(2, 1)` 处。所以 `np.where` 返回两个数组：
+
+- 第一个数组 `array([1, 2, 2])` 是行索引。
+- 第二个数组 `array([0, 0, 1])` 是列索引。
+
+结合这两个数组，我们可以找到所有满足条件的元素的索引。
+
+### 结论
+
+`np.where(Z1 == max_value)` 返回一个包含满足条件的元素索引的元组。在一维数组中，这个元组包含一个数组。在多维数组中，这个元组包含多个数组，分别对应不同维度的索引。这样，我们可以非常方便地找到数组中所有满足特定条件的元素的位置。
+
+---
+
+## np自定义派生类
+
+```py
+class Symtric(np.ndarray):
+    def __setitem__(self, key, value):
+        i, j = key
+        super(Symtric, self).__setitem__((i, j), value)
+        super(Symtric, self).__setitem__((j, i), value)
+def symetric(Z):
+    return np.asarray(Z + Z.T - np.diag(Z.diagonal())).view(Symtric)
+S = symetric(np.random.randint(0, 10, (5, 5)))
+S[0, 1] = 42
+print(S)
+```
+
+这段代码定义了一个名为 `Symtric` 的自定义类，它派生自 `np.ndarray`。这个类重写了 `__setitem__` 方法，以便在设置数组元素时保持对称性。
+
+同时注意view作为类型转化！
+
+在 NumPy 中，将一个数组视图转换为自定义子类（如 Symtric）的主要方式是使用 .view() 方法。如果你不想使用 .view()，可以考虑其他方式来实现类似的功能，例如创建一个新的实例并手动赋值属性。不过，.view() 是最直接和推荐的方法，因为它保持了底层数据的共享，从而避免了额外的内存开销。
+
+---
+
+## 利用bool索引，选择性赋值
+
+```py
+Z = np.random.randint(1,3,(5,5))
+B = np.full((3,3),True,dtype=bool)
+Z[1:-1,1:-1][B]=100 #只有true的位置才会被赋值
+print(Z)
+```
+
+---
+
+
+
+---
 # <center> Torch
 
 一个典型的神经网络forward过程:
