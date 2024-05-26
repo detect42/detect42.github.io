@@ -1072,7 +1072,72 @@ print(Z)
 
 ---
 
+## np.einsum
 
+
+知乎总结：https://www.zhihu.com/question/53365039/answer/3167199956
+
+`np.einsum` 是一个非常强大的工具，能够以非常灵活和高效的方式处理数组的运算。这里，我将通过多个例子来展示它的不同用途：
+
+### 1. 向量内积（点积）
+对于两个向量 \( a \) 和 \( b \)，计算它们的点积可以使用 `np.einsum` 如下：
+
+```python
+a = np.array([1, 2, 3])
+b = np.array([4, 5, 6])
+dot_product = np.einsum('i,i->', a, b)  # 等价于 np.dot(a, b)
+```
+这里的 `'i,i->'` 表示对两个索引 \( i \) 上的元素进行乘积，并对所有乘积结果求和，输出是一个标量。
+
+### 2. 矩阵与向量的乘积
+对于矩阵 \( A \) 和向量 \( v \)，计算它们的乘积可以如下：
+
+```python
+A = np.array([[1, 2], [3, 4]])
+v = np.array([1, 1])
+matrix_vector_product = np.einsum('ij,j->i', A, v)  # 等价于 np.dot(A, v)
+```
+这里 `'ij,j->i'` 表示对矩阵 \( A \) 的第 \( j \) 列和向量 \( v \) 的第 \( j \) 个元素进行乘积，并对 \( j \) 索引求和，输出是一个向量。
+
+### 3. 矩阵乘法
+对于两个矩阵 \( A \) 和 \( B \)，计算它们的矩阵乘积：
+
+```python
+A = np.array([[1, 2], [3, 4]])
+B = np.array([[2, 0], [1, 2]])
+matrix_product = np.einsum('ik,kj->ij', A, B)  # 等价于 np.dot(A, B)
+```
+`'ik,kj->ij'` 指对 \( A \) 的第 \( k \) 列和 \( B \) 的第 \( k \) 行进行乘积，并对 \( k \) 索引求和，输出是一个矩阵。
+
+### 4. 计算矩阵的对角线
+如果你有一个矩阵 \( A \) 并想得到它的对角线元素：
+
+```python
+A = np.array([[1, 2], [3, 4]])
+diagonal = np.einsum('ii->i', A)  # 提取对角元素
+```
+`'ii->i'` 指从矩阵 \( A \) 中提取 \( i, i \) 位置的元素（即对角线上的元素）。
+
+### 5. 计算张量的迹
+计算一个张量（多维数组）的迹：
+
+```python
+T = np.random.rand(3, 3, 3)
+trace = np.einsum('iii->', T)  # 计算三维张量的迹
+```
+`'iii->'` 表示计算多维张量 \( T \) 中 \( (i, i, i) \) 位置的元素之和。
+
+### 6. 批量矩阵乘法（两批矩阵）
+如果你有两批矩阵 \( A \) 和 \( B \) 并想对它们每一对进行矩阵乘法：
+
+```python
+A = np.random.rand(10, 3, 4)
+B = np.random.rand(10, 4, 2)
+batch_matrix_product = np.einsum('bij,bjk->bik', A, B)  # 批处理矩阵乘法
+```
+`'bij,bjk->bik'` 表示对每一批的矩阵进行乘法运算。
+
+这些例子展示了 `np.einsum` 在数组操作中的多样性和强大功能。它可以用来实现
 
 ---
 # <center> Torch

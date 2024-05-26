@@ -30,7 +30,7 @@ date: 2023-03-23 20:58:13
 
 - **Metabit Trading**: **Quant researcher** (2024.6 - 2024.9)
 
-## Pervious blog website
+## Previous blog website
 
 **Welcome to visit my previous blog [[wsr_oier]](https://www.luogu.com.cn/blog/wsr/), which mainly focuses on traditional algorithm and data structure in competitive programming.**
 
