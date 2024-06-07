@@ -26,6 +26,11 @@ date: 2023-03-23 20:58:13
 - **COSEC** paper: Preventing Dataset Abuse in Fine-Tuning Stable Diffusion Models
 - **LAMDA** RL project
 
+### Teaching Assistant
+
+- **程序设计** （23 fall）
+- **离散数学** （24 spring）
+
 ### Internship
 
 - **Metabit Trading**: **Quant researcher** (2024.6 - 2024.9)
