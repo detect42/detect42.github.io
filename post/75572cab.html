@@ -1,0 +1,645 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Inside the Black Box of Quantitative Trading | detect</title><meta name="author" content="Richard,detect0530@gmail.com"><meta name="copyright" content="Richard"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="打开量化交易的黑箱   概念阐明  1. “无效市场无风险套利” “当其他交易者的需求使得证券市场的供需关系短暂失衡时，量化交易可以通过提供流动性使得市场更有效率。从有效市场(eficientmarket)的经济角度而言，不平衡性也称为市场无效(inefficients)。真正的无效市场代表着存在很少的、转瞬即逝的无风险套利机会。” 这段话主要讨论了量化交易如何通过提供流动性来帮助证券市场达到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Inside the Black Box of Quantitative Trading">
+<meta property="og:url" content="https://detect42.github.io/post/75572cab.html">
+<meta property="og:site_name" content="detect">
+<meta property="og:description" content="打开量化交易的黑箱   概念阐明  1. “无效市场无风险套利” “当其他交易者的需求使得证券市场的供需关系短暂失衡时，量化交易可以通过提供流动性使得市场更有效率。从有效市场(eficientmarket)的经济角度而言，不平衡性也称为市场无效(inefficients)。真正的无效市场代表着存在很少的、转瞬即逝的无风险套利机会。” 这段话主要讨论了量化交易如何通过提供流动性来帮助证券市场达到">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://detect42.github.io/img/yang.jpg">
+<meta property="article:published_time" content="2024-05-06T09:09:48.000Z">
+<meta property="article:modified_time" content="2024-06-07T15:26:38.124Z">
+<meta property="article:author" content="Richard">
+<meta property="article:tag" content="Quant">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://detect42.github.io/img/yang.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://detect42.github.io/post/75572cab.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":1000},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Inside the Black Box of Quantitative Trading',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-06-07 23:26:38'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/1.css"><meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/yang.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">70</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">26</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">26</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/topimg.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="detect"><span class="site-name">detect</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Inside the Black Box of Quantitative Trading</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-05-06T09:09:48.000Z" title="Created 2024-05-06 17:09:48">2024-05-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-06-07T15:26:38.124Z" title="Updated 2024-06-07 23:26:38">2024-06-07</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">12.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>36min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Inside the Black Box of Quantitative Trading"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><center> <H1> 打开量化交易的黑箱 </H1> </center>
+<h1 id="概念阐明">概念阐明</h1>
+<h2 id="center-1-无效市场无风险套利"><center> 1. “无效市场无风险套利”</h2>
+<p>“当其他交易者的需求使得证券市场的供需关系短暂失衡时，量化交易可以通过提供流动性使得市场更有效率。从有效市场(eficientmarket)的经济角度而言，不平衡性也称为市场无效(inefficients)。<strong>真正的无效市场代表着存在很少的、转瞬即逝的无风险套利机会。”</strong></p>
+<p>这段话主要讨论了量化交易如何通过提供流动性来帮助证券市场达到更高的效率，并简要提到了有效市场理论与市场无效的概念。下面我会逐步解释这些概念，以便更容易理解：</p>
+<h3 id="量化交易提供流动性">量化交易提供流动性</h3>
+<p>量化交易通常涉及使用算法和数学模型自动执行大量的交易。当市场上某些证券的买卖订单不平衡时，即供求关系失衡，量化交易可以迅速介入，通过买入或卖出这些证券，帮助“填补”市场上的订单空缺。这种快速响应市场的能力使得量化交易者可以为市场提供所谓的“流动性”，即使资金更容易、更快速地在市场参与者之间流动。</p>
+<h3 id="市场效率与市场无效">市场效率与市场无效</h3>
+<p><strong>有效市场假说</strong>（Efficient Market Hypothesis，EMH）认为，市场价格在任何给定时间都已经反映了所有可用信息。因此，在一个完全有效的市场中，没有投资者可以系统性地实现超额回报，因为任何新信息一旦出现，就会立即被市场吸收并反映在证券价格上。</p>
+<p>然而，现实中市场并非总是完全有效。<strong>市场无效</strong>（Market Inefficiencies）指的是市场价格未能即时或准确反映所有相关信息的情况。这些无效可能是由于多种因素造成的，如信息传播不均、市场参与者行为偏差、交易成本或制度因素等。</p>
+<h2 id="无风险套利机会">无风险套利机会</h2>
+<p>在市场无效的环境中，有时会出现<strong>无风险套利</strong>（Risk-Free Arbitrage）的机会。这是指可以在没有风险的情况下从价格差异中获利的交易。例如，如果同一资产在不同市场中的价格不同，套利者可以在价格较低的市场买入，并在价格较高的市场同时卖出，从中获利。这种机会通常非常短暂，因为市场的参与者很快就会通过自己的买卖行为纠正价格差异，从而恢复市场效率。</p>
+<p>总结一下，这段话的核心是说明量化交易如何通过提供流动性来帮助纠正市场的短暂无效，即供需失衡的情况。这些无效状态可能提供了无风险的套利机会，而量化交易通过快速反应这些机会，有助于提高市场的整体效率。</p>
+<h2 id="center-2-每股收益-eps"><center> 2. 每股收益(EPS)</h2>
+<p>每股收益（Earnings Per Share, EPS）是一个用来衡量一家公司每一普通股所赚取的利润的财务指标。它是投资者评估一家公司盈利性的关键指标之一，也是计算市盈率（P/E Ratio）的分母。每股收益的计算公式和意义如下：</p>
+<h3 id="计算公式">计算公式</h3>
+<p>每股收益 ( \text{EPS} ) 的基本计算公式是：<br>
+[<br>
+\text{EPS} = \frac{\text{净利润} - \text{优先股股息}}{\text{普通股的总发行股数}}<br>
+]</p>
+<p>其中：</p>
+<ul>
+<li><strong>净利润</strong>：公司在一定时期（通常是一年或一季度）内的总收入减去总成本、费用、税项和其他支出后的剩余金额。</li>
+<li><strong>优先股股息</strong>：如果公司有发行优先股，需要从净利润中扣除支付给优先股股东的股息，因为这部分利润不属于普通股股东。</li>
+<li><strong>普通股的总发行股数</strong>：公司发行在外的普通股总数。</li>
+</ul>
+<h3 id="重要性">重要性</h3>
+<ul>
+<li><strong>投资决策</strong>：投资者经常用 EPS 来评估公司的盈利能力和比较不同公司的盈利水平。较高的每股收益通常被视为公司盈利能力强，可能吸引更多的投资者购买其股票。</li>
+<li><strong>股价影响</strong>：EPS 的增长往往可以推动公司股价上涨。投资者和分析师密切关注公司的季度和年度 EPS，因为它们提供了公司业绩改进或恶化的直接视图。</li>
+<li><strong>市盈率（P/E Ratio）</strong>：EPS 是计算市盈率的关键组成部分。市盈率是股票价格除以每股收益，是评估股票价格是否合理的常用指标。高 EPS 可能导致较低的市盈率，表明股票价格相对于每股盈利较低，可能被低估。</li>
+</ul>
+<h3 id="动态和静态-eps">动态和静态 EPS</h3>
+<ul>
+<li><strong>静态（或历史）EPS</strong>：基于最近完成的财务年度或季度的实际利润计算。</li>
+<li><strong>动态（或前瞻）EPS</strong>：基于预测的或未来期望的利润计算，通常涉及分析师的利润预测。</li>
+</ul>
+<p>通过理解每股收益，投资者可以更好地评估一家公司的财务健康状况和投资潜力，每股收益也是财务分析中的一个基本工具。</p>
+<h2 id="center-3-头寸-position"><center> 3. 头寸(Position)</h2>
+<p>在金融和交易领域中，<strong>“头寸”（Position）</strong> 指的是对特定金融工具的持有量，代表了市场参与者在某一资产上的投资状态。这个术语通常用于描述投资者或交易者在股票、债券、商品、外汇等市场上的买入或卖出持有的数量。</p>
+<h3 id="头寸的类型">头寸的类型</h3>
+<ol>
+<li>
+<p><strong>长头寸（Long Position）</strong>：当交易者或投资者买入并持有某种资产时，他们被认为持有“长头寸”。这是基于预期该资产价格将上涨的信念，目的是在价格上涨后以更高的价格出售以获取利润。</p>
+</li>
+<li>
+<p><strong>短头寸（Short Position）</strong>：当交易者或投资者卖空某种资产时，他们被认为持有“短头寸”。卖空是指借入资产并立即将其卖出的做法，预期在将来以较低价格买回（覆盖）同等数量的资产以归还借款，并从价格差中获利。</p>
+</li>
+</ol>
+<h3 id="进入和退出头寸">进入和退出头寸</h3>
+<ul>
+<li>
+<p><strong>进入头寸</strong>：这通常指开始一个新的交易或投资，无论是买入（建立长头寸）还是卖空（建立短头寸）。进入头寸涉及评估并决定在某个价格点开始持有某个资产。</p>
+</li>
+<li>
+<p><strong>退出头寸</strong>：这指的是结束或关闭一个现有的交易或投资。对于长头寸来说，这意味着卖出持有的资产；对于短头寸，则意味着购买相同数量的资产来覆盖先前卖空的持仓。</p>
+</li>
+</ul>
+<h3 id="头寸的管理">头寸的管理</h3>
+<p>管理头寸是交易和投资管理中的一个重要方面。它不仅涉及选择合适的时机和价格进入市场，也包括监控市场变化、评估风险、以及在适当的时机退出以实现预期的财务目标或限制潜在的损失。这其中可能涉及到多种策略和工具，如止损订单、限价订单等。</p>
+<h3 id="交易成本模型">交易成本模型</h3>
+<p>交易成本模型在这一过程中发挥作用，帮助交易者计算和预测进入或退出头寸时可能产生的所有相关成本。这些成本可能包括经纪佣金费用、交易税、市场冲击成本、滑点等。理解并计算这些成本对于优化交易策略、提高投资回报率、以及有效管理风险至关重要。</p>
+<h2 id="center-4-交易成本模型"><center> 4. 交易成本模型</h2>
+<p>交易成本模型是一种金融工具，用于评估调整投资组合时所需承担的所有相关成本。这包括但不限于佣金费用、市场冲击成本（即大规模交易对市场价格的影响）、滑点（执行价格与预期价格之间的差异）以及税务影响等。交易成本模型的目的是帮助投资者或交易者更准确地衡量实现交易策略的经济可行性。</p>
+<h3 id="交易成本模型的重要性">交易成本模型的重要性</h3>
+<ol>
+<li>
+<p><strong>成本与收益的比较</strong>：交易成本模型能帮助交易者评估是否值得进行某次交易。如果预期的收益低于交易成本，那么即使这笔交易可能获得正收益，实际上进行这笔交易可能导致净损失。</p>
+</li>
+<li>
+<p><strong>决策支持</strong>：它提供了一个量化的方法来考虑在执行任何交易决策前的成本因素，从而支持更加理性的投资决策。</p>
+</li>
+<li>
+<p><strong>优化交易策略</strong>：通过理解不同交易策略的成本影响，交易者可以优化他们的交易方法，例如选择更低成本的交易时机或调整交易规模。</p>
+</li>
+</ol>
+<h3 id="交易成本模型在趋势追随者策略中的应用">交易成本模型在趋势追随者策略中的应用</h3>
+<p>在趋势追随策略中，交易者通常根据某些资产价格的历史走势来预测其未来的价格变动，并据此进行买入或卖出决策。然而，这种策略的有效性很大程度上取决于市场趋势的强度和持续时间。如果趋势预测显示只是短暂和微弱的，那么使用交易成本模型来评估可能的成本就显得尤为重要：</p>
+<ul>
+<li>
+<p><strong>例子解析</strong>：假设一个趋势追随者预计某资产将在短期内轻微上涨。在这种情况下，交易成本模型可以用来计算进入（买入）和退出（卖出）这一头寸的总成本。这包括执行交易的直接费用、可能的市场冲击和滑点等。</p>
+</li>
+<li>
+<p><strong>成本与利润的权衡</strong>：如果模型显示，为了实现这一小幅利润，需要支付的交易成本（如佣金和市场冲击）超过了预期的收益，那么这笔交易实际上是不划算的。交易者可能会选择放弃这次交易，寻找更有利可图的机会。</p>
+</li>
+</ul>
+<h3 id="总结">总结</h3>
+<p>交易成本模型是确保交易策略经济有效性的关键工具。在实际操作中，这种模型帮助交易者避免了因忽视交易成本而产生不必要损失的风险，尤其是在那些预期收益较低的交易中。通过实时和准确地评估交易成本，交易者可以做出更明智的决策，从而在保持收益最大化的同时控制和优化成本。</p>
+<h2 id="center-5-隐含波动率"><center> 5. 隐含波动率</h2>
+<h4 id="知乎-浅谈隐含波动率-md-这回把隐含波动率从头到脚扒明白了"><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/570141126">知乎-浅谈隐含波动率（md，这回把隐含波动率从头到脚扒明白了）</a></h4>
+<p>隐含波动率（Implied Volatility, IV）是期权定价中的一个关键概念，它反映了市场对特定资产未来价格波动的预期。隐含波动率并不是从历史价格数据直接计算出来的，而是从期权的市场价格中推导出来的。这种波动率是在使用期权定价模型（如著名的Black-Scholes模型）时，使理论价格与市场价格匹配所需设定的波动率值。</p>
+<h2 id="center-6-虚值期权和平值期权"><center> 6. 虚值期权和平值期权</h2>
+<p>在期权交易中，根据期权的行权价格（exercise price）与标的资产当前市场价格的关系，期权可以被分类为虚值期权（Out-of-the-Money, OTM）、平值期权（At-the-Money, ATM）和实值期权（In-the-Money, ITM）。这里我们重点解释虚值期权和平值期权：</p>
+<h3 id="平值期权-at-the-money-atm">平值期权（At-the-Money, ATM）</h3>
+<ul>
+<li><strong>定义</strong>：当期权的行权价格等于或非常接近于标的资产的当前市场价格时，该期权被称为平值期权。</li>
+<li><strong>示例</strong>：
+<ul>
+<li>对于认购期权：如果股票当前价格是50美元，认购期权的行权价格也是50美元，则该认购期权为平值。</li>
+<li>对于认沽期权：同样，如果股票价格是50美元，认沽期权的行权价格也是50美元，则该认沽期权为平值。</li>
+</ul>
+</li>
+<li><strong>特点</strong>：平值期权的内在价值为零，因为如果立即行使这种期权，买家无法从中获得利益。然而，这种期权可能具有时间价值，因为未来的价格变动可能使得期权变得有利可图。</li>
+</ul>
+<h3 id="虚值期权-out-of-the-money-otm">虚值期权（Out-of-the-Money, OTM）</h3>
+<ul>
+<li><strong>定义</strong>：虚值期权指的是行权价格使得立即行使期权没有直接盈利的期权。
+<ul>
+<li>对于认购期权：如果行权价格高于当前股票价格，则认购期权是虚值的。</li>
+<li>对于认沽期权：如果行权价格低于当前股票价格，则认沽期权是虚值的。</li>
+</ul>
+</li>
+<li><strong>示例</strong>：
+<ul>
+<li>认购期权：股票的当前市场价格是50美元，而认购期权的行权价格是55美元。</li>
+<li>认沽期权：同一股票的当前市场价格是50美元，而认沽期权的行权价格是45美元。</li>
+</ul>
+</li>
+<li><strong>特点</strong>：虚值期权的内在价值为零，因为如果现在行使，持有人会立即面临损失（例如，以高于市场价格购买股票或以低于市场价格卖出股票）。虚值期权的整个价值可能完全由其时间价值组成，这取决于市场对未来价格变动的预期。</li>
+</ul>
+<h3 id="总结">总结</h3>
+<ul>
+<li><strong>平值期权</strong>通常被视为市场对标的资产价格最不确定的期权，因为它们位于价值转换的边缘，价格小幅变动即可将其转变为实值或虚值。</li>
+<li><strong>虚值期权</strong>则是对未来价格变动持乐观态度的投资者的选择，因为它们相对便宜，提供了高杠杆效应的可能性，但风险也相应较高，因为完全有可能到期时变得一文不值。</li>
+</ul>
+<p>这些分类帮助投资者和交易者理解期权的潜在价值和风险，以制定更符合其市场观点和风险承受能力的交易策略。</p>
+<h2 id="center-7-市净值"><center> 7. 市净值</h2>
+<p>市净值（Price-to-Book Ratio，简称P/B Ratio）是一个常用的财务比率，用于评估一家公司的股票价格与其账面价值之间的关系。市净值比率可以帮助投资者判断股票是否被高估或低估。</p>
+<h3 id="定义和计算">定义和计算</h3>
+<p>市净值比率通过将公司的股票市场价格除以其每股账面价值来计算。账面价值是指公司的总资产减去总负债后的剩余价值，通常在公司财报的资产负债表上可以找到。</p>
+<p><strong>公式</strong>：<br>
+[ \text{P/B Ratio} = \frac{\text{市场股价}}{\text{每股账面价值}} ]</p>
+<p>其中：</p>
+<ul>
+<li><strong>市场股价</strong>：是指公司股票在市场上的当前交易价格。</li>
+<li><strong>每股账面价值</strong>：计算方式是将公司的净资产（总资产减总负债）除以在外发行的总股数。</li>
+</ul>
+<h3 id="重要性和用途">重要性和用途</h3>
+<ol>
+<li>
+<p><strong>评估股价公允性</strong>：P/B比率是判断股票投资价值的一个重要工具。一般来说，P/B比率低于1可能表明股票被低估（市场价格低于公司账面价值），而高于1则可能表明股票被高估。然而，这也需要结合行业标准和其他财务指标来综合评估。</p>
+</li>
+<li>
+<p><strong>比较同行业公司</strong>：市净值比率可以用来比较同一行业中不同公司的价值。由于不同行业的资本结构和运营模式不同，P/B比率的行业标准也会有所不同。</p>
+</li>
+<li>
+<p><strong>风险评估</strong>：低P/B比率可能意味着市场对公司的未来前景持悲观态度，或者公司面临某些未被市场充分理解的内在问题。投资者使用P/B比率时需谨慎，同时考虑其他经济、行业和公司特有的因素。</p>
+</li>
+</ol>
+<h3 id="限制">限制</h3>
+<ul>
+<li>
+<p><strong>无形资产和折旧</strong>：对于那些拥有大量无形资产（如专利、品牌）或其资产价值因折旧而降低的公司，P/B比率可能不是一个完全准确的指标。这是因为账面价值可能没有准确反映这些资产的真实市场价值。</p>
+</li>
+<li>
+<p><strong>周期性行业</strong>：在周期性行业中，公司的资产和盈利在经济周期的不同阶段会有大幅波动，这也会影响P/B比率的稳定性和解释力。</p>
+</li>
+</ul>
+<p>总结来说，市净值比率是理解和评估股票相对价值的有用工具，但最好与其他指标和分析一起使用，以获得更全面的投资评估。</p>
+<h2 id="center-8-操作性应计利润"><center> 8. 操作性应计利润</h2>
+<p>操作性应计利润（Operational Accruals）是财务分析中一个重要的概念，用于评估公司在其正常业务活动中生成的应计基础的盈余。这种指标有助于分析公司的财务健康状况，特别是其经营效率和盈利质量。</p>
+<h3 id="定义和计算">定义和计算</h3>
+<p>操作性应计利润通常指公司的净利润中非现金交易所构成的部分。应计利润是基于应计会计原则计算的，这意味着收入和费用在发生时而非款项实际收付时被记录。操作性应计项目主要包括：</p>
+<ul>
+<li><strong>应收账款的变动</strong>：反映了销售收入中尚未收到现金的部分。</li>
+<li><strong>存货的变动</strong>：反映了产品成本在报告期内的增减变化。</li>
+<li><strong>预付费用和递延收入</strong>：预付费用指支付但尚未享受的服务或产品的费用；递延收入则是已收到的款项，但相关的产品或服务尚未交付。</li>
+<li><strong>应付账款和应计费用的变动</strong>：反映了公司尚未支付的、与业务运营相关的费用。</li>
+</ul>
+<h3 id="重要性">重要性</h3>
+<ol>
+<li>
+<p><strong>盈利质量</strong>：通过分析操作性应计利润，投资者和分析师可以评估公司报告的净利润中有多少是基于实际现金流，以及多少是通过会计估计和调整得到的。高比例的操作性应计可能表明公司的盈利质量较低，因为这部分盈利不是来自核心业务的现金流。</p>
+</li>
+<li>
+<p><strong>业务和财务透明度</strong>：操作性应计的分析有助于揭示公司的财务操作是否透明，是否依赖于会计政策和估计的调整来实现盈利目标。</p>
+</li>
+<li>
+<p><strong>预测未来现金流</strong>：了解操作性应计利润的变动有助于预测公司未来的现金流情况。通常，较低的操作性应计水平与较强的现金流生成能力相关联。</p>
+</li>
+</ol>
+<h3 id="应用限制">应用限制</h3>
+<ul>
+<li><strong>行业差异</strong>：不同行业的操作性应计特征可能差异很大，因此在分析时需要考虑行业特性。</li>
+<li><strong>周期性影响</strong>：某些行业如制造业和零售业可能会受到经济周期的影响，导致存货和应收账款的大幅波动，影响操作性应计的解读。</li>
+</ul>
+<p>操作性应计利润是一个复杂但非常有用的工具，用于深入理解公司的盈利动态和财务健康。正确理解和应用这一指标可以显著提高财务分析的质量和预测的准确性。</p>
+<h2 id="center-9-大宗交易"><center> 9. 大宗交易</h2>
+<p>大宗交易（Block Trading）是指在金融市场上进行的大量证券交易，通常涉及的数量远超过普通交易。这种交易经常在股票和债券市场发生，通常通过一种特殊的交易安排来执行，以避免对市场价格造成显著影响。</p>
+<h3 id="特点和定义">特点和定义</h3>
+<ol>
+<li>
+<p><strong>交易量大</strong>：大宗交易通常涉及的股票数量或债券金额远超过通过常规市场交易进行的平均交易量。具体的界定量可以根据不同市场和交易所的规定而有所不同，但通常是指成千上万股股票或价值数百万至数千万美元的证券。</p>
+</li>
+<li>
+<p><strong>独立撮合</strong>：为了最小化对市场的影响，大宗交易往往通过特殊的交易平台或通过券商之间的直接协商来执行。这些交易常常不在公开市场上报价，以避免影响市场价格。</p>
+</li>
+<li>
+<p><strong>定价机制</strong>：大宗交易的定价可能基于市场价格的一个折扣或溢价，取决于交易的具体条款和双方的协商结果。折扣通常是为了补偿买方承担的立即购买大量股份可能带来的价格风险。</p>
+</li>
+</ol>
+<h3 id="常见的用途和目的">常见的用途和目的</h3>
+<ul>
+<li><strong>机构投资者的操作</strong>：大宗交易通常由机构投资者执行，例如基金公司、保险公司、养老基金等，他们需要在短时间内买入或卖出大量股票。</li>
+<li><strong>企业并购活动</strong>：在并购或私有化交易中，涉及的交易方常常需要交易大量证券以达成交易。</li>
+<li><strong>减少市场冲击</strong>：通过大宗交易，大型股东可以在不过分影响市场价格的情况下，增减持特定股票。</li>
+</ul>
+<h3 id="风险与考量">风险与考量</h3>
+<ul>
+<li><strong>市场影响</strong>：虽然大宗交易旨在最小化对市场价格的影响，但信息泄露或交易执行不当仍可能导致市场波动。</li>
+<li><strong>流动性问题</strong>：大宗交易对市场的流动性有重要影响，特别是在涉及小型或中型企业股票的交易时，其市场流动性可能本身就不高。</li>
+<li><strong>执行风险</strong>：执行大宗交易的过程中可能会遇到多种风险，包括对手方风险和价格变动风险。</li>
+</ul>
+<p>大宗交易是金融市场上的一种重要现象，对市场结构和价格发现机制都有深远的影响。理解这种交易的性质和后果对于那些参与或受其影响的市场参与者至关重要。</p>
+<h2 id="center-10-敞口-explosure"><center> 10. 敞口(explosure)</h2>
+<p>在量化交易和金融市场中，<strong>敞口</strong>（Exposure）是一个关键概念，它描述了投资者或交易策略在特定市场、资产或风险因素面前的感受度或易受影响的程度。简单来说，敞口是衡量交易者或投资组合可能在市场变动时损失或获利的潜在规模。敞口可以在多种不同的情况和环境中被定义和测量：</p>
+<h3 id="1-市场敞口">1. <strong>市场敞口</strong></h3>
+<p>这是指一个投资组合对市场整体变动的敏感性。例如，一个股票重仓的投资组合对股市的波动非常敏感，因此具有较高的市场敞口。量化交易策略在设计时会计算预期的市场敞口，以决定在特定市场条件下应持有的资产规模或杠杆率。</p>
+<h3 id="2-资产敞口">2. <strong>资产敞口</strong></h3>
+<p>这涉及到特定资产或资产类别。例如，如果一个量化策略在某个特定的行业或商品（如科技股或石油）中投入了大量资本，那么它在这个领域的敞口较大。资产敞口决定了这些特定投资对投资组合整体性能的影响。</p>
+<h3 id="3-货币敞口">3. <strong>货币敞口</strong></h3>
+<p>对于那些涉及外币的投资，货币敞口描述了汇率变动对投资回报的影响。例如，一个美国投资者投资于欧洲市场的股票，如果欧元相对于美元贬值，即使这些股票的价值没有下降，转换成美元后的总价值也可能降低。</p>
+<h3 id="4-因子敞口">4. <strong>因子敞口</strong></h3>
+<p>在高级量化交易策略中，敞口也可以指对某些风险因子的敏感性。例如，一个策略可能对利率变化、某个经济指标的波动或者特定政策变动特别敏感。因子模型常用于评估和管理这种敞口。</p>
+<h3 id="5-信用敞口">5. <strong>信用敞口</strong></h3>
+<p>在信用市场，敞口可以描述债权人对债务人可能违约的财务风险。例如，一个交易策略如果大量持有某个信用等级较低的公司债，其信用敞口较大。</p>
+<h3 id="敞口管理">敞口管理</h3>
+<p>量化交易者和投资者通常使用多种工具和技术来管理和调整他们的敞口。通过对冲、多元化投资组合或使用衍生金融工具（如期权和期货）来减少不希望的敞口，同时增加那些可能带来积极回报的敞口。</p>
+<p>敞口管理是量化交易和风险管理的核心部分，通过科学的数据分析和模型，量化策略能够在保持预定风险水平的同时最大化收益。理解和有效管理敞口是量化交易成功的关键因素之一。</p>
+<h2 id="center-11-系统性风险或系统性敞口"><center> 11. 系统性风险或系统性敞口</h2>
+<p>系统性风险和系统性敞口这两个术语在金融和投资领域经常被使用，它们都与市场整体相关的风险有关，但有时这两个词的含义和用法会有所区别。以下是对这两个术语的解释和区分：</p>
+<h3 id="系统性风险">系统性风险</h3>
+<p>系统性风险（Systemic Risk），也称为不可分散风险或市场风险，是指影响整个市场或广大经济的风险。这类风险源自于那些影响整个市场的因素，如经济衰退、政治动荡、重大法律变更、自然灾害等。系统性风险是不可通过多样化投资组合来消除的，因为它同时影响市场中的大多数或所有资产。</p>
+<h3 id="系统性敞口">系统性敞口</h3>
+<p>系统性敞口（Systematic Exposure）通常是指投资组合在面对系统性风险时的敞开程度或易受程度。这涉及到投资组合对市场整体变动的敏感性。如果一个投资组合的表现与市场整体表现高度相关，则它具有较高的系统性敞口。</p>
+<h3 id="区别">区别</h3>
+<ul>
+<li><strong>风险 vs. 敞口</strong>：系统性风险是一个宏观层面的概念，描述的是影响整个市场的不可避免的风险因素。系统性敞口则更侧重于个体或投资组合如何受到这些宏观风险的影响，即投资者对这种系统性风险的暴露程度。</li>
+<li><strong>可管理性</strong>：虽然系统性风险本身通常是不可控的，但投资者可以通过各种策略来管理或调整他们的系统性敞口，如通过使用对冲策略来减少市场波动对投资组合的影响。</li>
+<li><strong>度量方式</strong>：系统性风险很难单独度量，因为它涉及整个市场。而系统性敞口可以通过比较投资组合收益与市场指数之间的相关性来度量，例如使用贝塔系数（Beta Coefficient）来衡量。</li>
+</ul>
+<h3 id="实际应用">实际应用</h3>
+<p>在实际投资管理中，了解和量化系统性敞口对于资产管理者来说是至关重要的。这可以帮助他们做出更加明智的投资决策，通过适当的对冲和资产配置策略来管理和优化这种敞口，以实现既定的风险和回报目标。通过控制对系统性风险的敞口，投资者可以更好地防范广泛市场的负面影响，同时利用市场上升带来的机会。</p>
+<h3 id="美联储加息带来固定投资回报率增加-银行存款-债券">美联储加息带来固定投资回报率增加（银行存款&amp;债券）</h3>
+<p>好的，让我尝试用一个更简单直观的方式来解释这个过程，希望能帮助您更好地理解。</p>
+<h3 id="1-美联储加息">1. 美联储加息</h3>
+<p>当美国联邦储备系统（美联储）决定提高利率时，他们实际上是在提高银行之间借钱的成本，这个特定的利率称为“联邦基金利率”。</p>
+<h3 id="2-银行提高利率">2. 银行提高利率</h3>
+<p>由于银行的借款成本增加了，为了维持利润，银行也会提高向客户提供的贷款和存款的利率。简单来说，如果银行从其他银行借钱的成本提高了，他们通常也需要从借给客户的钱中赚取更多，同时为了吸引客户继续存钱，也会提高给存款客户的利息。</p>
+<h3 id="3-投资者的回报率增加">3. 投资者的回报率增加</h3>
+<ul>
+<li>
+<p><strong>对于存款</strong>：当银行提高存款利率时，存款者（即普通储蓄账户、定期存款账户的持有者）将获得更多的利息收入。这意味着，如果您在银行有存款，您将因为加息而得到更多的利息回报。</p>
+</li>
+<li>
+<p><strong>对于债券</strong>：新发行的债券将会以更高的利率来吸引买家，因为现在市场上的通用利率水平已经提高。如果您投资于新的债券，这意味着您将获得更高的利息收入。</p>
+</li>
+</ul>
+<h3 id="4-固定收益投资的吸引力">4. 固定收益投资的吸引力</h3>
+<p>由于存款和债券的利率增加，固定收益投资变得更有吸引力。这是因为投资者现在可以通过这些较低风险的投资获得更高的收入。</p>
+<h3 id="总结">总结</h3>
+<p>简而言之，当美联储加息时，它导致整个经济中的利率普遍上升，包括您在银行的存款利率和您可能购买的债券的利率。这样一来，这些投资的回报率增加，从而吸引了寻求稳定收益的投资者。希望这次解释能帮助您更清楚地理解这个过程！</p>
+<h2 id="center-12-最佳买入价-best-bid-price-and-最佳卖出价-best-ask-price"><center> 12. 最佳买入价（Best Bid Price）and 最佳卖出价（Best Ask Price）</h2>
+<p>在正常的市场条件下，最佳买入价（Best Bid Price）永远不会高于最佳卖出价（Best Ask Price）。最佳买入价是市场上愿意支付的最高价格，而最佳卖出价是市场上愿意接受的最低价格。这两者之间存在的差距被称为<strong>价差</strong>（Spread）。</p>
+<h3 id="市场的买卖机制">市场的买卖机制</h3>
+<ul>
+<li><strong>最佳买入价（Best Bid）</strong>：这是买方愿意支付的最高价格。买方希望以尽可能低的价格购买资产，但这个价格是买方愿意支付的最高限价。</li>
+<li><strong>最佳卖出价（Best Ask）</strong>：这是卖方愿意接受的最低价格。卖方希望以尽可能高的价格出售资产，但这个价格是卖方愿意接受的最低限价。</li>
+</ul>
+<h3 id="市场价差的意义">市场价差的意义</h3>
+<p>价差的存在反映了市场的流动性。一个狭窄的价差通常表明市场具有较高的流动性，买卖双方的价格很接近，易于成交。相反，宽价差可能表明流动性较低，买卖双方的价格差异较大，成交不易。</p>
+<h3 id="特殊情况">特殊情况</h3>
+<p>在某些异常情况或市场错误报价的瞬间，可能会出现价格交叉的现象，即某些卖出价低于买入价。这种情况在高频交易中可能短暂发生，通常会被市场快速纠正。这种价格交叉也可能在市场开盘和收盘时因为订单堆积而短暂出现。</p>
+<h3 id="实际操作中的意义">实际操作中的意义</h3>
+<p>在进行股票交易或任何金融交易时，了解最佳买入价和最佳卖出价对于制定有效的交易策略至关重要。交易者需要关注这两个价格点来确定他们的买入或卖出订单是否有合理的成交机会，以及如何设置他们的限价订单以优化成交价格。</p>
+<h3 id="总结">总结</h3>
+<p>在大多数情况下，最佳买入价不会高于最佳卖出价，它们之间的差价反映了市场的流动性状况。了解和监控这一动态对于在金融市场中做出明智的交易决策是至关重要的。</p>
+<h2 id="center-13-量化投资评估指标"><center> 13. 量化投资评估指标</h2>
+<p>这段文本提到了几个关键的量化投资评估指标，主要用来衡量投资策略的风险和回报。让我们一一解析：</p>
+<ol>
+<li>
+<p><strong>夏普比率 (Sharpe Ratio)</strong>：这是评估投资性能的一个常用指标，通过计算策略的超额回报（即超过无风险利率的回报）与回报的标准偏差（波动性）的比例来衡量。一个夏普比率为2的策略意味着对每承担一个单位的风险，可以获得两个单位的超额回报，这被认为是一个非常好的比率。</p>
+</li>
+<li>
+<p><strong>信息比率 (Information Ratio)</strong>：与夏普比率类似，信息比率衡量的是策略相对于基准（通常是一个指数）的超额回报与超额回报的波动性之间的关系。不同的是，信息比率不扣除无风险利率。标准普尔500指数策略的信息比率为0.57意味着每承担1%的超额风险，可以获得0.57%的超额收益。</p>
+</li>
+<li>
+<p><strong>斯特林比率 (Sterling Ratio)</strong>：计算方法是平均收益率与低于平均收益率的波动率之间的比值。这个比率强调在低回报期间的风险控制。</p>
+</li>
+<li>
+<p><strong>Calmar比率 (Calmar Ratio)</strong>：这个比率通过将平均收益率除以最大回撤（从峰值到谷底的最大下跌幅度）来衡量。这里提到的0.31的Calmar比率表明，每承担1%的最大回撤风险，能产生0.31%的收益。</p>
+</li>
+<li>
+<p><strong>Omega比率 (Omega Ratio)</strong>：通过将正收益总和与负收益总和的比值来衡量。一个Omega比率大于1意味着正收益超过了负收益。</p>
+</li>
+</ol>
+<p>这些比率各有侧重，夏普比率和信息比率更侧重于整体的风险调整收益，而Calmar比率和斯特林比率更关注在特定情况下（如大的市场回调）的表现。这些工具都是帮助量化分析师或投资者评估和比较不同投资策略的风险和回报的有效工具。</p>
+<hr>
+<h1 id="常见策略">常见策略</h1>
+<h2 id="center-1-配对交易"><center> 1. 配对交易</h2>
+<p>配对交易（Pairs Trading）策略是一种市场中性的交易策略，它通过同时购买和卖空两只价格走势历史上高度相关的股票来赚取收益。在您提供的这段材料中，配对交易策略之所以能够赚钱，基于几个关键的假设和逻辑：</p>
+<h3 id="1-基本面相似性">1. <strong>基本面相似性</strong></h3>
+<p>配对交易的基本前提是选择两只基本面相似的股票，即它们来自同一行业，具有相似的商业模型和财务状况。这种相似性意味着它们的股价应该受到类似的宏观经济和行业特定因素的影响。</p>
+<h3 id="2-市场无效性和价格偏差">2. <strong>市场无效性和价格偏差</strong></h3>
+<p>在您的案例中，由于股票A是主要市场指数的成分股而股票B不是，股票A将吸引更多的主动和被动投资流入（特别是跟踪指数的基金会购买股票A），这可能导致股票A的市场表现暂时优于股票B。这种由非基本面因素（如流动性或指数成分的变化）引起的价格偏差为套利提供了机会。</p>
+<h3 id="3-执行套利">3. <strong>执行套利</strong></h3>
+<p>配对交易策略会利用这种偏差，通过卖空相对高估的股票A（价格被人为推高，市盈率较高），同时买入相对低估的股票B。因为这两只股票的基本面相似，长期来看，它们的价格应该会趋向一致。</p>
+<h3 id="4-市场效率的促进">4. <strong>市场效率的促进</strong></h3>
+<p>此策略的操作基于假设市场最终会纠正这种非基于基本面的定价偏差。当市场参与者认识到股票A相对于股票B过于昂贵时，他们将开始卖出A并买入B，从而推动A的价格下降和B的价格上升，直至两者的定价再次反映它们的真实价值。这个调整过程中产生的价格变动为配对交易者提供了利润。</p>
+<h3 id="5-风险和回报">5. <strong>风险和回报</strong></h3>
+<p>配对交易是一种统计套利策略，理论上它是市场中性的，因为它不依赖于整体市场的表现而是依赖于两只股票之间的相对表现。这减少了市场风险，但仍然存在执行风险、流动性风险以及突发事件导致股票基本面发生改变的风险。</p>
+<p>总结来说，配对交易能够赚钱是因为它利用了市场在短期内出现的非基本面引起的定价效率，通过同时对冲相似资产组合中的对立头寸来赚取两者价格差的收敛利润。这要求交易者精确评估涉及股票的相关性和潜在的风险，并及时调整策略以应对市场变化。</p>
+<h3 id="q：">Q：</h3>
+<ul>
+<li>特别是跟踪指数的基金会购买股票A，为什么</li>
+<li>价格被人为推高，市盈率较高 为什么？</li>
+</ul>
+<p>在金融市场中，当某只股票成为大型指数的一部分时，这只股票往往会受到额外的买盘关注，尤其是来自于跟踪该指数的被动投资基金（如指数基金和交易所交易基金，ETFs）。这种现象影响股票的需求和定价，具体原因和影响如下：</p>
+<h3 id="为何指数成分股会受到更多购买？">为何指数成分股会受到更多购买？</h3>
+<ol>
+<li>
+<p><strong>被动投资策略的影响</strong>：跟踪指数的基金，其目标是复制特定股票指数的表现。为了实现这一目标，这些基金必须购买和持有与指数成分股相同的股票，且按相应比例。当一只股票被纳入一个重要指数，比如标普500或纳斯达克100等，所有跟踪该指数的基金都需要购买该股票，以确保它们的投资组合能准确反映指数。</p>
+</li>
+<li>
+<p><strong>自动流入的资金</strong>：随着资金流入跟踪这些指数的基金，这些基金必须将新增资金用于购买更多的指数成分股。这种机械式的购买需求提升了股票的市场需求。</p>
+</li>
+</ol>
+<h3 id="为何股价和市盈率会人为推高？">为何股价和市盈率会人为推高？</h3>
+<ol>
+<li>
+<p><strong>增加的需求推动股价</strong>：由于被动投资策略的买入需求，股票A的市场需求增加。需求的增加，在供给不变的情况下，通常会导致股票价格上升。</p>
+</li>
+<li>
+<p><strong>市盈率的变动</strong>：市盈率（Price-to-Earnings Ratio, P/E）是衡量股票价格相对于每股收益的一个指标。当股票价格因为被动投资基金的购买而上升，而公司的盈利能力（即每股收益）没有同步显著增长时，市盈率会上升。这意味着投资者愿意为每单位盈利支付更高的价格，常常被视为股票被高估的一个信号。</p>
+</li>
+</ol>
+<h3 id="结论">结论</h3>
+<p>因此，股票A作为指数成分股，由于被动投资基金的需求自动增加，可能会导致其市场价格高于基于其基本面的合理估值，即市场无效性的表现。这种价格的人为推高不是基于公司业绩的改善或其他基本面因素，而仅仅是因为其在投资指数中的地位。这为配对交易和其他市场套利策略提供了可利用的机会。</p>
+<h2 id="center-均值回复策略和动量策略"><center> 均值回复策略和动量策略</h2>
+<p>“均值回复”和“动量”是金融市场中两种常用的投资策略，它们基于不同的市场行为理论。理解这两种策略的含义以及它们如何作为长期指标和速度指标使用。</p>
+<h3 id="均值回复策略">均值回复策略</h3>
+<p><strong>定义与应用</strong>：</p>
+<ul>
+<li><strong>均值回复</strong>是一种基于资产价格或收益将会回到其历史平均水平（均值）的假设的投资策略。这种策略认为，如果一种资产的价格远离其平均值（例如，过度上涨或下跌），它最终会回到那个平均水平。</li>
+<li><strong>长期指标</strong>：作为长期指标，均值回复策略通常在分析长期数据时更为有效。在更长的时间框架中，价格极端波动后往往会回归其长期均值，因此，均值回复策略特别适合于那些在一定时期内表现出稳定均值的市场或资产。</li>
+</ul>
+<h3 id="动量策略">动量策略</h3>
+<p><strong>定义与应用</strong>：</p>
+<ul>
+<li><strong>动量</strong>是基于过去的价格趋势来预测未来市场行为的投资策略。如果一种资产在某段时间内表现良好（价格上涨），动量策略假设这种资产短期内会继续表现良好；反之亦然。</li>
+<li><strong>速度指标</strong>：动量策略可以视为一种“速度指标”，因为它依赖于价格变动的速度和方向。通过测量资产价格的变动速率，投资者可以捕捉到趋势的强度，并试图在这些趋势可能继续之前进行交易。</li>
+</ul>
+<h3 id="结合应用">结合应用</h3>
+<p>在实际操作中，投资者可能会结合使用均值回复和动量策略，以平衡风险和捕捉市场机会：</p>
+<ul>
+<li>在分析一个资产时，如果观察到价格迅速偏离其历史平均水平，可能会使用动量策略来利用这种趋势继续的可能性。一旦动量减弱，可能迹象表明价格将回归其均值，这时均值回复策略就显得尤为重要。</li>
+<li>这种组合可以帮助投资者在短期内利用市场趋势，同时留意长期价格可能的回归，从而在不同时间框架内平衡交易决策。</li>
+</ul>
+<p>综上，均值回复作为长期指标和动量作为速度指标的组合使用，可以提供一个更全面的市场分析框架，帮助投资者在不同市场条件下作出更为明智的投资决策。</p>
+<h2 id="center-利差交易"><center> 利差交易</h2>
+<p>利差交易（Spread Trading）是金融市场上的一种常见策略，涉及同时买入和卖出两种相关金融工具以利用它们之间价格差异的变化。这种交易策略通常寻求从两种资产价格差的扩大或缩小中获利，而不仅仅是依赖单一资产的价格变动。</p>
+<h3 id="类型和例子">类型和例子</h3>
+<p>利差交易可以应用于多种市场和金融工具，包括但不限于股票、债券、期货、期权和货币。以下是一些常见的利差交易类型：</p>
+<ol>
+<li>
+<p><strong>期货市场的跨期套利</strong>：</p>
+<ul>
+<li><strong>跨期套利</strong>：交易者可能会同时买入一个月份的期货合约并卖出另一个月份的同一商品的期货合约，以利用不同到期日的价格差异。</li>
+<li><strong>例子</strong>：买入12月玉米期货和卖出3月玉米期货，预期价格差将变化以获得利润。</li>
+</ul>
+</li>
+<li>
+<p><strong>利率差异交易</strong>：</p>
+<ul>
+<li><strong>利差交易</strong>：这种策略常见于外汇市场和债券市场，交易者利用两种不同货币或债券的利率差异。</li>
+<li><strong>例子</strong>：如果美国利率低于欧洲利率，交易者可能会卖出美元债券并买入欧元债券，利用利差获利。</li>
+</ul>
+</li>
+<li>
+<p><strong>期权市场的垂直利差</strong>：</p>
+<ul>
+<li><strong>垂直利差</strong>：涉及购买和出售不同执行价格但相同到期日的同一类别（看涨或看跌）期权。</li>
+<li><strong>例子</strong>：买入一张行权价格为$100的看涨期权，并同时卖出一张行权价格为$110的看涨期权。</li>
+</ul>
+</li>
+</ol>
+<h3 id="目的和策略">目的和策略</h3>
+<ul>
+<li><strong>风险管理</strong>：利差交易通常被视为风险较低的策略，因为买入和卖出操作相互对冲了一部分市场风险。</li>
+<li><strong>利用市场效率或非效率</strong>：这种策略利用市场定价的效率或暂时的非效率，尤其是在关联资产之间的定价差异出现时。</li>
+<li><strong>资本要求较低</strong>：由于是对冲操作，许多市场如期货和期权市场可能要求的保证金较低。</li>
+</ul>
+<h3 id="风险">风险</h3>
+<p>尽管利差交易被认为风险较低，但仍存在潜在的损失风险，特别是市场波动大时。此外，利差可能不如预期那样发展，特别是在市场极端或不寻常的经济状况下。因此，成功的利差交易需要对市场条件、相关资产的性质以及潜在风险有深入的理解和实时的监控。</p>
+<h2 id="俄罗斯和美国债券在全球利率上涨下的对冲">俄罗斯和美国债券在全球利率上涨下的对冲</h2>
+<p>在这里所描述的策略是利用债券收益率的差异进行套利的一种形式，同时也包含了一种对冲（hedging）策略来管理利率变动的风险。这里的“全球利率上涨的对冲”指的是使用做空低收益的美国债券作为一种对冲手段来保护其对高收益俄罗斯债券的多头仓位。这样做的目的是减少全球利率可能上升带来的负面影响。我来详细解释一下这个概念：</p>
+<h3 id="做多俄罗斯高收益债券">做多俄罗斯高收益债券</h3>
+<ul>
+<li><strong>做多</strong>：投资者购买俄罗斯债券，预期这些债券的价格将上涨，或者至少能够获得较高的利息收入。</li>
+<li><strong>高收益率</strong>：通常表示这些债券承担更高的信用风险（例如违约风险较大），因此提供更高的收益率来吸引投资者。</li>
+</ul>
+<h3 id="做空美国低收益债券">做空美国低收益债券</h3>
+<ul>
+<li><strong>做空</strong>：投资者借入并立即出售美国债券，预期未来能以较低价格回购同等债券归还借入的债券，从中获利。</li>
+<li><strong>低收益率</strong>：相对于俄罗斯债券，美国债券通常被认为更安全，因此其收益率较低。</li>
+</ul>
+<h3 id="对冲全球利率上涨">对冲全球利率上涨</h3>
+<ul>
+<li><strong>利率上涨的影响</strong>：一般来说，当利率上升时，现有债券的价格会下跌，因为新发行的债券可能会提供更高的收益率，使得老债券相对较不吸引。</li>
+<li><strong>对冲策略</strong>：通过做空美国债券，投资者实际上是在对冲或保护其投资组合免受全球利率上升的影响。如果全球利率上升，做空的美国债券头寸可能会获利（因为债券价格下跌），这有助于抵消做多的俄罗斯高收益债券所承受的损失。</li>
+</ul>
+<p>这种策略是基于全球利率环境的预测和两种不同信用质量债券之间收益率的差异来操作的。它体现了一种复杂的金融工程技术，旨在从不同金融工具的相对价格变动中获利，同时管理因利率变动带来的潜在风险。</p>
+<p>而不做空俄罗斯债券而选择做空美国债券的策略背后有几个可能的原因，主要涉及风险管理、市场特性和投资目标的不同：</p>
+<h3 id="1-信用风险差异：">1. <strong>信用风险差异</strong>：</h3>
+<ul>
+<li><strong>俄罗斯债券</strong>：通常具有较高的收益率，这反映了较高的信用风险，即这些债券的违约风险更大。投资者购买这些债券是为了获取较高的收益。</li>
+<li><strong>美国债券</strong>：通常视为“风险较低”的资产，因为它们拥有较低的违约风险和稳定的收益。美国政府债券尤其被视为全球金融市场中的安全资产。</li>
+</ul>
+<h3 id="2-对冲策略：">2. <strong>对冲策略</strong>：</h3>
+<ul>
+<li>做空俄罗斯债券在理论上确实可以在利率上升时获利，但同时也增加了面对极高信用风险的暴露。如果俄罗斯经济或政治局势发生负面变化，这些债券的价格可能会急剧下跌，从而使做空位置带来的风险大大增加。</li>
+<li>另一方面，做空信用风险较低的美国债券在全球利率上涨时同样可以获利，同时这种策略的风险相对较低。美国债券的价格波动通常不如高收益债券剧烈，使得做空美国债券成为一种较为稳健的对冲选择。</li>
+</ul>
+<h3 id="3-市场流动性：">3. <strong>市场流动性</strong>：</h3>
+<ul>
+<li><strong>美国债券市场</strong>：具有极高的流动性，使得大规模的买入和卖出操作更容易执行，不太可能对市场价格造成重大影响。</li>
+<li><strong>俄罗斯债券市场</strong>：可能不具备与美国债券市场同样的流动性，尤其是在市场动荡时。在流动性不足的市场中做空可能会面临更高的执行成本和滑点风险。</li>
+</ul>
+<h3 id="4-政策和市场反应：">4. <strong>政策和市场反应</strong>：</h3>
+<ul>
+<li>市场参与者可能对美国政策变动和全球利率趋势有更快速和可预测的反应，而对于新兴市场如俄罗斯，市场反应可能更加复杂和不确定。</li>
+</ul>
+<p>综上所述，虽然理论上做空俄罗斯债券可以作为对冲全球利率上升的一种策略，但实际上这种操作可能涉及较高的风险和复杂性，这就是为什么投资者可能更倾向于选择做空较为稳定和低风险的美国债券作为对冲工具的原因。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://detect42.github.io">Richard</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://detect42.github.io/post/75572cab.html">https://detect42.github.io/post/75572cab.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Quant/">Quant</a></div><div class="post_share"><div class="social-share" data-image="/img/yang.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/a9655390.html" title="Metabit trading 实习记录"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">Metabit trading 实习记录</div></div></a></div><div class="next-post pull-right"><a href="/post/3d86db23.html" title="OS_lab"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">OS_lab</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text"> 打开量化交易的黑箱 </span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5%E9%98%90%E6%98%8E"><span class="toc-text">概念阐明</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#center-1-%E6%97%A0%E6%95%88%E5%B8%82%E5%9C%BA%E6%97%A0%E9%A3%8E%E9%99%A9%E5%A5%97%E5%88%A9"><span class="toc-text"> 1. “无效市场无风险套利”</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8F%E5%8C%96%E4%BA%A4%E6%98%93%E6%8F%90%E4%BE%9B%E6%B5%81%E5%8A%A8%E6%80%A7"><span class="toc-text">量化交易提供流动性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%82%E5%9C%BA%E6%95%88%E7%8E%87%E4%B8%8E%E5%B8%82%E5%9C%BA%E6%97%A0%E6%95%88"><span class="toc-text">市场效率与市场无效</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A0%E9%A3%8E%E9%99%A9%E5%A5%97%E5%88%A9%E6%9C%BA%E4%BC%9A"><span class="toc-text">无风险套利机会</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-2-%E6%AF%8F%E8%82%A1%E6%94%B6%E7%9B%8A-eps"><span class="toc-text"> 2. 每股收益(EPS)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F"><span class="toc-text">计算公式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%A6%81%E6%80%A7"><span class="toc-text">重要性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%92%8C%E9%9D%99%E6%80%81-eps"><span class="toc-text">动态和静态 EPS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-3-%E5%A4%B4%E5%AF%B8-position"><span class="toc-text"> 3. 头寸(Position)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%B4%E5%AF%B8%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="toc-text">头寸的类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5%E5%92%8C%E9%80%80%E5%87%BA%E5%A4%B4%E5%AF%B8"><span class="toc-text">进入和退出头寸</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%B4%E5%AF%B8%E7%9A%84%E7%AE%A1%E7%90%86"><span class="toc-text">头寸的管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E6%98%93%E6%88%90%E6%9C%AC%E6%A8%A1%E5%9E%8B"><span class="toc-text">交易成本模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-4-%E4%BA%A4%E6%98%93%E6%88%90%E6%9C%AC%E6%A8%A1%E5%9E%8B"><span class="toc-text"> 4. 交易成本模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E6%98%93%E6%88%90%E6%9C%AC%E6%A8%A1%E5%9E%8B%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7"><span class="toc-text">交易成本模型的重要性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E6%98%93%E6%88%90%E6%9C%AC%E6%A8%A1%E5%9E%8B%E5%9C%A8%E8%B6%8B%E5%8A%BF%E8%BF%BD%E9%9A%8F%E8%80%85%E7%AD%96%E7%95%A5%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-text">交易成本模型在趋势追随者策略中的应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-5-%E9%9A%90%E5%90%AB%E6%B3%A2%E5%8A%A8%E7%8E%87"><span class="toc-text"> 5. 隐含波动率</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9F%A5%E4%B9%8E-%E6%B5%85%E8%B0%88%E9%9A%90%E5%90%AB%E6%B3%A2%E5%8A%A8%E7%8E%87-md-%E8%BF%99%E5%9B%9E%E6%8A%8A%E9%9A%90%E5%90%AB%E6%B3%A2%E5%8A%A8%E7%8E%87%E4%BB%8E%E5%A4%B4%E5%88%B0%E8%84%9A%E6%89%92%E6%98%8E%E7%99%BD%E4%BA%86"><span class="toc-text">知乎-浅谈隐含波动率（md，这回把隐含波动率从头到脚扒明白了）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-6-%E8%99%9A%E5%80%BC%E6%9C%9F%E6%9D%83%E5%92%8C%E5%B9%B3%E5%80%BC%E6%9C%9F%E6%9D%83"><span class="toc-text"> 6. 虚值期权和平值期权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%B3%E5%80%BC%E6%9C%9F%E6%9D%83-at-the-money-atm"><span class="toc-text">平值期权（At-the-Money, ATM）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%9A%E5%80%BC%E6%9C%9F%E6%9D%83-out-of-the-money-otm"><span class="toc-text">虚值期权（Out-of-the-Money, OTM）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-7-%E5%B8%82%E5%87%80%E5%80%BC"><span class="toc-text"> 7. 市净值</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%92%8C%E8%AE%A1%E7%AE%97"><span class="toc-text">定义和计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%A6%81%E6%80%A7%E5%92%8C%E7%94%A8%E9%80%94"><span class="toc-text">重要性和用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%90%E5%88%B6"><span class="toc-text">限制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-8-%E6%93%8D%E4%BD%9C%E6%80%A7%E5%BA%94%E8%AE%A1%E5%88%A9%E6%B6%A6"><span class="toc-text"> 8. 操作性应计利润</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%92%8C%E8%AE%A1%E7%AE%97"><span class="toc-text">定义和计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%A6%81%E6%80%A7"><span class="toc-text">重要性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E9%99%90%E5%88%B6"><span class="toc-text">应用限制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-9-%E5%A4%A7%E5%AE%97%E4%BA%A4%E6%98%93"><span class="toc-text"> 9. 大宗交易</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E7%82%B9%E5%92%8C%E5%AE%9A%E4%B9%89"><span class="toc-text">特点和定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E7%94%A8%E9%80%94%E5%92%8C%E7%9B%AE%E7%9A%84"><span class="toc-text">常见的用途和目的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A3%8E%E9%99%A9%E4%B8%8E%E8%80%83%E9%87%8F"><span class="toc-text">风险与考量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-10-%E6%95%9E%E5%8F%A3-explosure"><span class="toc-text"> 10. 敞口(explosure)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%B8%82%E5%9C%BA%E6%95%9E%E5%8F%A3"><span class="toc-text">1. 市场敞口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%B5%84%E4%BA%A7%E6%95%9E%E5%8F%A3"><span class="toc-text">2. 资产敞口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%B4%A7%E5%B8%81%E6%95%9E%E5%8F%A3"><span class="toc-text">3. 货币敞口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%9B%A0%E5%AD%90%E6%95%9E%E5%8F%A3"><span class="toc-text">4. 因子敞口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E4%BF%A1%E7%94%A8%E6%95%9E%E5%8F%A3"><span class="toc-text">5. 信用敞口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%9E%E5%8F%A3%E7%AE%A1%E7%90%86"><span class="toc-text">敞口管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-11-%E7%B3%BB%E7%BB%9F%E6%80%A7%E9%A3%8E%E9%99%A9%E6%88%96%E7%B3%BB%E7%BB%9F%E6%80%A7%E6%95%9E%E5%8F%A3"><span class="toc-text"> 11. 系统性风险或系统性敞口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%80%A7%E9%A3%8E%E9%99%A9"><span class="toc-text">系统性风险</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%80%A7%E6%95%9E%E5%8F%A3"><span class="toc-text">系统性敞口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%BA%E5%88%AB"><span class="toc-text">区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="toc-text">实际应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BE%8E%E8%81%94%E5%82%A8%E5%8A%A0%E6%81%AF%E5%B8%A6%E6%9D%A5%E5%9B%BA%E5%AE%9A%E6%8A%95%E8%B5%84%E5%9B%9E%E6%8A%A5%E7%8E%87%E5%A2%9E%E5%8A%A0-%E9%93%B6%E8%A1%8C%E5%AD%98%E6%AC%BE-%E5%80%BA%E5%88%B8"><span class="toc-text">美联储加息带来固定投资回报率增加（银行存款&amp;债券）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%BE%8E%E8%81%94%E5%82%A8%E5%8A%A0%E6%81%AF"><span class="toc-text">1. 美联储加息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%93%B6%E8%A1%8C%E6%8F%90%E9%AB%98%E5%88%A9%E7%8E%87"><span class="toc-text">2. 银行提高利率</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%8A%95%E8%B5%84%E8%80%85%E7%9A%84%E5%9B%9E%E6%8A%A5%E7%8E%87%E5%A2%9E%E5%8A%A0"><span class="toc-text">3. 投资者的回报率增加</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%9B%BA%E5%AE%9A%E6%94%B6%E7%9B%8A%E6%8A%95%E8%B5%84%E7%9A%84%E5%90%B8%E5%BC%95%E5%8A%9B"><span class="toc-text">4. 固定收益投资的吸引力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-12-%E6%9C%80%E4%BD%B3%E4%B9%B0%E5%85%A5%E4%BB%B7-best-bid-price-and-%E6%9C%80%E4%BD%B3%E5%8D%96%E5%87%BA%E4%BB%B7-best-ask-price"><span class="toc-text"> 12. 最佳买入价（Best Bid Price）and 最佳卖出价（Best Ask Price）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%82%E5%9C%BA%E7%9A%84%E4%B9%B0%E5%8D%96%E6%9C%BA%E5%88%B6"><span class="toc-text">市场的买卖机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%82%E5%9C%BA%E4%BB%B7%E5%B7%AE%E7%9A%84%E6%84%8F%E4%B9%89"><span class="toc-text">市场价差的意义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5"><span class="toc-text">特殊情况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%99%85%E6%93%8D%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%84%8F%E4%B9%89"><span class="toc-text">实际操作中的意义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-13-%E9%87%8F%E5%8C%96%E6%8A%95%E8%B5%84%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87"><span class="toc-text"> 13. 量化投资评估指标</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%AD%96%E7%95%A5"><span class="toc-text">常见策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#center-1-%E9%85%8D%E5%AF%B9%E4%BA%A4%E6%98%93"><span class="toc-text"> 1. 配对交易</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E9%9D%A2%E7%9B%B8%E4%BC%BC%E6%80%A7"><span class="toc-text">1. 基本面相似性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%B8%82%E5%9C%BA%E6%97%A0%E6%95%88%E6%80%A7%E5%92%8C%E4%BB%B7%E6%A0%BC%E5%81%8F%E5%B7%AE"><span class="toc-text">2. 市场无效性和价格偏差</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%89%A7%E8%A1%8C%E5%A5%97%E5%88%A9"><span class="toc-text">3. 执行套利</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%B8%82%E5%9C%BA%E6%95%88%E7%8E%87%E7%9A%84%E4%BF%83%E8%BF%9B"><span class="toc-text">4. 市场效率的促进</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%A3%8E%E9%99%A9%E5%92%8C%E5%9B%9E%E6%8A%A5"><span class="toc-text">5. 风险和回报</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#q%EF%BC%9A"><span class="toc-text">Q：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BD%95%E6%8C%87%E6%95%B0%E6%88%90%E5%88%86%E8%82%A1%E4%BC%9A%E5%8F%97%E5%88%B0%E6%9B%B4%E5%A4%9A%E8%B4%AD%E4%B9%B0%EF%BC%9F"><span class="toc-text">为何指数成分股会受到更多购买？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BD%95%E8%82%A1%E4%BB%B7%E5%92%8C%E5%B8%82%E7%9B%88%E7%8E%87%E4%BC%9A%E4%BA%BA%E4%B8%BA%E6%8E%A8%E9%AB%98%EF%BC%9F"><span class="toc-text">为何股价和市盈率会人为推高？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-text">结论</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-%E5%9D%87%E5%80%BC%E5%9B%9E%E5%A4%8D%E7%AD%96%E7%95%A5%E5%92%8C%E5%8A%A8%E9%87%8F%E7%AD%96%E7%95%A5"><span class="toc-text"> 均值回复策略和动量策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9D%87%E5%80%BC%E5%9B%9E%E5%A4%8D%E7%AD%96%E7%95%A5"><span class="toc-text">均值回复策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E9%87%8F%E7%AD%96%E7%95%A5"><span class="toc-text">动量策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E5%90%88%E5%BA%94%E7%94%A8"><span class="toc-text">结合应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-%E5%88%A9%E5%B7%AE%E4%BA%A4%E6%98%93"><span class="toc-text"> 利差交易</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E5%92%8C%E4%BE%8B%E5%AD%90"><span class="toc-text">类型和例子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E7%9A%84%E5%92%8C%E7%AD%96%E7%95%A5"><span class="toc-text">目的和策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A3%8E%E9%99%A9"><span class="toc-text">风险</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%84%E7%BD%97%E6%96%AF%E5%92%8C%E7%BE%8E%E5%9B%BD%E5%80%BA%E5%88%B8%E5%9C%A8%E5%85%A8%E7%90%83%E5%88%A9%E7%8E%87%E4%B8%8A%E6%B6%A8%E4%B8%8B%E7%9A%84%E5%AF%B9%E5%86%B2"><span class="toc-text">俄罗斯和美国债券在全球利率上涨下的对冲</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9A%E5%A4%9A%E4%BF%84%E7%BD%97%E6%96%AF%E9%AB%98%E6%94%B6%E7%9B%8A%E5%80%BA%E5%88%B8"><span class="toc-text">做多俄罗斯高收益债券</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9A%E7%A9%BA%E7%BE%8E%E5%9B%BD%E4%BD%8E%E6%94%B6%E7%9B%8A%E5%80%BA%E5%88%B8"><span class="toc-text">做空美国低收益债券</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E5%86%B2%E5%85%A8%E7%90%83%E5%88%A9%E7%8E%87%E4%B8%8A%E6%B6%A8"><span class="toc-text">对冲全球利率上涨</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BF%A1%E7%94%A8%E9%A3%8E%E9%99%A9%E5%B7%AE%E5%BC%82%EF%BC%9A"><span class="toc-text">1. 信用风险差异：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AF%B9%E5%86%B2%E7%AD%96%E7%95%A5%EF%BC%9A"><span class="toc-text">2. 对冲策略：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%B8%82%E5%9C%BA%E6%B5%81%E5%8A%A8%E6%80%A7%EF%BC%9A"><span class="toc-text">3. 市场流动性：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%94%BF%E7%AD%96%E5%92%8C%E5%B8%82%E5%9C%BA%E5%8F%8D%E5%BA%94%EF%BC%9A"><span class="toc-text">4. 政策和市场反应：</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/topimg.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Richard</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js"></script><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>
