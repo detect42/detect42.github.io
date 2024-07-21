@@ -1,5 +1,5 @@
 ---
-title: Inside the Black Box of Quantitative Trading
+title: Quant note
 tags: Quant
 Category:
   - Quant

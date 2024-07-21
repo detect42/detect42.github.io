@@ -19,12 +19,12 @@ date: 2023-03-23 20:58:13
 - icpc2023 Xi'an invitational contest:  **gold medal**
 - icpc2023 Hangzhou regional contest:  **gold medal**
 - icpc2023 east continent final:  **silver medal**
-- csp: **Top 0.3%**
+- csp **Top 0.3%**
 
 ### **NJU-信计-强基** (2022.9 - ????)
 
-- **COSEC** paper: Preventing Dataset Abuse in Fine-Tuning Stable Diffusion Models
-- **LAMDA** RL project
+- **COSEC**: **NADD2025** first author (under review) ccf-A
+- **LAMDA**: RL project
 
 ### Teaching Assistant
 

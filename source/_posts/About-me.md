@@ -2,8 +2,8 @@
 title: About me
 tags: resume
 abbrlink: 653763f0
-date: 2024-04-21 11:14:28
-sticky: true
+date: 2024-06-01 11:14:28
+sticky: 1000
 ---
 
 ## Research Interest
@@ -14,7 +14,7 @@ sticky: true
 
 ### **oier** (2017.7 - 2021.1)
 
-- noip2020: **First prize**
+- noip2020: **First prize*
 - WC2021: **bronze medal**
 
 ### **icpc_er** (2022.7 - 2024.1)
@@ -28,6 +28,11 @@ sticky: true
 
 - **COSEC** paper: Preventing Dataset Abuse in Fine-Tuning Stable Diffusion Models
 - **LAMDA** RL project
+
+### Teaching Assistant
+
+- **程序设计** （23 fall）
+- **离散数学** （24 spring）
 
 ### Internship
 

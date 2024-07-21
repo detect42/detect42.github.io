@@ -45,7 +45,7 @@ copy:
 #   icon: link || the description
 social:
    fab fa-github: https://github.com/detect42 || Github
-   fas fa-envelope: mailto:detect0530@gmail.com || Email 
+   fas fa-envelope: mailto:detect0530@gmail.com || Email
 
 # search (搜索)
 # see https://butterfly.js.org/posts/ceeb73f/#搜索系統
@@ -98,7 +98,7 @@ favicon: /img/favicon.png
 
 # Avatar (頭像)
 avatar:
-  img: /img/yang.jpg
+  img: /img/ff.jpg
   effect: false
 
 # Disable all banner image
@@ -172,7 +172,7 @@ post_meta:
 # wordcount (字數統計)
 # see https://butterfly.js.org/posts/ceeb73f/#字數統計
 wordcount:
-  enable: true 
+  enable: true
   post_wordcount: true
   min2read: true
   total_wordcount: true
@@ -537,7 +537,7 @@ tag_ui: # 留空或 index
 background: url(https://s2.loli.net/2023/03/23/LEcI5UBxZa6HuAC.jpg)
 
 # Footer Background
-footer_bg: true 
+footer_bg: true
 
 # the position of bottom right button/default unit: px (右下角按鈕距離底部的距離/默認單位為px)
 rightside-bottom:
@@ -685,7 +685,7 @@ aside:
       link: https://github.com/detect42
   card_announcement:
     enable: true
-    content: blog is buliding! 
+    content: blog is buliding!
   card_recent_post:
     enable: true
     limit: 10 # if set 0 will show all
