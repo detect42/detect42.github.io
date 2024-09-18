@@ -23,7 +23,7 @@ date: 2023-03-23 20:58:13
 
 ### **NJU-信计-强基** (2022.9 - ????)
 
-- **COSEC**: **NADD2025** first author (under review) ccf-A
+- **COSEC**: **NDSS2025** first author (under review) ccf-A
 - **LAMDA**: RL project
 
 ### Teaching Assistant
