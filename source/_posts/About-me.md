@@ -14,7 +14,7 @@ sticky: 1000
 
 ### **oier** (2017.7 - 2021.1)
 
-- noip2020: **First prize*
+- noip2020: **First prize**
 - WC2021: **bronze medal**
 
 ### **icpc_er** (2022.7 - 2024.1)
