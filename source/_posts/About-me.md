@@ -34,9 +34,11 @@ sticky: 1000
 - **程序设计** （23 fall）
 - **离散数学** （24 spring）
 
-### Internship
+### Intern
 
 - **Metabit Trading**: **Quant researcher** (2024.6 - 2024.9)
+  - 最佳模拟盘奖 & 最佳成果奖(out-of-sample alpha rate)
+  - 美股组冠军
 
 ## Previous blog website
 

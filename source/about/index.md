@@ -1,6 +1,9 @@
 ---
-title: about
-date: 2023-03-23 20:58:13
+title: About me
+tags: resume
+abbrlink: 653763f0
+date: 2024-06-01 11:14:28
+sticky: 1000
 ---
 
 ## Research Interest
@@ -19,21 +22,23 @@ date: 2023-03-23 20:58:13
 - icpc2023 Xi'an invitational contest:  **gold medal**
 - icpc2023 Hangzhou regional contest:  **gold medal**
 - icpc2023 east continent final:  **silver medal**
-- csp **Top 0.3%**
+- csp: **Top 0.3%**
 
 ### **NJU-信计-强基** (2022.9 - ????)
 
-- **COSEC**: **NDSS2025** first author (under review) ccf-A
-- **LAMDA**: RL project
+- **COSEC** paper: Preventing Dataset Abuse in Fine-Tuning Stable Diffusion Models
+- **LAMDA** RL project
 
 ### Teaching Assistant
 
 - **程序设计** （23 fall）
 - **离散数学** （24 spring）
 
-### Internship
+### Intern
 
 - **Metabit Trading**: **Quant researcher** (2024.6 - 2024.9)
+  - 最佳模拟盘奖 & 最佳成果奖(out-of-sample alpha rate)
+  - 美股组冠军
 
 ## Previous blog website
 
