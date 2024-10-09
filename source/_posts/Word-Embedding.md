@@ -1,7 +1,7 @@
 ---
 title: Word Embedding
 tags: 机器学习
-categories: 
+categories:
 - DL
 - Lee's notes
 abbrlink: f63ef346
@@ -100,7 +100,7 @@ date: 2023-12-28 16:19:32
 ![Alt text](WordEmbedding/image-10.png)
 
 ---
-  
+
 我们还可以对不同语言做一个project。
 
 但是如果硬做的话，没什么用，因为训练集里面中文和英文是隔离的，corpus里面没有任何关系（没有中英文混杂在一起的句子）。
