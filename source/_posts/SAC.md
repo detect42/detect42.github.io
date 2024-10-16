@@ -104,13 +104,13 @@ $$\pi^*_{MaxEnt}=argmax_{\pi}\sum_t\mathbb{E}_{(s_t,a_t)\sim \rho_{\pi}}[r(s_t,a
 - Soft Value Function:
 
 $$Q_{soft}^{\pi}(s,a) = \mathbb{E}_{s_t,a_t \sim \rho_\pi}[\sum_{t=0}^\infin\gamma^tr(s_t,a_t)+\alpha\sum_{t=1}^\infin\gamma^tH(\pi(\cdot|s_t))|s_0=s,a_0=a] $$
-$$V_{soft}^\pi(s)=\mathbb{E}_{s_t,a_t \sim \rho_pi}[\sum_{t=0}^\infin\gamma^t(r(s_t,a_t)+\alpha H(\pi(\cdot|s_t)))|s_0=s]$$
+$$V_{soft}^{\pi(s)}=\mathbb{E}_{s_t,a_t \sim \rho_\pi}[\sum_{t=0}^\infin\gamma^t(r(s_t,a_t)+\alpha H(\pi(\cdot|s_t)))|s_0=s]$$
 
 不难注意到soft Q和soft V之间存在关系：
 
 $$Q_{soft}^{\pi}(s,a) = \mathbb{E}_{s' \sim p(s'|s,a)}[r(s,a) + \gamma V_{soft}^\pi(s')]$$
 
-$$V_{soft}^\pi(s) = \mathbb{E}_{a\sim \pi}[Q_{soft}^\pi(s,a)]+\alpha H(\pi(\cdot|s))=\mathbb{E}_{a\sim \pi}[Q_{soft}^\pi(s,a)]-\alpha \log(\pi(a|s))$$
+$$V_{soft}^\pi(s) = \mathbb{E}_{a\sim \pi}[Q_{soft}^\pi(s,a)]+\alpha H(\pi(\cdot|s))=\mathbb{E}_{a\sim \pi}[Q_{soft}^\pi(s,a)-\alpha \log(\pi(a|s))]$$
 
 (其实上式就是SAC中V函数的值迭代公式)
 
