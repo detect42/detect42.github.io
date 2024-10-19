@@ -1,8 +1,10 @@
 ---
 title: Deep Generative Model
 tags: RL
-abbrlink: d5d94bd9
-date: 2024-10-09 20:44:35
+Category:
+  - RL
+abbrlink: d5d94bd1
+date: 2024-10-10 15:44:35
 ---
 
 # <center> Deep Generative Model </center>
