@@ -1,5 +1,5 @@
 ---
-title: unsurpervised_learning
+title: Unsurpervised Learning
 tags: 机器学习
 categories:
   - DL
