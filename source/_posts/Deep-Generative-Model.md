@@ -9,6 +9,9 @@ date: 2024-10-10 15:44:35
 
 # <center> Deep Generative Model </center>
 
+
+<img src="Deep-Generative-Model/image-33.png" alt="" width="80%" height="80%">
+
 ## PixelRNN
 
 很朴素的想法，就是用RNN来生成图片，每一个像素点的生成都是依赖于之前的像素点。也是做一个自回归unsupervised learning。
