@@ -1,0 +1,425 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>生成式奖励模型的几种方法 | detect</title><meta name="author" content="Richard,detect0530@gmail.com"><meta name="copyright" content="Richard"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="生成式奖励模型的几种方法  简要讨论link 列出的这几篇论文是2024年最新的生成式奖励模型（Generative Reward Models, GRM）方向的重要工作。下面我会逐条为你展开讲解每一篇的核心思路、方法结构、创新点和关键词，  🧠 生成式奖励模型（GRM）背景介绍 传统奖励模型（如 InstructGPT 使用的）大多是：  在 LLM 后面加一个 MLP（value head">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生成式奖励模型的几种方法">
+<meta property="og:url" content="https://detect42.github.io/post/9fbb006.html">
+<meta property="og:site_name" content="detect">
+<meta property="og:description" content="生成式奖励模型的几种方法  简要讨论link 列出的这几篇论文是2024年最新的生成式奖励模型（Generative Reward Models, GRM）方向的重要工作。下面我会逐条为你展开讲解每一篇的核心思路、方法结构、创新点和关键词，  🧠 生成式奖励模型（GRM）背景介绍 传统奖励模型（如 InstructGPT 使用的）大多是：  在 LLM 后面加一个 MLP（value head">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://detect42.github.io/img/ff.jpg">
+<meta property="article:published_time" content="2025-03-25T02:02:47.000Z">
+<meta property="article:modified_time" content="2025-03-25T02:30:22.016Z">
+<meta property="article:author" content="Richard">
+<meta property="article:tag" content="paper">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://detect42.github.io/img/ff.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://detect42.github.io/post/9fbb006.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":1000},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '生成式奖励模型的几种方法',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-25 10:30:22'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/1.css"><meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/ff.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">93</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">29</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">26</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/topimg.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="detect"><span class="site-name">detect</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">生成式奖励模型的几种方法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-03-25T02:02:47.000Z" title="Created 2025-03-25 10:02:47">2025-03-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-03-25T02:30:22.016Z" title="Updated 2025-03-25 10:30:22">2025-03-25</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">1.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>4min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="生成式奖励模型的几种方法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="center-生成式奖励模型的几种方法-center"><center> 生成式奖励模型的几种方法 </center></h1>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/fjfdg666/article/details/143969076">简要讨论link</a></p>
+<p>列出的这几篇论文是<strong>2024年最新的生成式奖励模型（Generative Reward Models, GRM）方向的重要工作</strong>。下面我会<strong>逐条为你展开讲解</strong>每一篇的核心思路、方法结构、创新点和关键词，</p>
+<hr>
+<h2 id="🧠-生成式奖励模型-grm-背景介绍">🧠 生成式奖励模型（GRM）背景介绍</h2>
+<p>传统奖励模型（如 InstructGPT 使用的）大多是：</p>
+<ul>
+<li>在 LLM 后面加一个 MLP（value head）</li>
+<li>输出一个 scalar 值作为 reward</li>
+<li>通常使用 pairwise 偏好数据 + ranking loss 或 DPO 来训练</li>
+</ul>
+<p>但这些模型有几个问题：</p>
+<ul>
+<li><strong>不可解释</strong>（只是一个分数，没有理由）</li>
+<li><strong>结构封闭</strong>（需要改模型结构）</li>
+<li><strong>鲁棒性差</strong>（容易受样本偏差影响）</li>
+</ul>
+<p>于是最近兴起了一类新的范式：<strong>生成式奖励模型（Generative Reward Model）</strong>，即：</p>
+<blockquote>
+<p>利用 LLM 原有的生成能力，输出语言化的评价（评语、判断、Yes/No、分数等），作为奖励模型。</p>
+</blockquote>
+<hr>
+<h2 id="1-beyond-scalar-reward-model-learning-generative-judge-from-preference-data">1️⃣ <strong>Beyond Scalar Reward Model: Learning Generative Judge from Preference Data</strong></h2>
+<p>📅 2024.10 | 📌 方法名：<strong>Con-J</strong></p>
+<h3 id="📌-核心思想：">📌 核心思想：</h3>
+<ul>
+<li>不再输出一个 scalar（分数）</li>
+<li>而是让 LLM 直接生成两段文字评价（正/负）</li>
+<li>利用这两个生成内容之间的对比，来训练模型进行偏好判断</li>
+</ul>
+<h3 id="✅-方法亮点：">✅ 方法亮点：</h3>
+<ul>
+<li><strong>Con-J（Contrastive Judgement）</strong>：对同一输入的两个回答生成评价 → 形成偏好对比信号</li>
+<li>用 DPO loss 来训练，使模型更倾向于偏好更好的回答</li>
+<li>输出带理由的判断，<strong>可解释性强</strong></li>
+<li>对训练数据中的偏见（如模板化表达）更鲁棒</li>
+</ul>
+<h3 id="🧠-总结：">🧠 总结：</h3>
+<blockquote>
+<p>Con-J 用语言对比来替代 scalar loss，让模型“说出它为什么喜欢 A 不喜欢 B”。</p>
+</blockquote>
+<hr>
+<h2 id="2-generative-verifiers-reward-modeling-as-next-token-prediction">2️⃣ <strong>Generative Verifiers: Reward Modeling as Next-Token Prediction</strong></h2>
+<p>📅 2024.10</p>
+<h3 id="📌-核心思想：">📌 核心思想：</h3>
+<ul>
+<li>把“奖励建模”当成语言模型的“补全任务”</li>
+<li>给 prompt 和 response 后面加上一句话：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Is the answer correct (Yes/No)?</span><br></pre></td></tr></table></figure>
+</li>
+<li>然后看模型预测 “Yes” 的概率是多少 → 作为奖励值</li>
+</ul>
+<h3 id="✅-方法亮点：">✅ 方法亮点：</h3>
+<ul>
+<li><strong>不改模型结构</strong>，只用原始语言建模能力</li>
+<li>可视为“prompt 编程 + next-token 概率预测”</li>
+<li>支持 SFT 和 CoT-SFT 两种训练方式</li>
+</ul>
+<h3 id="🧠-总结：">🧠 总结：</h3>
+<blockquote>
+<p>这是把 reward modeling 转换为一个非常自然的“语言建模任务”，实现简单，泛化强。</p>
+</blockquote>
+<hr>
+<h2 id="3-generative-reward-models">3️⃣ <strong>Generative Reward Models</strong></h2>
+<p>📅 2024.10 | 📌 方法名：<strong>GenRM / CoT-GenRM</strong></p>
+<h3 id="📌-核心思想：">📌 核心思想：</h3>
+<ul>
+<li>提出了 GenRM：在不加 value head 的前提下，用 “预测 Yes 的概率” 作为 reward</li>
+<li>使用 DPO loss 进行训练，模型更自然地偏好人类喜欢的回答</li>
+</ul>
+<h3 id="📌-cot-genrm-扩展：">📌 CoT-GenRM 扩展：</h3>
+<ul>
+<li>在回答前引入 Chain-of-Thought 思维链</li>
+<li>用 CoT 作为偏好依据，引导模型理解为什么一个回答更好</li>
+<li>推理时先生成 CoT，再判断偏好</li>
+</ul>
+<h3 id="✅-方法亮点：">✅ 方法亮点：</h3>
+<ul>
+<li>完全不改结构，<strong>即插即用</strong></li>
+<li>引入 CoT 后显著提升 reasoning 任务的判断能力</li>
+</ul>
+<h3 id="🧠-总结：">🧠 总结：</h3>
+<blockquote>
+<p>GenRM 是最经典的“生成式评分”方法，而 CoT-GenRM 强调“先解释再判断”的思路，强化逻辑推理偏好。</p>
+</blockquote>
+<hr>
+<h2 id="4-direct-judgement-preference-optimization">4️⃣ <strong>Direct Judgement Preference Optimization</strong></h2>
+<p>📅 2024.9 | 📌 方法名：DJPO</p>
+<h3 id="📌-核心思想：">📌 核心思想：</h3>
+<ul>
+<li>融合多个训练信号：不仅看结果好不好，还引导模型<strong>用不同方式解释</strong>“好在哪、差在哪”</li>
+</ul>
+<h3 id="📌-三种训练任务：">📌 三种训练任务：</h3>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Chain-of-Thought Critique</strong></td>
+<td>让模型输出带有“逐步推理”的评价逻辑</td>
+</tr>
+<tr>
+<td><strong>Standard Judgement</strong></td>
+<td>只输出最终判断（Yes/No），不包含解释</td>
+</tr>
+<tr>
+<td><strong>Response Deduction</strong></td>
+<td>反推原始答案，看模型的评价是否合理</td>
+</tr>
+</tbody>
+</table>
+<h3 id="✅-方法亮点：">✅ 方法亮点：</h3>
+<ul>
+<li>多样化监督方式</li>
+<li>使用强教师模型生成高质量正例，用弱模型生成负例 → 组成偏好对</li>
+<li>同时使用 DPO loss + SFT loss 进行训练</li>
+</ul>
+<h3 id="🧠-总结：">🧠 总结：</h3>
+<blockquote>
+<p>DJPO 把“偏好学习 + 推理 +反推”三种能力结合起来，训练出更稳定、更理解答案质量的评估器。</p>
+</blockquote>
+<hr>
+<h2 id="5-critique-out-loud-reward-models">5️⃣ <strong>Critique-out-Loud Reward Models</strong></h2>
+<p>📅 2024.8 | 📌 方法名：<strong>CLoud</strong></p>
+<h3 id="📌-核心思想：">📌 核心思想：</h3>
+<ul>
+<li>奖励模型不再是 “只输出 Yes/No”</li>
+<li>而是先 <strong>生成一个自然语言的点评评论</strong></li>
+<li>然后将 prompt、response、评论 一起输入 → 输出 reward value</li>
+</ul>
+<h3 id="✅-方法流程：">✅ 方法流程：</h3>
+<ol>
+<li>输入：prompt + response</li>
+<li>模型生成评论文字（如：“This answer is correct because…”）</li>
+<li>输入 prompt + response + 评论 → 输出 reward score</li>
+</ol>
+<h3 id="✅-方法亮点：">✅ 方法亮点：</h3>
+<ul>
+<li><strong>高可解释性</strong></li>
+<li>可解耦：评论模块和打分模块可以分开训练、分析</li>
+<li>也可以将评论作为训练数据增强的辅助信息</li>
+</ul>
+<h3 id="🧠-总结：">🧠 总结：</h3>
+<blockquote>
+<p>CLoud 让模型“边评价边打分”，像一个能说人话的打分器，不仅有输出，还有依据。</p>
+</blockquote>
+<hr>
+<h2 id="✅-总结对比表">✅ 总结对比表</h2>
+<table>
+<thead>
+<tr>
+<th>方法/模型名</th>
+<th>核心机制</th>
+<th>是否生成语言</th>
+<th>是否结构改动</th>
+<th>可解释性</th>
+<th>是否用 DPO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Con-J</td>
+<td>对比两段生成判断</td>
+<td>✅</td>
+<td>❌</td>
+<td>✅✅✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Generative Verifier</td>
+<td>Next-token Yes/No</td>
+<td>❌（只预测 token）</td>
+<td>❌</td>
+<td>✅</td>
+<td>❌ or ✅</td>
+</tr>
+<tr>
+<td>GenRM</td>
+<td>Yes 概率作为 reward</td>
+<td>❌</td>
+<td>❌</td>
+<td>中</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>CoT-GenRM</td>
+<td>生成 CoT + 判断</td>
+<td>✅（生成推理链）</td>
+<td>❌</td>
+<td>✅✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>DJPO</td>
+<td>三种监督方式混合</td>
+<td>✅</td>
+<td>❌</td>
+<td>✅✅</td>
+<td>✅✅</td>
+</tr>
+<tr>
+<td>CLoud</td>
+<td>先生成评论再打分</td>
+<td>✅✅</td>
+<td>❌</td>
+<td>✅✅✅</td>
+<td>可选</td>
+</tr>
+</tbody>
+</table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="https://detect42.github.io">Richard</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://detect42.github.io/post/9fbb006.html">https://detect42.github.io/post/9fbb006.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/paper/">paper</a></div><div class="post_share"><div class="social-share" data-image="/img/ff.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/post/78eeacc4.html" title="Let’s Verify Step by Step"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Let’s Verify Step by Step</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/post/78eeacc4.html" title="Let’s Verify Step by Step"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-24</div><div class="title">Let’s Verify Step by Step</div></div></a></div><div><a href="/post/1d73d54e.html" title="Generative Verifiers, Reward Modeling as Next-Token Prediction"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-23</div><div class="title">Generative Verifiers, Reward Modeling as Next-Token Prediction</div></div></a></div><div><a href="/post/3a5bfa54.html" title="LoRA"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-23</div><div class="title">LoRA</div></div></a></div><div><a href="/post/14674413.html" title="GRPO"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-23</div><div class="title">GRPO</div></div></a></div><div><a href="/post/36e12070.html" title="Iterated Denoising Energy Matching for Sampling from Boltzmann Densities"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-16</div><div class="title">Iterated Denoising Energy Matching for Sampling from Boltzmann Densities</div></div></a></div><div><a href="/post/ff7c69.html" title="Offline Transition Modeling via Contrastive Energy Learning"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-12</div><div class="title">Offline Transition Modeling via Contrastive Energy Learning</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#center-%E7%94%9F%E6%88%90%E5%BC%8F%E5%A5%96%E5%8A%B1%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95-center"><span class="toc-text"> 生成式奖励模型的几种方法 </span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A0-%E7%94%9F%E6%88%90%E5%BC%8F%E5%A5%96%E5%8A%B1%E6%A8%A1%E5%9E%8B-grm-%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D"><span class="toc-text">🧠 生成式奖励模型（GRM）背景介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-beyond-scalar-reward-model-learning-generative-judge-from-preference-data"><span class="toc-text">1️⃣ Beyond Scalar Reward Model: Learning Generative Judge from Preference Data</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%8C-%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%EF%BC%9A"><span class="toc-text">📌 核心思想：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E6%96%B9%E6%B3%95%E4%BA%AE%E7%82%B9%EF%BC%9A"><span class="toc-text">✅ 方法亮点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A0-%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-text">🧠 总结：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-generative-verifiers-reward-modeling-as-next-token-prediction"><span class="toc-text">2️⃣ Generative Verifiers: Reward Modeling as Next-Token Prediction</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%8C-%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%EF%BC%9A"><span class="toc-text">📌 核心思想：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E6%96%B9%E6%B3%95%E4%BA%AE%E7%82%B9%EF%BC%9A"><span class="toc-text">✅ 方法亮点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A0-%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-text">🧠 总结：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-generative-reward-models"><span class="toc-text">3️⃣ Generative Reward Models</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%8C-%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%EF%BC%9A"><span class="toc-text">📌 核心思想：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%8C-cot-genrm-%E6%89%A9%E5%B1%95%EF%BC%9A"><span class="toc-text">📌 CoT-GenRM 扩展：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E6%96%B9%E6%B3%95%E4%BA%AE%E7%82%B9%EF%BC%9A"><span class="toc-text">✅ 方法亮点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A0-%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-text">🧠 总结：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-direct-judgement-preference-optimization"><span class="toc-text">4️⃣ Direct Judgement Preference Optimization</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%8C-%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%EF%BC%9A"><span class="toc-text">📌 核心思想：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%8C-%E4%B8%89%E7%A7%8D%E8%AE%AD%E7%BB%83%E4%BB%BB%E5%8A%A1%EF%BC%9A"><span class="toc-text">📌 三种训练任务：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E6%96%B9%E6%B3%95%E4%BA%AE%E7%82%B9%EF%BC%9A"><span class="toc-text">✅ 方法亮点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A0-%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-text">🧠 总结：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-critique-out-loud-reward-models"><span class="toc-text">5️⃣ Critique-out-Loud Reward Models</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%8C-%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%EF%BC%9A"><span class="toc-text">📌 核心思想：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E6%96%B9%E6%B3%95%E6%B5%81%E7%A8%8B%EF%BC%9A"><span class="toc-text">✅ 方法流程：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E6%96%B9%E6%B3%95%E4%BA%AE%E7%82%B9%EF%BC%9A"><span class="toc-text">✅ 方法亮点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A0-%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-text">🧠 总结：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%9C%85-%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94%E8%A1%A8"><span class="toc-text">✅ 总结对比表</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/topimg.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By Richard</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js"></script><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></body></html>
