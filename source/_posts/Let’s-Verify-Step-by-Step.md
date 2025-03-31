@@ -6,6 +6,8 @@ date: 2025-03-24 22:02:47
 ---
 # <center> Let’s Verify Step by Step </center>
 
+[更多细节](https://zhuanlan.zhihu.com/p/12324054365)
+
 Problem：数学问题。
 
 Solution：解题的过程/步骤。
