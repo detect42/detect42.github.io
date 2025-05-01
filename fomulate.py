@@ -24,7 +24,9 @@ def process_files(name):
     content = re.sub(r"\\\[\s*(.*?)\s*\\\]", r"$$\1$$", content, flags=re.DOTALL | re.MULTILINE)
 
     # Replace image paths
-    content = re.sub(r"!\[.*?\]\((image.*?\.png)\)", rf'<img src="{name}/\1" alt="" width="70%" height="70%">', content)
+    content = re.sub(
+        r"!\[.*?\]\(\<?(.*?\.png)\>?\)", rf'<img src="{name}/\1" alt="" width="70%" height="70%">', content
+    )
 
     # Save the modified Markdown file
     with open(output_md_file, "w", encoding="utf-8") as f:
@@ -32,7 +34,7 @@ def process_files(name):
 
     # Copy images to the target folder
     for file_name in os.listdir(input_folder):
-        if file_name.startswith("image") and file_name.lower().endswith((".png", ".jpg", ".jpeg", ".gif")):
+        if file_name.lower().endswith((".png", ".jpg", ".jpeg", ".gif")):
             shutil.copy(os.path.join(input_folder, file_name), output_image_folder)
 
     print(f"Processing completed for {name}.")
